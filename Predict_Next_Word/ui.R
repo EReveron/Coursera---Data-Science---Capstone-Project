@@ -42,16 +42,20 @@ shinyUI(
                   placeholder = "Type your text here ..."),
         
         hr(),
-        fluidRow(column(1, textOutput("value")),
-                 column(2, textOutput("value2"))),
-        #htmlOutput("table"),
+        plotOutput("word_cloud"),
+        fluidRow(column(5, h3(textOutput("prediction1"))),
+                 column(6, h3(textOutput("prediction2")))),
         
-        h3(textOutput("prediction1")),
-        h3(textOutput("prediction2")),
+        
+        #htmlOutput("table"),
+        DT::dataTableOutput("table"),
+        
+        #h3(textOutput("prediction1")),
+        #h3(textOutput("prediction2")),
         h3(textOutput("prediction3")),
         h3(textOutput("prediction4")),
-        h3(textOutput("prediction5")),
-        plotOutput("word_cloud")
+        h3(textOutput("prediction5"))
+        #plotOutput("word_cloud")
         
       )
     )

@@ -104,6 +104,24 @@ shinyServer(function(input, output,session) {
   
   
   
+  
+  output$table <- DT::renderDataTable({
+    
+    input$text_string
+    myds <- get_predicted_words()
+    
+    
+    
+    
+    if (nrow(myds) > 0) {
+        DT::datatable(myds,options = list(lengthChange = FALSE, scroller = FALSE))
+      }
+    
+  })
+  
+  
+   
+  
   # This function will create the table 
   #output$table <- renderGvis({
   #  input$text_string
@@ -147,7 +165,7 @@ shinyServer(function(input, output,session) {
     {
       wordcloud(myds$word,myds$prob,
                 max.words = 5, random.order = FALSE, random.color = FALSE,
-                rot.per=0,scale=c(3,1), fixed.asp = TRUE,
+                rot.per=0,scale=c(8,5), fixed.asp = TRUE,
                 colors = brewer.pal(6, "Dark2"))
     }
     #}

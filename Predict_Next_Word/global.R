@@ -9,6 +9,7 @@ library(googleVis)
 library(RColorBrewer)
 library(wordcloud)
 library(memoise)
+library(DT)
 
 setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
 
