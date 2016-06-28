@@ -14,7 +14,7 @@
 library(data.table)
 
 #setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
-setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+#setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
 
 # For reproducibility
 set.seed(12345)

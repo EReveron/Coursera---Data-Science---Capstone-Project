@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "# This is the user-interface definition of a Shiny web application.\n# Author: Enrique Reveron\n# Date: 2016-06-27\n# Content: This Shiny Apps predict the next word for english language using\n#          Knersey-ney Algoritm and Backoff\n#          \n#\n\nshinyUI(\n  fluidPage(\n    \n    titlePanel(\"Predict Next Word with Knersey-ney Algorithm and Backoff\"),\n    \n    sidebarLayout(\n      sidebarPanel(\n        helpText(paste(\"This app create demographic maps with information from ITU-T 2000-2014.\",\n                       \"This apps use the GoogleVis library to make the plots.\")),\n        \n        helpText(paste(\"Please select the variable to display (Fixed, Mobile) and the\",\n                       \"years Range of interest.\")),\n        helpText(paste(\"If you want to plot the total amount of subscriptions in a specific\",\n                       \"year, please select the same year from beginning to end.\")),\n        helpText(paste(\"When is selected a year range, the Apps will show the diff (Year2 - Year1).\")),\n        \n        selectInput(\"pred_method\", \n                    label = \"Select the Prediction method to display:\",\n                    choices = c(\"Based on Complete Words\" = 1, \n                                \"Based on Incomplete Words\" = 2)),\n        \n        sliderInput(\"prob\",\n                    label = \"Minimun Probability of the Words to Get:\",\n                    min = 0, max = 1,\n                    value = 0.5)\n        \n      ),\n      \n      mainPanel(\n        h3(textOutput(\"var\")),  \n        textInput(\"text_string\", \n                  label = \"\", \n                  value = \"\",\n                  placeholder = \"Type your text here ...\"),\n        \n        hr(),\n        fluidRow(column(1, textOutput(\"value\")),\n                 column(2, textOutput(\"value2\"))),\n        #htmlOutput(\"table\"),\n        \n        h3(textOutput(\"prediction1\")),\n        h3(textOutput(\"prediction2\")),\n        h3(textOutput(\"prediction3\")),\n        h3(textOutput(\"prediction4\")),\n        h3(textOutput(\"prediction5\")),\n        plotOutput(\"word_cloud\")\n        \n      )\n    )\n  )\n)\n    \n  \n",
+    "created" : 1467119650775.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "1828901089",
+    "id" : "F9F937FC",
+    "lastKnownWriteTime" : 1467149382,
+    "last_content_update" : 1467149382063,
+    "path" : "D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project/Predict_Next_Word/ui.R",
+    "project_path" : "ui.R",
+    "properties" : {
+    },
+    "relative_order" : 1,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

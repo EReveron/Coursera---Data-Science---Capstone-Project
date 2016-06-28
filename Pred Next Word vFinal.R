@@ -1,5 +1,5 @@
 #####################################################################
-# Predict Next Word vFinal using the backoff implementation with incomplete
+# Predict Next Word vFinal using the backoff implementation 
 #   and the knersey-ney probabilities already calculated previously:
 #
 #             DT_uni_prob.Rdata: data table that include all the unigrams 
@@ -14,7 +14,7 @@
 library(data.table)
 
 #setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
-setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+#setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
 
 # For reproducibility
 set.seed(12345)
@@ -91,7 +91,7 @@ load_DT_prob_table <- function (n,lines=-1) {
 }
 
 
-topn_predict_incomplete <- function(x,p=0,n=5,f=1) {
+topn_predict <- function(x,p=0,n=5,f=1) {
   # f is the factor
   
   
@@ -211,7 +211,7 @@ topn_predict_incomplete <- function(x,p=0,n=5,f=1) {
 }
 
 
-predict_nextword_incomplete <- function(x,lines=-1,p=0,n=5) {
+predict_nextword <- function(x,lines=-1,p=0,n=5) {
   
   l <- length(x)
   
@@ -220,7 +220,7 @@ predict_nextword_incomplete <- function(x,lines=-1,p=0,n=5) {
   load_DT_prob_table(3,lines)
   load_DT_prob_table(4,lines)
   
-  print(paste("-----> predict_nextword_incomplete(",
+  print(paste("-----> predict_nextword(",
               " word:=(",paste(x, collapse=","),")",
               ", lines:=",lines,
               ", prob:=",p,
@@ -231,7 +231,7 @@ predict_nextword_incomplete <- function(x,lines=-1,p=0,n=5) {
   result <- topn_predict(x,p,n,1)
 
   t2 <- proc.time()
-  print(paste("-----> predict_nextword_incomplete: Running Time .......",
+  print(paste("-----> predict_nextword: Running Time .......",
               elapsed_time(t1,t2)," seconds ...",sep=""))
   
   # Remove duplicated values, some words could appers duplicated as a part of

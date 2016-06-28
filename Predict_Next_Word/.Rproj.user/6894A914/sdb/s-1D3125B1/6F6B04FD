@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "\nlibrary(stringi)\nlibrary(data.table)\n\n#setwd(\"D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/FINAL2/Final 27-06\")\n#setwd(\"D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US\")\n\n# For reproducibility\n#set.seed(12345)\n\nsource(\"Pred Next Word vFinal.R\")\nsource(\"Pred Next Word Regex vFinal.R\")\n\n\nlast_n_words <- function(s, num_words = 3) {\n  \n  # Lower, trim and remove additional blank spaces\n  \n  s <- gsub(\"(^[[:space:]]+|[[:space:]]+$)\", \"\", tolower(s))\n  s <- gsub(\"[[:space:]]+\", \" \", s)\n  \n  words_list <- unlist(stri_split_fixed(s,\" \"))\n  \n  l <- length(words_list)\n  \n  \n  if (l < num_words) {\n    # Not enough words in the string, return all the words\n    words_list\n  } else {\n    # Return only the last n words\n    words_list[(l-num_words+1):l]\n  }\n}\n\n\nmain_predict_word <- function(s, lines = -1) {\n  \n  if (s != \"\") {\n\n    s <- tolower(s)\n    print(paste(\"String:\",s,\"...\",sep=\"\"))\n    \n    finish_word <- stri_endswith_fixed(s,\" \")\n    \n    list_words <- last_n_words(s)\n    \n    if (finish_word) {\n      print(\"Predict Next Word ...\")\n      result <- predict_nextword(list_words,lines)\n    }\n    else {\n      print(\"Predict Next Word with Regex ...\")\n      result <- predict_nextword_regex(list_words,lines)\n    }\n  }\n  else {\n      result <- as.data.frame(character())\n      }\n  result\n}\n\n",
+    "created" : 1467119942035.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "806569503",
+    "id" : "6F6B04FD",
+    "lastKnownWriteTime" : 1467149111,
+    "last_content_update" : 1467149111644,
+    "path" : "D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project/Main Predict Word vFinal.R",
+    "project_path" : null,
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

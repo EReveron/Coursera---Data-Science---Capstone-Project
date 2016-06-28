@@ -4,84 +4,158 @@
 # Content: This Shiny Apps predict the next word for english language using
 #          Knersey-ney Algoritm and Backoff
 
-library(shiny)
-library(googleVis)
-require(shiny)
 
-setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/FINAL2/Final 27-06")
-source("Pred Next Word vFinal.R")
-source("Pred Next Word Regex vFinal.R")
-source("Final.R")
+shinyServer(function(input, output,session) {
 
-load_DT_prob_table(1,100)
-load_DT_prob_table(2,100)
-load_DT_prob_table(3,100)
-load_DT_prob_table(4,100)
-
-shinyServer(function(input, output) {
-  
-
+  # For reactive purposes
+  #myVar <- reactive({
+  #  input$var
+  #})
   
   # For reactive purposes
-  myVar <- reactive({
-    input$var
-  })
+  #myYear1 <- reactive({
+  #  input$range[1]
+  #})
   
   # For reactive purposes
-  myYear1 <- reactive({
-    input$range[1]
-  })
+  #myYear2 <- reactive({
+  #  input$range[2]
+  #})
   
   # For reactive purposes
-  myYear2 <- reactive({
-    input$range[2]
-  })
+  #myInputString <- reactive({
+  #  input$text_string
+  #})
   
-  # For reactive purposes
-  myInputString <- reactive({
-    input$string
+  get_predicted_words <- reactive({
+    input$text_string
+    
+
+
+    isolate({
+      withProgress({
+        setProgress(message = "Predicting words...")
+        as.data.frame(main_predict_word(input$text_string))
+      })
+    })
+    
   })
   
   # This function will create the Tittle
   output$var <- renderText({
-    
-    if (input$var == 1) { myvariable <- "Fixed Phone Lines"
-    } else { myvariable <- "Mobile Phone Subscriptions" } 
-    
-    if (input$range[1] == input$range[2]) {
-      title_map <- paste(myYear1()," Total Worldwide ITU ",
-                         myvariable," (thousands)")
-    } else {
-      title_map <- paste(myYear1(),"-",myYear2()," Increment Worldwide ITU ",
-                         myvariable, " (thousands)")
+    myds <- get_predicted_words()
+    print("Corre ouput var")
+    myds$word[1]
+  })
+  
+  
+  
+  
+  # This function will create the Tittle
+  output$prediction1 <- renderText({
+    input$text_string
+    myds <- get_predicted_words()
+    print("Corre ouput prediction1")
+    if (nrow(myds) > 0) {
+      myds$word[1]
     }
-    title_map
+  })
+  
+  # This function will create the Tittle
+  output$prediction2 <- renderText({
+    input$text_string
+    myds <- get_predicted_words()
+    print("Corre ouput prediction2")
+    if (nrow(myds) > 1) {
+      myds$word[2]
+    }
+  })
+  
+  # This function will create the Tittle
+  output$prediction3 <- renderText({
+    input$text_string
+    myds <- get_predicted_words()
+    print("Corre ouput prediction3")
+    if (nrow(myds) > 2) {
+      myds$word[3]
+    }
   })
   
   
   # This function will create the Tittle
-  output$prediction <- renderText({
-    myds <<- main_predict_word(input$string)
-    unlist(myds[1:5,word,])
-    #input$string
-    
+  output$prediction4 <- renderText({
+    input$text_string
+    myds <- get_predicted_words()
+    print("Corre ouput prediction4")
+    if (nrow(myds) > 3) {
+      myds$word[4]
+    }
   })
   
-
+  # This function will create the Tittle
+  output$prediction5 <- renderText({
+    input$text_string
+    myds <- get_predicted_words()
+    print("Corre ouput prediction3")
+    if (nrow(myds) > 4) {
+      myds$word[5]
+    }
+  })
+  
   
   
   # This function will create the table 
-  output$table <- renderGvis({
+  #output$table <- renderGvis({
+  #  input$text_string
+  #  myds <- get_predicted_words()
+    
+    
+    
 
-    if (length(input$string) < 0) { NULL}
+    #if (length(input$text_string) < 0) { NULL}
+  #  if (nrow(myds) > 0)
+  #  {
+  #    gvisTable(myds)
+  #  }
     
-    gvisTable(as.data.frame(myds), 
-              options=list(page='enable',
-                           height='automatic',
-                           width='automatic'))
+    #gvisTable(as.data.frame(myds),
+              
+            #  options=list(page='enable',
+            #               height='automatic',
+            #               width='automatic'))
+    
+
+ # })
   
+  # Make the wordcloud drawing predictable during a session
+  #wordcloud_rep <- repeatable(wordcloud)
+
+  # This function will create the wordcloud 
+  
+  output$word_cloud <- renderPlot({
+    input$text_string
+    myds <- get_predicted_words()
     
+    
+  
+   # prediction()
+  #output$wordcloud <- renderGvis({
+    
+    #if (length(input$text_string) > 1) {
+    
+    if (nrow(myds) > 0)
+    {
+      wordcloud(myds$word,myds$prob,
+                max.words = 5, random.order = FALSE, random.color = FALSE,
+                rot.per=0,scale=c(3,1), fixed.asp = TRUE,
+                colors = brewer.pal(6, "Dark2"))
+    }
+    #}
+    #wordcloud_rep(myds$word, 
+    #              round(myds$prob * 10000), 
+    #              scale=c(4,0.5), 
+    #              colors=brewer.pal(8, "Dark2"))
   })
   
-  
 })
+ 
