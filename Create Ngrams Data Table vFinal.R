@@ -54,7 +54,6 @@ create_mydata <- function(lines=-1) {
   var.name <- "mydata"
   file.name <- create_filename("mydata",lines)
 
-  
   #Validate if "mydata" exists in the enviroment
   if (!exists(var.name)) {
 
@@ -81,7 +80,7 @@ create_mydata <- function(lines=-1) {
       print("... blogs data ....")
       blogs.data <- readLines(filename_blogs, n = lines, encoding="UTF-8", warn = FALSE)
       
-      # remove emojies and other characters.
+      # Remove emojies and other characters.
       print("... Removing emojies and other characters ....")
       twitter.data <- iconv(twitter.data, "latin1", "ASCII", sub="")
       twitter.data <- iconv(twitter.data, "ISO-8859-2", "ASCII", sub="")
@@ -100,7 +99,6 @@ create_mydata <- function(lines=-1) {
       
       # Replace punctutation for a special word "eeee" in order to 
       # avoid some ngrams that doesn't exists
-      
       print("... Replacing punctuation for special characters ....")   
       twitter.data <- stri_replace_all_regex(twitter.data,"[.,;:]", " eeee ", 
                                              vectorize_all=FALSE)
@@ -109,13 +107,8 @@ create_mydata <- function(lines=-1) {
                                            vectorize_all=FALSE)
       news.data <- stri_replace_all_regex(news.data,"[.,;:]", " eeee ", 
                                           vectorize_all=FALSE)
-      
-      
-      
-      
-      
+
       # Replace the rest of punctutation 
-   
       print("... Replacing rest of punctuation ....")   
       twitter.data <- stri_replace_all_regex(twitter.data,"[:punct:]", " ", 
                                              vectorize_all=FALSE)
@@ -135,7 +128,6 @@ create_mydata <- function(lines=-1) {
       t2 <- proc.time()
       print(paste("-----> create_mydata: Running Time .......",
                   elapsed_time(t1,t2)," seconds ...",sep=""))
-      
     }
   }
   gc()
@@ -189,20 +181,39 @@ create_alltokens <- function(lines=-1) {
 
 create_ngram <- function(n,lines=-1)
 {
+  
+  switch(n,
+         "1" = {
+           var.name <- "uni.ngram"
+           file.name <- create_filename("uni_ngram",lines)
+         },
+         "2" = {
+           var.name <- "bi.ngram"
+           file.name <- create_filename("bi_ngram",lines)
+         },
+         "3"={
+           var.name <- "tri.ngram"
+           file.name <- create_filename("tri_ngram",lines)
+         },
+         "4"={
+           var.name <- "quad.ngram"
+           file.name <- create_filename("quad_ngram",lines)
+         }
+  )
 
-  if (n == 1) {
-    var.name <- "uni.ngram"
-    file.name <- create_filename("uni_ngram",lines)
-  } else if (n == 2) {
-    var.name <- "bi.ngram"
-    file.name <- create_filename("bi_ngram",lines)
-  } else if (n == 3) {
-    var.name <- "tri.ngram"
-    file.name <- create_filename("tri_ngram",lines)
-  } else if (n == 4) {
-    var.name <- "quad.ngram"
-    file.name <- create_filename("quad_ngram",lines)
-  }
+  #if (n == 1) {
+  #  var.name <- "uni.ngram"
+  #  file.name <- create_filename("uni_ngram",lines)
+  #} else if (n == 2) {
+  #  var.name <- "bi.ngram"
+  #  file.name <- create_filename("bi_ngram",lines)
+  #} else if (n == 3) {
+  #  var.name <- "tri.ngram"
+  #  file.name <- create_filename("tri_ngram",lines)
+  #} else if (n == 4) {
+  #  var.name <- "quad.ngram"
+  #  file.name <- create_filename("quad_ngram",lines)
+  #}
   
   #Validate if the "var.name" exists in the enviroment
   if (!exists(var.name)) {
@@ -212,29 +223,50 @@ create_ngram <- function(n,lines=-1)
       load(file.name,.GlobalEnv) 
     }  else {
       ## Load "alltokens" and create the ngrams
-      
       create_alltokens(lines)
       print(paste("-----> create_ngram(",n,",",lines,").......",sep=""))
       t1 <- proc.time()
       
       print(paste("... Creating Ngram:",var.name,sep=""))
-      if (n == 1) {
-        uni.ngram <<- ngrams(alltokens, 1)
-        print(paste("... Saving Ngram file:",file.name, sep=""))
-        save(uni.ngram,file=file.name)
-      } else if (n == 2) {
-        bi.ngram <<- ngrams(alltokens, 2)
-        print(paste("... Saving Ngram file:",file.name,sep=""))
-        save(bi.ngram,file=file.name)
-      } else if (n == 3) {
-        tri.ngram <<- ngrams(alltokens, 3)
-        print(paste("... Saving Ngram file:",file.name,sep=""))
-        save(tri.ngram,file=file.name)
-      } else if (n == 4) {
-        quad.ngram <<- ngrams(alltokens, 4)
-        print(paste("... Saving Ngram file:",file.name,sep=""))
-        save(quad.ngram,file=file.name)
-      }
+      
+      switch(n,
+             "1"= { #Unigrams
+               uni.ngram <<- ngrams(alltokens, 1)
+               print(paste("... Saving Ngram file:",file.name, sep=""))       
+             },
+             "2"= { #Bigrams
+               bi.ngram <<- ngrams(alltokens, 2)
+               print(paste("... Saving Ngram file:",file.name,sep=""))
+             },
+             "3"= { #Trigrams
+               tri.ngram <<- ngrams(alltokens, 3)
+               print(paste("... Saving Ngram file:",file.name,sep=""))
+               save(tri.ngram,file=file.name)
+             },
+             "4"= { #Quadgrams
+               quad.ngram <<- ngrams(alltokens, 4)
+               print(paste("... Saving Ngram file:",file.name,sep=""))
+               save(quad.ngram,file=file.name)
+             }
+      )
+      
+      #if (n == 1) {
+      #  uni.ngram <<- ngrams(alltokens, 1)
+      #  print(paste("... Saving Ngram file:",file.name, sep=""))
+      #  save(uni.ngram,file=file.name)
+      #} else if (n == 2) {
+      #  bi.ngram <<- ngrams(alltokens, 2)
+      #  print(paste("... Saving Ngram file:",file.name,sep=""))
+      #  save(bi.ngram,file=file.name)
+      #} else if (n == 3) {
+      #  tri.ngram <<- ngrams(alltokens, 3)
+      #  print(paste("... Saving Ngram file:",file.name,sep=""))
+      #  save(tri.ngram,file=file.name)
+      #} else if (n == 4) {
+      #  quad.ngram <<- ngrams(alltokens, 4)
+      #  print(paste("... Saving Ngram file:",file.name,sep=""))
+      #  save(quad.ngram,file=file.name)
+      #}
       rm("alltokens",envir =.GlobalEnv)
       t2 <- proc.time()
       print(paste("-----> create_ngram: Running Time .......",

@@ -33,23 +33,43 @@ create_filename <- function(x,lines=-1) {
   }
 }
 
-
-
 load_DT_prob_table <- function (n,lines=-1) {
   
-  if (n == 1) {
-    var.name <- "DT.uni.prob"
-    file.name <- create_filename("DT_uni_prob_final",lines)
-  } else if (n == 2) {
-    var.name <- "DT.bi.prob"
-    file.name <- create_filename("DT_bi_prob_final",lines)
-  } else if (n == 3) {
-    var.name <- "DT.tri.prob"
-    file.name <- create_filename("DT_tri_prob_final",lines)
-  } else if (n == 4) {
-    var.name <- "DT.quad.prob"
-    file.name <- create_filename("DT_quad_prob_final",lines)
-  }
+  switch(n,
+         "1"= {
+           var.name <- "DT.uni.prob"
+           file.name <- create_filename("DT_uni_prob_final",lines)
+         },
+         "2"= {
+           var.name <- "DT.bi.prob"
+           file.name <- create_filename("DT_bi_prob_final",lines)
+         },
+         "3"= {
+           var.name <- "DT.tri.prob"
+           file.name <- create_filename("DT_tri_prob_final",lines)
+         },
+         "4"= {
+           var.name <- "DT.quad.prob"
+           file.name <- create_filename("DT_quad_prob_final",lines)
+         } 
+  )
+         
+         
+         
+  
+  #if (n == 1) {
+  #  var.name <- "DT.uni.prob"
+  #  file.name <- create_filename("DT_uni_prob_final",lines)
+  #} else if (n == 2) {
+  #  var.name <- "DT.bi.prob"
+  #  file.name <- create_filename("DT_bi_prob_final",lines)
+  #} else if (n == 3) {
+  #  var.name <- "DT.tri.prob"
+  #  file.name <- create_filename("DT_tri_prob_final",lines)
+  #} else if (n == 4) {
+  #  var.name <- "DT.quad.prob"
+  #  file.name <- create_filename("DT_quad_prob_final",lines)
+  #}
   
   #Validate if the DT exists in the enviroment
   if (!exists(var.name)) {
@@ -63,21 +83,24 @@ load_DT_prob_table <- function (n,lines=-1) {
       
       print(paste("Initialization of DT Prob Table from:",var.name, sep =""))
       
-      if (n == 1) {
-        DT.uni.prob <<- as.data.table(DT.uni.prob, key = "t1")
-        #DT.uni.prob[,prob:=pkn1,]
-        
-        
-      } else if (n == 2) {
-        DT.bi.prob <<- as.data.table(DT.bi.prob, key = "t1,t2")
-        #DT.bi.prob[,prob:=pkn1,]
-      } else if (n == 3) {
-        DT.tri.prob <<- as.data.table(DT.tri.prob, key = "t1,t2,t3")
-        #DT.tri.prob[,prob:=pkn1,]
-      } else if (n == 4) {
-        DT.quad.prob <<- as.data.table(DT.quad.prob, key = "t1,t2,t3,t4")
-        #DT.quad.prob[,prob:=pkn1,]
-      }
+      switch(n,
+             "1" = DT.uni.prob <<- as.data.table(DT.uni.prob, key = "t1"),
+             "2" = DT.bi.prob <<- as.data.table(DT.bi.prob, key = "t1,t2"),
+             "3" = DT.tri.prob <<- as.data.table(DT.tri.prob, key = "t1,t2,t3"),
+             "4" = DT.quad.prob <<- as.data.table(DT.quad.prob, key = "t1,t2,t3,t4")
+      )
+             
+            
+      
+      #if (n == 1) {
+      #  DT.uni.prob <<- as.data.table(DT.uni.prob, key = "t1")
+      #} else if (n == 2) {
+      #  DT.bi.prob <<- as.data.table(DT.bi.prob, key = "t1,t2")
+      #} else if (n == 3) {
+      #  DT.tri.prob <<- as.data.table(DT.tri.prob, key = "t1,t2,t3")
+      #} else if (n == 4) {
+      #  DT.quad.prob <<- as.data.table(DT.quad.prob, key = "t1,t2,t3,t4")
+      #}
       t2 <- proc.time()
       
       print(paste("-----> load_DT_prob_table: Running Time .......",
@@ -131,7 +154,7 @@ topn_predict <- function(x,p=0,n=5,f=1) {
     
     num_words <- nrow(topn)
     
-    print(paste("...Found:",num_words," words ..."))
+    print(paste("... Found:",num_words," words ..."))
     print(topn)
     
     if (num_words < n) {

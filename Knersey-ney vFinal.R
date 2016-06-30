@@ -42,19 +42,38 @@ create_filename <- function(x,lines) {
 
 load_DT_table <- function (n,lines=-1) {
   
-  if (n == 1) {
-    var.name <- "DT.uni"
-    file.name <- create_filename("DT_uni",lines)
-  } else if (n == 2) {
-    var.name <- "DT.bi"
-    file.name <- create_filename("DT_bi",lines)
-  } else if (n == 3) {
-    var.name <- "DT.tri"
-    file.name <- create_filename("DT_tri",lines)
-  } else if (n == 4) {
-    var.name <- "DT.quad"
-    file.name <- create_filename("DT_quad",lines)
-  }
+  switch(n,
+         "1" = {
+           var.name <- "DT.uni"
+           file.name <- create_filename("DT_uni",lines)
+         },
+         "2" = {
+           var.name <- "DT.bi"
+           file.name <- create_filename("DT_bi",lines)
+         },
+         "3" = {
+           var.name <- "DT.tri"
+           file.name <- create_filename("DT_tri",lines)
+         },
+         "4" = {
+           var.name <- "DT.quad"
+           file.name <- create_filename("DT_quad",lines)
+         }
+  )
+
+  #if (n == 1) {
+  #  var.name <- "DT.uni"
+  #  file.name <- create_filename("DT_uni",lines)
+  #} else if (n == 2) {
+  #  var.name <- "DT.bi"
+  #  file.name <- create_filename("DT_bi",lines)
+  #} else if (n == 3) {
+  #  var.name <- "DT.tri"
+  #  file.name <- create_filename("DT_tri",lines)
+  #} else if (n == 4) {
+  #  var.name <- "DT.quad"
+  #  file.name <- create_filename("DT_quad",lines)
+  #}
   
   #Validate if the DT exists in the enviroment
   if (!exists(var.name)) {
@@ -67,16 +86,26 @@ load_DT_table <- function (n,lines=-1) {
       load(file.name,.GlobalEnv) 
       
       print(paste("Creating DT Table from:",var.name, sep =""))
-      
-      if (n == 1) {
-        DT.uni <<- as.data.table(DT.uni, key = "t1")
-      } else if (n == 2) {
-        DT.bi <<- as.data.table(DT.bi, key = "t1,t2")
-      } else if (n == 3) {
-        DT.tri <<- as.data.table(DT.tri, key = "t1,t2,t3")
-      } else if (n == 4) {
-        DT.quad <<- as.data.table(DT.quad, key = "t1,t2,t3,t4")
-      }
+   
+      switch(n,
+             "1" = DT.uni <<- as.data.table(DT.uni, key = "t1"),
+             "2" = DT.bi <<- as.data.table(DT.bi, key = "t1,t2"),
+             "3" = DT.tri <<- as.data.table(DT.tri, key = "t1,t2,t3"),
+             "4" = DT.quad <<- as.data.table(DT.quad, key = "t1,t2,t3,t4")
+      )
+             
+             
+             
+         
+      #if (n == 1) {
+      #  DT.uni <<- as.data.table(DT.uni, key = "t1")
+      #} else if (n == 2) {
+      #  DT.bi <<- as.data.table(DT.bi, key = "t1,t2")
+      #} else if (n == 3) {
+      #  DT.tri <<- as.data.table(DT.tri, key = "t1,t2,t3")
+      #} else if (n == 4) {
+      #  DT.quad <<- as.data.table(DT.quad, key = "t1,t2,t3,t4")
+      #}
       t2 <- proc.time()
       print(paste("-----> load_DT_table: Running Time .......",
                   elapsed_time(t1,t2)," seconds ...",sep=""))
@@ -92,20 +121,28 @@ load_DT_table <- function (n,lines=-1) {
 
 init_DT_table <- function (n,lines=-1,p1=5) { 
 
-  # Values needed for Knersey-prob
+  # Values needed for Knersey-ney prob calculations
   p1 <<- p1
   p2 <<- p1 + 1
   
-  if (n == 1) {
-    file.name <- create_filename("DT_uni_prob_temp",lines)
-  } else if (n == 2) {
-    var.name <- "DT.bi.prob"
-    file.name <- create_filename("DT_bi_prob_temp",lines)
-  } else if (n == 3) {
-    file.name <- create_filename("DT_tri_prob_temp",lines)
-  } else if (n == 4) {
-    file.name <- create_filename("DT_quad_prob_temp",lines)
-  }
+  switch(n,
+         "1"= file.name <- create_filename("DT_uni_prob_temp",lines),
+         "2"= file.name <- create_filename("DT_bi_prob_temp",lines),
+         "3"= file.name <- create_filename("DT_tri_prob_temp",lines),
+         "4"= file.name <- create_filename("DT_quad_prob_temp",lines)
+  )
+  
+  
+  #if (n == 1) {
+  #  file.name <- create_filename("DT_uni_prob_temp",lines)
+  #} else if (n == 2) {
+  #  var.name <- "DT.bi.prob"
+  #  file.name <- create_filename("DT_bi_prob_temp",lines)
+  #} else if (n == 3) {
+  #  file.name <- create_filename("DT_tri_prob_temp",lines)
+  #} else if (n == 4) {
+  #  file.name <- create_filename("DT_quad_prob_temp",lines)
+  #}
   
   #Validate if exists a DT probability temporal table
   if (file.exists(file.name)) {
@@ -116,87 +153,159 @@ init_DT_table <- function (n,lines=-1,p1=5) {
     # Init DT table
     print(paste("-----> init_DT_table(",n,",",p1,").......",sep=""))
     t1 <- proc.time()
+   
+    switch(n,
+           "1" = DT.uni <<- DT.uni[ freq >= p1,
+                                    c("n11","n12","l1","l2","a1","a2","pkn1","pkn2") :=
+                                      list(-1,-1,-1,-1,-1,-1,-1,-1),
+                                    ],
+           "2" = DT.bi <<- DT.bi[ freq >= p1,
+                         c("n11","n12","l1","l2","a1","a2","pkn1","pkn2") :=
+                           list(-1,-1,-1,-1,-1,-1,-1,-1),
+                         ],
+           
+           "3" = DT.tri <<- DT.tri[ freq >= p1,
+                                  c("n11","n12","l1","l2","a1","a2","pkn1","pkn2") :=
+                                    list(-1,-1,-1,-1,-1,-1,-1,-1),
+                                  ],
+           
+           "4" = DT.quad <<- DT.quad[ freq >= p1,
+                                    c("n11","n12","l1","l2","a1","a2","pkn1","pkn2") :=
+                                      list(-1,-1,-1,-1,-1,-1,-1,-1),
+                                    ]
+    )
+           
     
-    if (n==1) {
-      DT.uni <<- DT.uni[freq >= p1,,]
-      DT.uni[,n11:=-1,]
-      DT.uni[,n12:=-1,]
-      DT.uni[,l1:=-1,]
-      DT.uni[,l2:=-1,]
-      DT.uni[,a1:=-1,]
-      DT.uni[,a2:=-1,]
-      DT.uni[,pkn1:=-1,]
-      DT.uni[,pkn2:=-1,]
+    #if (n==1) {
+      # Remove ngrams with freq < p1, create new columns to keep some values
+      # needed for recursive implementation:
+      #   n11: 
+      #   n12:
+      #   l1: lambda of high order
+      #   l2: lambda of low order
+      #   pkn1: knersey-ney probability for high order
+      #   pkn2: knersey-ney probability for low order
+     # DT.uni <<- DT.uni[ freq >= p1,
+    #                    c("n11","n12","l1","l2","a1","a2","pkn1","pkn2") :=
+     #                     list(-1,-1,-1,-1,-1,-1,-1,-1),
+      #                  ]
+      #DT.uni
       
-    } else if (n==2) {
-      DT.bi <<- DT.bi[freq >= p1,,]
-      DT.bi[,n11:=-1,]
-      DT.bi[,n12:=-1,]
-      DT.bi[,l1:=-1,]
-      DT.bi[,l2:=-1,]
-      DT.bi[,pkn1:=-1,]
-      DT.bi[,pkn2:=-1,]
-      DT.bi[,a1:=-1,]
-      DT.bi[,a2:=-1,]
+      #DT.uni[,n11:=-1,]
+      #DT.uni[,n12:=-1,]
+      #DT.uni[,l1:=-1,]
+      #DT.uni[,l2:=-1,]
+      #DT.uni[,a1:=-1,]
+      #DT.uni[,a2:=-1,]
+      #DT.uni[,pkn1:=-1,]
+      #DT.uni[,pkn2:=-1,]
       
-    } else if (n==3) {
-      DT.tri <<- DT.tri[freq >= p1,,]
-      DT.tri[,n11:=-1,]
-      DT.tri[,n12:=-1,]
-      DT.tri[,l1:=-1,]
-      DT.tri[,l2:=-1,]
-      DT.tri[,pkn1:=-1,]
-      DT.tri[,pkn2:=-1,]
-      DT.tri[,a1:=-1,]
-      DT.tri[,a2:=-1,]
+   # } else if (n==2) {
+  #    DT.bi <<- DT.bi[freq >= p1,,]
+  #    DT.bi[,n11:=-1,]
+  #    DT.bi[,n12:=-1,]
+  #    DT.bi[,l1:=-1,]
+  #    DT.bi[,l2:=-1,]
+  #    DT.bi[,pkn1:=-1,]
+  #    DT.bi[,pkn2:=-1,]
+  #    DT.bi[,a1:=-1,]
+  #    DT.bi[,a2:=-1,]
       
-    } else if (n==4) {
-      DT.quad <<- DT.quad[freq >= p1,,]
-      DT.quad[,n11:=-1,]
-      DT.quad[,n12:=-1,]
-      DT.quad[,l1:=-1,]
-      DT.quad[,l2:=-1,]
-      DT.quad[,pkn1:=-1,]
-      DT.quad[,pkn2:=-1,]
-      DT.quad[,a1:=-1,]
-      DT.quad[,a2:=-1,]
+   # } else if (n==3) {
+  #    DT.tri <<- DT.tri[freq >= p1,,]
+  #    DT.tri[,n11:=-1,]
+  #    DT.tri[,n12:=-1,]
+  #    DT.tri[,l1:=-1,]
+  #    DT.tri[,l2:=-1,]
+  #    DT.tri[,pkn1:=-1,]
+  #    DT.tri[,pkn2:=-1,]
+  #    DT.tri[,a1:=-1,]
+  #    DT.tri[,a2:=-1,]
       
-    }
+  #  } else if (n==4) {
+  #    DT.quad <<- DT.quad[freq >= p1,,]
+  #    DT.quad[,n11:=-1,]
+  #    DT.quad[,n12:=-1,]
+  #    DT.quad[,l1:=-1,]
+  #    DT.quad[,l2:=-1,]
+  #    DT.quad[,pkn1:=-1,]
+  #    DT.quad[,pkn2:=-1,]
+  #    DT.quad[,a1:=-1,]
+  #    DT.quad[,a2:=-1,]
+      
+  #  }
     t2 <- proc.time()
-    
-    
     
     print("-----> init_DT_table: Running Time .......")
     print(t2 - t1)
   }
   
-  if (n == 1) {
-    n.uni <<- nrow(DT.uni)
+  switch(n, # Calculate important values for Knersey-ney, including discount values 
+            # (D2, D3, D4) for lambda function
+            
+         "1"= n.uni <<- nrow(DT.uni),
+         
+         "2"={
 
-  } else if (n ==2) {
-    n.bi <<- nrow(DT.bi)
+           #   n1: number of bigrams that occurs exactly p1 times
+           #   n2: number of bigrams that occurs exactly p1+1 times
+           #   D2 = n1 / (n1 + 2 * n2)
+           
+           n.bi <<- nrow(DT.bi)
+           n1.bi <<- nrow(DT.bi[freq == p1,,])
+           n2.bi <<- nrow(DT.bi[freq == p2,,])
+           D2 <<- n1.bi / (n1.bi + 2 * n2.bi) 
+         },
+         
+         "3"={
+           #   n1: number of trigrams that occurs exactly p1 times
+           #   n2: number of trigrams that occurs exactly p1+1 times
+           #   D3 = n1 / (n1 + 2 * n2)
+           n.tri <<- nrow(DT.tri)
+           n1.tri <<- nrow(DT.tri[freq == p1,,])
+           n2.tri <<- nrow(DT.tri[freq == p2,,])
+           D3 <<- n1.tri / (n1.tri + 2 * n2.tri) 
+         },
+         
+         "4"={
+           #   n1: number of quadgrams that occurs exactly p1 times
+           #   n2: number of quadgrams that occurs exactly p1+1 times
+           #   D4 = n1 / (n1 + 2 * n2)
+           n.quad <<- nrow(DT.quad)
+           n1.quad <<- nrow(DT.quad[freq == p1,,])
+           n2.quad <<- nrow(DT.quad[freq == p2,,])
+           D4 <<- n1.quad / (n1.quad + 2 * n2.quad) 
+         }
+         
+  )
+  
+  #if (n == 1) {
+  #  n.uni <<- nrow(DT.uni)
+
+  #} else if (n ==2) {
+  #  n.bi <<- nrow(DT.bi)
     ######### Discount values (D1, D2, D3) for lambda function
     #
     #   n1: number of ngrams that occurs exactly one time
     #   n2: number of ngrams that occurs exactly two times
     #    D1 = n1 / (n1 + 2 * n2)
     
-    n1.bi <<- nrow(DT.bi[freq == p1,,])
-    n2.bi <<- nrow(DT.bi[freq == p2,,])
-    D2 <<- n1.bi / (n1.bi + 2 * n2.bi) 
-  } else if (n==3) {
-    n.tri <<- nrow(DT.tri)
+  #  n1.bi <<- nrow(DT.bi[freq == p1,,])
+  #  n2.bi <<- nrow(DT.bi[freq == p2,,])
+  #  D2 <<- n1.bi / (n1.bi + 2 * n2.bi) 
+  #} else if (n==3) {
+  #  n.tri <<- nrow(DT.tri)
     ######### Discount values (D1, D2, D3) for lambda function
     #
     #   n1: number of ngrams that occurs exactly one time
     #   n2: number of ngrams that occurs exactly two times
     #    D1 = n1 / (n1 + 2 * n2)
     
-    n1.tri <<- nrow(DT.tri[freq == p1,,])
-    n2.tri <<- nrow(DT.tri[freq == p2,,])
-    D3 <<- n1.tri / (n1.tri + 2 * n2.tri) 
-  } else if (n==4) {
-    n.quad <<- nrow(DT.quad)
+  #  n1.tri <<- nrow(DT.tri[freq == p1,,])
+  #  n2.tri <<- nrow(DT.tri[freq == p2,,])
+  #  D3 <<- n1.tri / (n1.tri + 2 * n2.tri) 
+  #} else if (n==4) {
+  #  n.quad <<- nrow(DT.quad)
     ######### Discount values (D1, D2, D3) for lambda function
     #
     #   n1: number of ngrams that occurs exactly one time
@@ -204,10 +313,10 @@ init_DT_table <- function (n,lines=-1,p1=5) {
     #    D1 = n1 / (n1 + 2 * n2)
     #    
     
-    n1.quad <<- nrow(DT.quad[freq == p1,,])
-    n2.quad <<- nrow(DT.quad[freq == p2,,])
-    D4 <<- n1.quad / (n1.quad + 2 * n2.quad) 
-  }
+   # n1.quad <<- nrow(DT.quad[freq == p1,,])
+  #  n2.quad <<- nrow(DT.quad[freq == p2,,])
+  #  D4 <<- n1.quad / (n1.quad + 2 * n2.quad) 
+  #}
   
 }
   
@@ -363,43 +472,44 @@ N1plus_suc <- function(x) {
 }
 
 ngram_count <- function(x) {
-  # Count the number of times that the n-gram x appears on dt
+  # Count the number of times that the ngram x appears on DT
   # Parameters:
-  #   x:  n-gram to be considered, with the following format
-  #       c("t1") # unigram
-  #       c("t1",t2") # bigram
-  #   l:  integer that identified the type of x
-  #       1 #unigram
-  #       2 #bigram
-  #   dt: data table that have the frequency for each ngram
-  #     for bigrams:
-  #     c("t1","t2","freq","prob") # bigram
-  #     c("t1","t2","t3","freq","prob") # trigram
+  #   x:  n-gram to be considered
   
   l <- length(x)
-  if (l == 1) {
+  switch(l,
+         "1" = DT.uni[t1 == x[1],freq,],
+         "2" = DT.bi[t1 == x[1] & t2 == x[2],freq,],
+         "3" = DT.tri[t1 == x[1] & t2 == x[2] & t3 == x[3],freq,],
+         "4" = DT.quad[t1 == x[1] & t2 == x[2] & t3 == x[3] & t4 == x[4],freq,]
+  )
+         
+         
+         
+   #      )
+  #if (l == 1) {
     ## Provide the frequency of the ngram on unigram table
     
     #(uni.dt[which(uni.dt$t1 == x[1]),])$freq
     
-    DT.uni[t1 == x[1],freq,]
+   # DT.uni[t1 == x[1],freq,]
     
-  } else if (l == 2) {
+  #} else if (l == 2) {
     ## Provide the frequency of the ngram on bigram table
     
     #(bi.dt[which(bi.dt$t1 == x[1] & 
     #               bi.dt$t2 == x[2]),])$freq
-    DT.bi[t1 == x[1] & t2 == x[2],freq,]
+   # DT.bi[t1 == x[1] & t2 == x[2],freq,]
     
-  } else if (l == 3) {
+  #} else if (l == 3) {
     ## Provide the frequency of the ngram on trigram table
     
     #(tri.dt[which(tri.dt$t1 == x[1] & 
     #                tri.dt$t2 == x[2] &
     #                tri.dt$t3 == x[3] ),])$freq
-    DT.tri[t1 == x[1] & t2 == x[2] & t3 == x[3],freq,]
+   # DT.tri[t1 == x[1] & t2 == x[2] & t3 == x[3],freq,]
     
-  } else if (l == 4) {
+  #} else if (l == 4) {
     ## Provide the frequency of the ngram on quadgram table
     
     #(quad.dt[which(quad.dt$t1 == x[1] & 
@@ -407,26 +517,16 @@ ngram_count <- function(x) {
     #                 quad.dt$t3 == x[3] &
     #                 quad.dt$t4 == x[4]),])$freq
     
-    DT.quad[t1 == x[1] & t2 == x[2] & t3 == x[3] & t4 == x[4],freq,]
+   # DT.quad[t1 == x[1] & t2 == x[2] & t3 == x[3] & t4 == x[4],freq,]
     
-  }
+  #}
   
 }
 
 
 count_kn <- function(x,high_order) {
-  # Count the number of times that the n-gram x appears on dt
-  # Parameters:
-  #   x:  n-gram to be considered, with the following format
-  #       c("t1") # unigram
-  #       c("t1",t2") # bigram
-  #   l:  integer that identified the type of x
-  #       1 #unigram
-  #       2 #bigram
-  #   dt: data table that have the frequency for each ngram
-  #     for bigrams:
-  #     c("t1","t2","freq","prob") # bigram
-  #     c("t1","t2","t3","freq","prob") # trigram
+  # Count the number of times that the ngram x appears on DT,
+  # considering high or low order calculations.
   
   if (high_order) {
     # For high order calculations, use ngram_count(x)
@@ -453,73 +553,133 @@ alpha <- function(x,high_order) {
   #     c("t1","t2","t3","freq","prob") # trigram
   l <- length(x)
   r <- -1
-  if (l == 2) {
+  
+  switch(l,
+         "2" = { # bigrams, check the table for a1 or a2 values (high/low order)
+           if (high_order) {
+             r <- DT.bi[t1 == x[1] & t2 == x[2],a1,]
+           } else {
+             r <- DT.bi[t1 == x[1] & t2 == x[2],a2,]
+           }
+           
+           if (r<0) {
+             # alpha was not previously calculated, let's do it and save it
+             r <- max( count_kn(x,high_order) - D2, 0) / count_kn(x[1],high_order)
+             
+             if (high_order) {
+               DT.bi[t1 == x[1] & t2 == x[2],a1:=r,]
+             } else {
+               DT.bi[t1 == x[1] & t2 == x[2],a2:=r,]
+             }
+           }
+         },
+         
+         "3" = { # trigrams, check the table for a1 or a2 values (high/low order)
+           if (high_order) {
+             r <- DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a1,]
+           } else {
+             r <- DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a2,]
+           }
+           
+           if (r<0) {
+             # alpha was not previously calculated, let's do it and save it
+             r <- max( count_kn(x,high_order) - D3, 0) / count_kn(c(x[1],x[2]),high_order)
+             
+             if (high_order) {
+               DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a1:=r,]
+             } else {
+               DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a2:=r,]
+             }
+           }
+         },
+         "4" = { # quadgrams, check the table for a1 or a2 values (high/low order)  
+           if (high_order) {
+             r <- DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a1,]
+           } else {
+             r <- DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a2,]
+           }
+           
+           if (r<0) {
+             # alpha was not previously calculated, let's do it and save it
+             r <- max( count_kn(x,high_order) - D4, 0) / count_kn(c(x[1],x[2],x[3]),high_order)
+             
+             if (high_order) {
+               DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a1:=r,]
+             } else {
+               DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a2:=r,]
+             }    
+           }
+         }
+  )
+           
+      
+  
+  #if (l == 2) {
     # For bigrams use D2 for calculation
     
-    if (high_order) {
-      r <- DT.bi[t1 == x[1] & t2 == x[2],a1,]
-    } else {
-      r <- DT.bi[t1 == x[1] & t2 == x[2],a2,]
-    }
+   # if (high_order) {
+  #    r <- DT.bi[t1 == x[1] & t2 == x[2],a1,]
+  #  } else {
+  #    r <- DT.bi[t1 == x[1] & t2 == x[2],a2,]
+  #  }
     
-    
-    if (r<0)
-    {
-      #r <- (D2 / count_kn(x,high_order)) * N1plus_suc(x)
-      r <- max( count_kn(x,high_order) - D2, 0) / count_kn(x[1],high_order)
+  #  if (r<0)
+  #  {
+      # alpha was not previously calculated, let's do it and save it
+   #   r <- max( count_kn(x,high_order) - D2, 0) / count_kn(x[1],high_order)
       
-      if (high_order) {
-        DT.bi[t1 == x[1] & t2 == x[2],a1:=r,]
-      } else {
-        DT.bi[t1 == x[1] & t2 == x[2],a2:=r,]
-      }
-    }
+  #    if (high_order) {
+   #     DT.bi[t1 == x[1] & t2 == x[2],a1:=r,]
+  #    } else {
+  #      DT.bi[t1 == x[1] & t2 == x[2],a2:=r,]
+  #    }
+  #  }
     
     
-  } else if (l == 3) {
+  #} else if (l == 3) {
     # For trigrams use D3 for calculation 
     
-    if (high_order) {
-      r <- DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a1,]
-    } else {
-      r <- DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a2,]
-    }
+   # if (high_order) {
+  #    r <- DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a1,]
+  #  } else {
+  #    r <- DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a2,]
+  #  }
     
-    if (r<0) {
+   # if (r<0) {
       #r <- (D3 / count_kn(x,high_order)) * N1plus_suc(x)
-      r <- max( count_kn(x,high_order) - D3, 0) / count_kn(c(x[1],x[2]),high_order)
+  #    r <- max( count_kn(x,high_order) - D3, 0) / count_kn(c(x[1],x[2]),high_order)
       
       
-      if (high_order) {
-        DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a1:=r,]
-      } else {
-        DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a2:=r,]
-      }
-    }
+   #   if (high_order) {
+    #    DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a1:=r,]
+     # } else {
+    #    DT.tri[t1 == x[1] & t2 == x[2] & t3 ==x[3],a2:=r,]
+    #  }
+    #}
     
     
-  } else if (l == 4) {
+  #} else if (l == 4) {
     # For quadgrams use D4 for calculation 
     
-    if (high_order) {
-      r <- DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a1,]
-    } else {
-      r <- DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a2,]
-    }
+  #  if (high_order) {
+  #    r <- DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a1,]
+  #  } else {
+   #   r <- DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a2,]
+  #  }
     
-    if (r<0) {
+   # if (r<0) {
       #r <- (D4 / count_kn(x,high_order)) * N1plus_suc(x)
-      r <- max( count_kn(x,high_order) - D4, 0) / count_kn(c(x[1],x[2],x[3]),high_order)
+    #  r <- max( count_kn(x,high_order) - D4, 0) / count_kn(c(x[1],x[2],x[3]),high_order)
       
       #max( N1plus_pre(x) - D4, 0) / N1plus_pre(c(x[1],x[2],x[3]))
       
-      if (high_order) {
-        DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a1:=r,]
-      } else {
-        DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a2:=r,]
-      }    
-    }
-  }
+     # if (high_order) {
+     #   DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a1:=r,]
+     # } else {
+    #    DT.quad[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a2:=r,]
+    #  }    
+    #}
+  #}
   r
 }
 
@@ -747,23 +907,48 @@ calculate_prob_kn_range <- function(n,lines=-1,init,final)
   
 calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
     
-  if (n == 1) {
-    var.name <- "DT.uni.prob"
-    file.name <- create_filename("DT_uni_prob",lines)
-    file.name.final <- create_filename("DT_uni_prob_final",lines)
-  } else if (n == 2) {
-    var.name <- "DT.bi.prob"
-    file.name <- create_filename("DT_bi_prob",lines)
-    file.name.final <- create_filename("DT_bi_prob_final",lines)
-  } else if (n == 3) {
-    var.name <- "DT.tri.prob"
-    file.name <- create_filename("DT_tri_prob",lines)
-    file.name.final <- create_filename("DT_tri_prob_final",lines)
-  } else if (n == 4) {
-    var.name <- "DT.quad.prob"
-    file.name <- create_filename("DT_quad_prob",lines)
-    file.name.final <- create_filename("DT_quad_prob_final",lines)
-  }
+  switch(n,
+         "1" = {
+           var.name <- "DT.uni.prob"
+           file.name <- create_filename("DT_uni_prob",lines)
+           file.name.final <- create_filename("DT_uni_prob_final",lines)
+         },
+         "2" = {
+           var.name <- "DT.bi.prob"
+           file.name <- create_filename("DT_bi_prob",lines)
+           file.name.final <- create_filename("DT_bi_prob_final",lines)
+         },
+         "3" = {
+           var.name <- "DT.tri.prob"
+           file.name <- create_filename("DT_tri_prob",lines)
+           file.name.final <- create_filename("DT_tri_prob_final",lines)
+         },
+         "4" = {
+           var.name <- "DT.quad.prob"
+           file.name <- create_filename("DT_quad_prob",lines)
+           file.name.final <- create_filename("DT_quad_prob_final",lines)
+         }
+  )
+  
+  
+         
+  #if (n == 1) {
+  #  var.name <- "DT.uni.prob"
+  #  file.name <- create_filename("DT_uni_prob",lines)
+  #  file.name.final <- create_filename("DT_uni_prob_final",lines)
+  #} else if (n == 2) {
+  #  var.name <- "DT.bi.prob"
+  #  file.name <- create_filename("DT_bi_prob",lines)
+  #  file.name.final <- create_filename("DT_bi_prob_final",lines)
+  #} else if (n == 3) {
+  #  var.name <- "DT.tri.prob"
+  #  file.name <- create_filename("DT_tri_prob",lines)
+  #  file.name.final <- create_filename("DT_tri_prob_final",lines)
+  #} else if (n == 4) {
+  #  var.name <- "DT.quad.prob"
+  #  file.name <- create_filename("DT_quad_prob",lines)
+  #  file.name.final <- create_filename("DT_quad_prob_final",lines)
+  #}
   
   #Validate if the DT with the probability exists in the enviroment
   if (!exists(var.name)) {
@@ -794,7 +979,7 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
           t1 <- as.character(DT.uni[i,t1,])
           prob_kneser_ney(c(t1))
           
-          ### To give some feedback, print a message each 10%
+          ### To give some feedback, print a message each 1%
           if (k==percent_1) {
             nic2 <- proc.time()
             print(paste("......",m,"% done in ",
@@ -842,7 +1027,7 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
           t2 <- as.character(DT.bi[i,t2,])
           prob_kneser_ney(c(t1,t2))
           
-          ### To give some feedback, print a message each 10%
+          ### To give some feedback, print a message each 1%
           if (k==percent_1) {
             nic2 <- proc.time()
             print(paste("......",m,"% done in ",
@@ -888,7 +1073,7 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
           t3 <- as.character(DT.tri[i,t3,])
           prob_kneser_ney(c(t1,t2,t3))
           
-          ### To give some feedback, print a message each 10%
+          ### To give some feedback, print a message each 1%
           if (k==percent_1) {
             nic2 <- proc.time()
             print(paste("......",m,"% done in ",
@@ -897,7 +1082,7 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
             k <- 1
             m <- m + 1
           } else { k <- k + 1}
-          #print(paste(" i:",i," total:",numlines," percent10:",percent_1," k:",k," m:",m))
+          #print(paste(" i:",i," total:",numlines," percent1:",percent_1," k:",k," m:",m))
         }
         #print(paste("... Saving DT probability file:",file.name,sep=""))
         #save(DT.tri,file=file.name)
