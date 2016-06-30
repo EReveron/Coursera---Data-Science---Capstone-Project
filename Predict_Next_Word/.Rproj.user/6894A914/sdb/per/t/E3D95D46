@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "# This is the global.R file for a Shiny web application.\n# Author: Enrique Reveron\n# Date: 2016-06-27\n# Content: This Shiny Apps predict the next word for english language using\n#          Knersey-ney Algoritm and Backoff\n\nlibrary(shiny)\nlibrary(googleVis)\nlibrary(RColorBrewer)\nlibrary(wordcloud)\n#library(memoise)\nlibrary(DT)\nlibrary(markdown)\nlibrary(rWordCloud)\n\nsetwd(\"D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project\")\n\nsource(\"Pred Next Word vFinal.R\")\nsource(\"Pred Next Word Regex vFinal.R\")\nsource(\"Main Predict Word vFinal.R\")\n\n\n#setwd(\"D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/FINAL2/Final 27-06\")\n\n#DT.uni.prob\n\n#load_DT_prob_table(1,100)\n#load_DT_prob_table(2,100)\n#load_DT_prob_table(3,100)\n#load_DT_prob_table(4,100)\n\n#setwd(\"D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project\")\n\n\n\n\n",
+    "created" : 1467127113276.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2508930477",
+    "id" : "E3D95D46",
+    "lastKnownWriteTime" : 1467288793,
+    "last_content_update" : 1467288793943,
+    "path" : "D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project/Predict_Next_Word/global.R",
+    "project_path" : "global.R",
+    "properties" : {
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 7,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

@@ -8,58 +8,79 @@
 
 shinyUI(
   fluidPage(
-    
-    titlePanel("Predict Next Word with Knersey-ney Algorithm and Backoff"),
-    
-    sidebarLayout(
-      sidebarPanel(
-        helpText(paste("This app create demographic maps with information from ITU-T 2000-2014.",
-                       "This apps use the GoogleVis library to make the plots.")),
-        
-        helpText(paste("Please select the variable to display (Fixed, Mobile) and the",
-                       "years Range of interest.")),
-        helpText(paste("If you want to plot the total amount of subscriptions in a specific",
-                       "year, please select the same year from beginning to end.")),
-        helpText(paste("When is selected a year range, the Apps will show the diff (Year2 - Year1).")),
-        
-        selectInput("pred_method", 
-                    label = "Select the Prediction method to display:",
-                    choices = c("Based on Complete Words" = 1, 
-                                "Based on Incomplete Words" = 2)),
-        
-        sliderInput("prob",
-                    label = "Minimun Probability of the Words to Get:",
-                    min = 0, max = 1,
-                    value = 0.5)
-        
-      ),
-      
-      mainPanel(
-        h3(textOutput("var")),  
-        textInput("text_string", 
-                  label = "", 
-                  value = "",
-                  placeholder = "Type your text here ..."),
-        
-        hr(),
-        plotOutput("word_cloud"),
-        fluidRow(column(5, h3(textOutput("prediction1"))),
-                 column(6, h3(textOutput("prediction2")))),
-        
-        
-        #htmlOutput("table"),
-        DT::dataTableOutput("table"),
-        
-        #h3(textOutput("prediction1")),
-        #h3(textOutput("prediction2")),
-        h3(textOutput("prediction3")),
-        h3(textOutput("prediction4")),
-        h3(textOutput("prediction5"))
-        #plotOutput("word_cloud")
-        
-      )
+    navbarPage("Predictor!",
+               tabPanel("Main",
+                        #titlePanel("Predict Next Word with Knersey-ney Algorithm and Backoff"),
+                        sidebarLayout(
+                          sidebarPanel(
+                            #helpText(paste("This app create demographic maps with information from ITU-T 2000-2014.",
+                            #               "This apps use the GoogleVis library to make the plots.")),
+                            
+                            #helpText(paste("Please select the variable to display (Fixed, Mobile) and the",
+                            #               "years Range of interest.")),
+                            #helpText(paste("If you want to plot the total amount of subscriptions in a specific",
+                            #               "year, please select the same year from beginning to end.")),
+                            #helpText(paste("When is selected a year range, the Apps will show the diff (Year2 - Year1).")),
+                            
+                            div(class = "option-group",
+                                radioButtons("pred_method", "Prediction Method",
+                                             choices = c("Complete Words", "Incomplete Words"), inline = TRUE)
+                            ),
+                            #hr(),
+                            
+                            #selectInput("pred_method", 
+                            #            label = "Select the Prediction method to display:",
+                            #            choices = c("Based on Complete Words" = 1, 
+                            #                        "Based on Incomplete Words" = 2)),
+                            div(class = "option-group",
+                                sliderInput("minprob",
+                                            label = "Probability Range:",
+                                            min = 0, max = 0.25,
+                                            value = 0)
+                            ),
+                            div(class = "option-group",
+                                sliderInput("maxwords",
+                                            label = "Maximun Number of Words:",
+                                            min = 0, max = 20,
+                                            value = 5)
+                            ),
+                            h4("Results Table:"),
+                            div(class = "option-result",
+                                div(class = "option-header", "Results"),
+                                div(class = "option-header", 
+                                    dataTableOutput("table"))
+                            )
+                          ), 
+                          mainPanel(
+                            textInput("text_string", 
+                                      label = "", 
+                                      value = "",
+                                      width = '100%',
+                                      placeholder = "Type your text here ..."),
+                            plotOutput("word_cloud")
+                          )
+                        )
+               ),
+               
+               tabPanel("Report",
+                        includeMarkdown("Final Report v2.Rmd")
+               ),
+               navbarMenu("More",
+                          tabPanel('Unigrams Probability Table',
+                                   dataTableOutput("unigrams_table")),
+                          tabPanel('Bigrams Probability Table',
+                                   dataTableOutput("bigrams_table")),
+                          tabPanel('Trigrams Probability Table',
+                                   dataTableOutput("trigrams_table"))
+               )
+              
     )
   )
 )
-    
-  
+               
+                            
+                          
+                 
+                 
+                       
+      

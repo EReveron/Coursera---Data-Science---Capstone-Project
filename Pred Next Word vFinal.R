@@ -139,7 +139,10 @@ topn_predict <- function(x,p=0,n=5,f=1) {
       print("... Default Checking Probability in Unigram Data Table")
       
       #a <- DT.uni.prob[head(order(-prob),n -num_words)] 
-      a <- DT.uni.prob[head(order(-prob),n)] 
+      
+      a <- DT.uni.prob[prob >= p,,]
+      
+      a <- a[head(order(-prob),n)] 
       a[,word:=t1,] 
       a <- a[,list(word,prob),]
   
@@ -211,7 +214,7 @@ topn_predict <- function(x,p=0,n=5,f=1) {
 }
 
 
-predict_nextword <- function(x,lines=-1,p=0,n=5) {
+predict_nextword <- function(x,p=0,n=5,lines=-1) {
   
   l <- length(x)
   

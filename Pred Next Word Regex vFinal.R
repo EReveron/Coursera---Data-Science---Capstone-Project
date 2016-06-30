@@ -48,6 +48,7 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
     regex_word <- paste("^",x[1],".",sep="")
     
     topn <- DT.uni.prob[grepl(regex_word,t1),,]
+    topn <- topn[((prob*f) >= p),,]
     topn <- topn[head(order(-prob),n)] 
     topn[,word:=t1,] 
     topn <- topn[,list(word,prob),]
@@ -61,7 +62,7 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
     
     regex_word <- paste("^",x[2],".",sep="")
     
-    topn <- DT.bi.prob[t1 == x[1],,]
+    topn <- DT.bi.prob[t1 == x[1] & ((prob*f) >= p),,]
     topn <- topn[grepl(regex_word,t2),,]
     
     topn <- topn[head(order(-prob),n)] 
@@ -83,7 +84,7 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
     
     regex_word <- paste("^",x[3],".",sep="")
     
-    topn <- DT.tri.prob[t1 == x[1] & t2 == x[2],,]
+    topn <- DT.tri.prob[t1 == x[1] & t2 == x[2] & ((prob*f) >= p),,]
     topn <- topn[grepl(regex_word,t3),,]
     
     topn <- topn[head(order(-prob),n)] 
@@ -105,7 +106,7 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
     
     regex_word <- paste("^",x[4],sep="")
     
-    topn <- DT.quad.prob[t1 == x[1] & t2 == x[2] & t3 == x[3],,]
+    topn <- DT.quad.prob[t1 == x[1] & t2 == x[2] & t3 == x[3] & ((prob*f) >= p),,]
     topn <- topn[grepl(regex_word,t4),,]
     
     topn <- topn[head(order(-prob),n)] 
@@ -132,7 +133,7 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
 }
 
 
-predict_nextword_regex <- function(x,lines=-1,p=0,n=5) {
+predict_nextword_regex <- function(x,p=0,n=5,lines=-1) {
   
   l <- length(x)
   

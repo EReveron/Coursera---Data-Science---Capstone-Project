@@ -8,8 +8,10 @@ library(shiny)
 library(googleVis)
 library(RColorBrewer)
 library(wordcloud)
-library(memoise)
+#library(memoise)
 library(DT)
+library(markdown)
+library(rWordCloud)
 
 setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
 
@@ -18,14 +20,16 @@ source("Pred Next Word Regex vFinal.R")
 source("Main Predict Word vFinal.R")
 
 
-setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/FINAL2/Final 27-06")
+#setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/FINAL2/Final 27-06")
 
-load_DT_prob_table(1,100)
-load_DT_prob_table(2,100)
-load_DT_prob_table(3,100)
-load_DT_prob_table(4,100)
+#DT.uni.prob
 
-setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
+#load_DT_prob_table(1,100)
+#load_DT_prob_table(2,100)
+#load_DT_prob_table(3,100)
+#load_DT_prob_table(4,100)
+
+#setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
 
 
 

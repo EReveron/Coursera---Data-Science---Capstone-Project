@@ -23,7 +23,6 @@ last_n_words <- function(s, num_words = 3) {
   
   l <- length(words_list)
   
-  
   if (l < num_words) {
     # Not enough words in the string, return all the words
     words_list
@@ -34,29 +33,42 @@ last_n_words <- function(s, num_words = 3) {
 }
 
 
-main_predict_word <- function(s, lines = -1) {
+main_predict_word <- function(s, p=0,n=5, consider_regex_words = TRUE, lines = -1) {
   
   if (s != "") {
-
     s <- tolower(s)
     print(paste("String:",s,"...",sep=""))
     
-    finish_word <- stri_endswith_fixed(s," ")
+    is_final_word <- stri_endswith_fixed(s," ")
     
     list_words <- last_n_words(s)
     
-    if (finish_word) {
-      print("Predict Next Word ...")
-      result <- predict_nextword(list_words,lines)
+    if (consider_regex_words) {
+      # Consider Regex Words in the Prediction
+     
+      if (is_final_word) {
+        print("---> Considering Regex: YES, Predicting Next Word with Complete Words ...")
+        result <- predict_nextword(list_words,p,n,lines)
+      } else {
+        print("---> Considering Regex: YES, Predicting Next Word with Regex Words...")
+        result <- predict_nextword_regex(list_words,p,n,lines)
+        
+      }
     }
     else {
-      print("Predict Next Word with Regex ...")
-      result <- predict_nextword_regex(list_words,lines)
-    }
-  }
-  else {
-      result <- as.data.frame(character())
+      # Consider Only Complete Words in the Prediction 
+      
+      if (is_final_word) {
+        print("---> Considering Regex: NO, Predicting Next Word with Complete Words ...")
+        result <- predict_nextword(list_words,p,n,lines)
+      } else {
+        print("---> Considering Regex: NO, Is a Regex Words ... Wait until a Complete Word Appear ...")
+        result <- as.data.frame(character())
       }
+    }
+  } else {
+    result <- as.data.frame(character())
+  } 
   result
 }
 
