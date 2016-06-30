@@ -20,8 +20,8 @@
 
 library(data.table)
 
-#setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
-setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+#setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
 
 # For reproducibility
 set.seed(12345)
@@ -782,10 +782,10 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
         ## For each unigram lets calculate the kneser-ney prob
         if (numlines == -1) { numlines <- nrow(DT.uni) }
         
-        percent_10 <- round(numlines/10)
-        print(paste("... Calculating Knersey-ney prob for:",numlines," 10% is:",percent_10))
+        percent_1 <- round(numlines/100)
+        print(paste("... Calculating Knersey-ney prob for:",numlines," 1% is:",percent_1))
         k <- 1
-        m <- 10
+        m <- 1
         
         nic1 <- proc.time()
         
@@ -795,15 +795,15 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
           prob_kneser_ney(c(t1))
           
           ### To give some feedback, print a message each 10%
-          if (k==percent_10) {
+          if (k==percent_1) {
             nic2 <- proc.time()
             print(paste("......",m,"% done in ",
                         elapsed_time(nic1,nic2)," seconds ...",sep=""))
             
             k <- 1
-            m <- m + 10
+            m <- m + 1
           } else { k <- k + 1}
-          print(paste(" i:",i," total:",numlines," percent10:",percent_10," k:",k," m:",m))
+          #print(paste(" i:",i," total:",numlines," percent10:",percent_1," k:",k," m:",m))
             
         }
         #print(paste("... Saving DT probability file:",file.name,sep=""))
@@ -827,13 +827,13 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
         if (numlines == -1) { numlines <- nrow(DT.bi)}
         
         
-        percent_10 <- round(numlines/10)
+        percent_1 <- round(numlines/100)
         
-        print(paste("... Calculating Knersey-ney prob for:",numlines," 10% is:",percent_10))
+        print(paste("... Calculating Knersey-ney prob for:",numlines," 1% is:",percent_1))
         
         
         k <- 1
-        m <- 10
+        m <- 1
         
         nic1 <- proc.time()
         
@@ -843,15 +843,15 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
           prob_kneser_ney(c(t1,t2))
           
           ### To give some feedback, print a message each 10%
-          if (k==percent_10) {
+          if (k==percent_1) {
             nic2 <- proc.time()
             print(paste("......",m,"% done in ",
                         elapsed_time(nic1,nic2)," seconds ...",sep=""))
             
             k <- 1
-            m <- m + 10
+            m <- m + 1
           } else { k <- k + 1}
-          print(paste(" i:",i," total:",numlines," percent10:",percent_10," k:",k," m:",m))
+          #print(paste(" i:",i," total:",numlines," percent10:",percent_1," k:",k," m:",m))
           
         }
         #print(paste("... Saving DT probability file:",file.name,sep=""))
@@ -875,10 +875,10 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
 
         if (numlines == -1) { numlines <- nrow(DT.tri) }
         
-        percent_10 <- round(numlines/10)
-        print(paste("... Calculating Knersey-ney prob for:",numlines," 10% is:",percent_10))
+        percent_1 <- round(numlines/100)
+        print(paste("... Calculating Knersey-ney prob for:",numlines," 1% is:",percent_1))
         k <- 1
-        m <- 10
+        m <- 1
         
         nic1 <- proc.time()
         
@@ -889,15 +889,15 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
           prob_kneser_ney(c(t1,t2,t3))
           
           ### To give some feedback, print a message each 10%
-          if (k==percent_10) {
+          if (k==percent_1) {
             nic2 <- proc.time()
             print(paste("......",m,"% done in ",
                         elapsed_time(nic1,nic2)," seconds ...",sep=""))
 
             k <- 1
-            m <- m + 10
+            m <- m + 1
           } else { k <- k + 1}
-          print(paste(" i:",i," total:",numlines," percent10:",percent_10," k:",k," m:",m))
+          #print(paste(" i:",i," total:",numlines," percent10:",percent_1," k:",k," m:",m))
         }
         #print(paste("... Saving DT probability file:",file.name,sep=""))
         #save(DT.tri,file=file.name)
@@ -920,8 +920,8 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
         
         if (numlines == -1) { numlines <- nrow(DT.quad) }
         
-        percent_10 <- round(numlines/10)
-        print(paste("... Calculating Knersey-ney prob for:",numlines," 10% is:",percent_10))
+        percent_1 <- round(numlines/100)
+        print(paste("... Calculating Knersey-ney prob for:",numlines," 1% is:",percent_1))
         k <- 1
         m <- 10
         
@@ -935,16 +935,16 @@ calculate_prob_kn <- function(n,lines=-1,numlines=-1) {
           prob_kneser_ney(c(t1,t2,t3,t4))
           
           ### To give some feedback, print a message each 10%
-          if (k==percent_10) {
+          if (k==percent_1) {
             nic2 <- proc.time()
             
             print(paste("......",m,"% done in ",
                         elapsed_time(nic1,nic2)," seconds ...",sep=""))
             
             k <- 1
-            m <- m + 10
+            m <- m + 1
           } else { k <- k + 1}
-          print(paste(" i:",i," total:",numlines," percent10:",percent_10," k:",k," m:",m))
+          #print(paste(" i:",i," total:",numlines," percent1:",percent_1," k:",k," m:",m))
         }
         #print(paste("... Saving DT probability file:",file.name,sep=""))
         #save(DT.quad,file=file.name)
