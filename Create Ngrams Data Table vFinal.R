@@ -24,16 +24,18 @@ library(data.table)
 library(stringi)
 
 #setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
-setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+#setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
 
 # For reproducibility
 set.seed(12345)
 
+####################################
 # For print elapsed time
 elapsed_time <- function(tic1,tic2) {
   format((tic2-tic1)[3][[1]], digits = 2)
 }
 
+####################################
 # For file name creation
 create_filename <- function(x,lines) {
   
@@ -45,6 +47,7 @@ create_filename <- function(x,lines) {
   }
 }
 
+####################################
 # Load, filter and transform the data (twitter, news, blogs). The
 # lines parameter define the number of lines per each dataset to consider.
 # If lines = -1, read all lines.
@@ -81,7 +84,7 @@ create_mydata <- function(lines=-1) {
       blogs.data <- readLines(filename_blogs, n = lines, encoding="UTF-8", warn = FALSE)
       
       # Remove emojies and other characters.
-      print("... Removing emojies and other characters ....")
+      print("Removing emojies and other characters ....")
       twitter.data <- iconv(twitter.data, "latin1", "ASCII", sub="")
       twitter.data <- iconv(twitter.data, "ISO-8859-2", "ASCII", sub="")
       
@@ -92,14 +95,14 @@ create_mydata <- function(lines=-1) {
       blogs.data <- iconv(blogs.data, "ISO-8859-2", "ASCII", sub="")
       
       # toLower
-      print("... toLower Data ....")
+      print("To Lower Data ....")
       twitter.data <- toLower(twitter.data)
       blogs.data <- toLower(blogs.data)
       news.data <- toLower(news.data)
       
       # Replace punctutation for a special word "eeee" in order to 
       # avoid some ngrams that doesn't exists
-      print("... Replacing punctuation for special characters ....")   
+      print("Replacing punctuation for special characters ....")   
       twitter.data <- stri_replace_all_regex(twitter.data,"[.,;:]", " eeee ", 
                                              vectorize_all=FALSE)
       
@@ -109,7 +112,7 @@ create_mydata <- function(lines=-1) {
                                           vectorize_all=FALSE)
 
       # Replace the rest of punctutation 
-      print("... Replacing rest of punctuation ....")   
+      print("Replacing rest of punctuation ....")   
       twitter.data <- stri_replace_all_regex(twitter.data,"[:punct:]", " ", 
                                              vectorize_all=FALSE)
       blogs.data <- stri_replace_all_regex(blogs.data,"[:punct:]", " ", 
@@ -119,7 +122,7 @@ create_mydata <- function(lines=-1) {
       # Final Data    
       mydata <<- c(twitter.data, news.data, blogs.data)
       
-      print(paste("... Saving mydata file:",file.name,sep=""))
+      print(paste("Saving mydata file:",file.name,sep=""))
       save(mydata,file=file.name)
       
       rm("twitter.data","news.data","blogs.data",
@@ -133,7 +136,7 @@ create_mydata <- function(lines=-1) {
   gc()
 }
 
-
+####################################
 create_alltokens <- function(lines=-1) {
   
   var.name <- "alltokens"
@@ -165,7 +168,7 @@ create_alltokens <- function(lines=-1) {
                         removeURL = TRUE, 
                         verbose = TRUE)
       
-      print(paste("... Saving alltokens file:",file.name,sep=""))
+      print(paste("Saving alltokens file:",file.name,sep=""))
       save(alltokens,file=file.name)
       rm("mydata",envir =.GlobalEnv)
       
@@ -178,7 +181,7 @@ create_alltokens <- function(lines=-1) {
   gc()
 }
 
-
+####################################
 create_ngram <- function(n,lines=-1)
 {
   
@@ -227,25 +230,25 @@ create_ngram <- function(n,lines=-1)
       print(paste("-----> create_ngram(",n,",",lines,").......",sep=""))
       t1 <- proc.time()
       
-      print(paste("... Creating Ngram:",var.name,sep=""))
+      print(paste("Creating Ngram:",var.name,sep=""))
       
       switch(n,
              "1"= { #Unigrams
                uni.ngram <<- ngrams(alltokens, 1)
-               print(paste("... Saving Ngram file:",file.name, sep=""))       
+               print(paste("Saving Ngram file:",file.name, sep=""))       
              },
              "2"= { #Bigrams
                bi.ngram <<- ngrams(alltokens, 2)
-               print(paste("... Saving Ngram file:",file.name,sep=""))
+               print(paste("Saving Ngram file:",file.name,sep=""))
              },
              "3"= { #Trigrams
                tri.ngram <<- ngrams(alltokens, 3)
-               print(paste("... Saving Ngram file:",file.name,sep=""))
+               print(paste("Saving Ngram file:",file.name,sep=""))
                save(tri.ngram,file=file.name)
              },
              "4"= { #Quadgrams
                quad.ngram <<- ngrams(alltokens, 4)
-               print(paste("... Saving Ngram file:",file.name,sep=""))
+               print(paste("Saving Ngram file:",file.name,sep=""))
                save(quad.ngram,file=file.name)
              }
       )
@@ -277,7 +280,7 @@ create_ngram <- function(n,lines=-1)
   gc()
 }
     
-   
+####################################   
 clean_ngram <- function(n,lines=-1)
 {
   # List of Profanity words to be removed
@@ -314,34 +317,34 @@ clean_ngram <- function(n,lines=-1)
       print(paste("-----> clean_ngram(",n,",",lines,").......",sep=""))
       t1 <- proc.time()
       
-      print(paste("... Cleaning Ngram: ",ngram.name, sep =""))
+      print(paste("Cleaning Ngram: ",ngram.name, sep =""))
       if (n == 1) {
         uni.ngram.clean <<- 
           selectFeatures(uni.ngram, c(profanityList,"eeee"),
                          selection = "remove", valuetype = "regex")
         rm(uni.ngram,envir =.GlobalEnv)
-        print(paste("... Saving Ngram Cleaned file: ",file.name, sep =""))
+        print(paste("Saving Ngram Cleaned file: ",file.name, sep =""))
         save(uni.ngram.clean,file=file.name)
       } else if (n == 2) {
         bi.ngram.clean <<- 
           selectFeatures(bi.ngram, c(profanityList,"eeee"),
                          selection = "remove", valuetype = "regex")
         rm(bi.ngram,envir =.GlobalEnv)
-        print(paste("... Saving Ngram Cleaned file: ",file.name, sep =""))
+        print(paste("Saving Ngram Cleaned file: ",file.name, sep =""))
         save(bi.ngram.clean,file=file.name)
       } else if (n == 3) {
         tri.ngram.clean <<- 
           selectFeatures(tri.ngram, c(profanityList,"eeee"),
                          selection = "remove", valuetype = "regex")
         rm(tri.ngram,envir =.GlobalEnv)
-        print(paste("... Saving Ngram Cleaned file: ",file.name, sep =""))
+        print(paste("Saving Ngram Cleaned file: ",file.name, sep =""))
         save(tri.ngram.clean,file=file.name)
       } else if (n == 4) {
         quad.ngram.clean <<- 
           selectFeatures(quad.ngram, c(profanityList,"eeee"),
                          selection = "remove", valuetype = "regex")
         rm(quad.ngram,envir =.GlobalEnv)
-        print(paste("... Saving Ngram Cleaned file: ",file.name, sep =""))
+        print(paste("Saving Ngram Cleaned file: ",file.name, sep =""))
         save(quad.ngram.clean,file=file.name)
       }
       t2 <- proc.time()
@@ -352,28 +355,32 @@ clean_ngram <- function(n,lines=-1)
   gc() 
 }
   
-  
+####################################  
 create_dfm <- function(n,lines=-1) {
   
-  if (n == 1) {
-    var.name <- "uni.dfm"
-    file.name <- create_filename("uni_dfm",lines)
-    ngram.clean.name <- "uni.ngram.clean"
-  } else if (n == 2) {
-    var.name <- "bi.dfm"
-    file.name <- create_filename("bi_dfm",lines)
-    ngram.clean.name <- "bi.ngram.clean"
-  } else if (n == 3) {
-    var.name <- "tri.dfm"
-    file.name <- create_filename("tri_dfm",lines)
-    ngram.clean.name <- "tri.ngram.clean"
-  } else if (n == 4) {
-    var.name <- "quad.dfm"
-    file.name <- create_filename("quad_dfm",lines)
-    ngram.clean.name <- "quad.ngram.clean"
-  }  
+  switch(n,
+         "1" = {
+           var.name <- "uni.dfm"
+           file.name <- create_filename("uni_dfm",lines)
+           ngram.clean.name <- "uni.ngram.clean"
+         },
+         "2" = {
+           var.name <- "bi.dfm"
+           file.name <- create_filename("bi_dfm",lines)
+           ngram.clean.name <- "bi.ngram.clean"
+         },
+         "3" = {
+           var.name <- "tri.dfm"
+           file.name <- create_filename("tri_dfm",lines)
+           ngram.clean.name <- "tri.ngram.clean"
+         },
+         "4" = {
+           var.name <- "quad.dfm"
+           file.name <- create_filename("quad_dfm",lines)
+           ngram.clean.name <- "quad.ngram.clean"
+         }
+  )
   
-
   #Validate if the "var.name" exists in the enviroment
   if (!exists(var.name)) {
     #Validate if "file.name" file exists an load the value
@@ -382,35 +389,40 @@ create_dfm <- function(n,lines=-1) {
       load(file.name,.GlobalEnv) 
     }  else {
       ## Load the ngrams and cleaned it 
-      
-      
       clean_ngram(n,lines)
       
       print(paste("-----> create_dfm(",n,",",lines,").......",sep=""))
       t1 <- proc.time()
       
-      print(paste("... Creating dfm:", var.name, sep=""))
-      if (n == 1) {
-        uni.dfm <<- dfm(uni.ngram.clean,toLower = FALSE)
-        rm(uni.ngram.clean,envir =.GlobalEnv)
-        print(paste("... Saving dfm file:", file.name, sep=""))
-        save(uni.dfm,file=file.name)
-      } else if (n == 2) {
-        bi.dfm <<- dfm(bi.ngram.clean,toLower = FALSE)
-        rm(bi.ngram.clean,envir =.GlobalEnv)
-        print(paste("... Saving dfm file:", file.name, sep=""))
-        save(bi.dfm,file=file.name)
-      } else if (n == 3) {
-        tri.dfm <<- dfm(tri.ngram.clean,toLower = FALSE)
-        rm(tri.ngram.clean,envir =.GlobalEnv)
-        print(paste("... Saving dfm file:", file.name, sep=""))
-        save(tri.dfm,file=file.name)
-      } else if (n == 4) {
-        quad.dfm <<- dfm(quad.ngram.clean,toLower = FALSE)
-        rm(quad.ngram.clean,envir =.GlobalEnv)
-        print(paste("... Saving dfm file:", file.name, sep=""))
-        save(quad.dfm,file=file.name)
-      }
+      print(paste("Creating dfm:", var.name, sep=""))
+      
+      switch(n,
+             "1" = {
+               uni.dfm <<- dfm(uni.ngram.clean,toLower = FALSE)
+               rm(uni.ngram.clean,envir =.GlobalEnv)
+               print(paste("Saving dfm file:", file.name, sep=""))
+               save(uni.dfm,file=file.name)
+             },
+             "2" = {
+               bi.dfm <<- dfm(bi.ngram.clean,toLower = FALSE)
+               rm(bi.ngram.clean,envir =.GlobalEnv)
+               print(paste("Saving dfm file:", file.name, sep=""))
+               save(bi.dfm,file=file.name)
+             },
+             "3" = {
+               tri.dfm <<- dfm(tri.ngram.clean,toLower = FALSE)
+               rm(tri.ngram.clean,envir =.GlobalEnv)
+               print(paste("Saving dfm file:", file.name, sep=""))
+               save(tri.dfm,file=file.name)
+             },
+             "4" = {
+               quad.dfm <<- dfm(quad.ngram.clean,toLower = FALSE)
+               rm(quad.ngram.clean,envir =.GlobalEnv)
+               print(paste("Saving dfm file:", file.name, sep=""))
+               save(quad.dfm,file=file.name)
+             }
+      )
+      
       t2 <- proc.time()
       print(paste("-----> create_dfm: Running Time .......",
                   elapsed_time(t1,t2)," seconds ...",sep=""))
@@ -419,7 +431,7 @@ create_dfm <- function(n,lines=-1) {
   gc()
 }
 
-
+####################################
 trim_dfm <- function(n,lines=-1,mincount=5) {
   
   if (n == 1) {
@@ -455,15 +467,26 @@ trim_dfm <- function(n,lines=-1,mincount=5) {
       print(paste("... trim dfm:", var.name, sep=""))
       if (n == 1) {
         
-        uni.dfm.clean <<- trim(uni.dfm,minCount = mincount)
+        if (mincount <= 0) {
+          uni.dfm.clean <<- uni.dfm
+        } else {
+          uni.dfm.clean <<- trim(uni.dfm,minCount = mincount)  
+        }
         rm("uni.dfm",envir =.GlobalEnv)
         gc()
+        
+        
         print("... Saving dfm clean: uni.dfm.clean ..")
         save(uni.dfm.clean,file=file.name)
 
       } else if (n == 2) {
         
-        bi.dfm.clean <<- trim(bi.dfm,minCount = mincount)
+        if (mincount <= 0) {
+          bi.dfm.clean <<- bi.dfm
+        } else {
+          bi.dfm.clean <<- trim(bi.dfm,minCount = mincount)  
+        }
+        
         rm("bi.dfm",envir =.GlobalEnv)
         gc()
         print("... Saving dfm clean: bi.dfm.clean ..")
@@ -471,7 +494,12 @@ trim_dfm <- function(n,lines=-1,mincount=5) {
         
       } else if (n == 3) {
         
-        tri.dfm.clean <<- trim(tri.dfm,minCount = mincount)
+        if (mincount <= 0) {
+          tri.dfm.clean <<- tri.dfm
+        } else {
+          tri.dfm.clean <<- trim(tri.dfm,minCount = mincount)  
+        }
+        
         rm("tri.dfm",envir =.GlobalEnv)
         gc()
         print("... Saving dfm clean: tri.dfm.clean ..")
@@ -479,7 +507,12 @@ trim_dfm <- function(n,lines=-1,mincount=5) {
        
       } else if (n == 4) {
         
-        quad.dfm.clean <<- trim(quad.dfm,minCount = mincount)
+        if (mincount <= 0) {
+          quad.dfm.clean <<- quad.dfm
+        } else {
+          quad.dfm.clean <<- trim(quad.dfm,minCount = mincount)  
+        }
+        
         rm("quad.dfm",envir =.GlobalEnv)
         gc()
         print("... Saving dfm clean: quad.dfm.clean ..")
@@ -494,7 +527,7 @@ trim_dfm <- function(n,lines=-1,mincount=5) {
 } 
 
   
-      
+####################################      
 create_DT <- function(n,lines=-1,mincount=5) {
   
   if (n == 1) {

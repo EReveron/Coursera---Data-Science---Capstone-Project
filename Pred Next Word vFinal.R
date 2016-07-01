@@ -33,23 +33,23 @@ create_filename <- function(x,lines=-1) {
   }
 }
 
-load_DT_prob_table <- function (n,lines=-1) {
+load_DT_prob_final_table <- function (n,lines=-1) {
   
   switch(n,
          "1"= {
-           var.name <- "DT.uni.prob"
+           var.name <- "DT.uni.prob.final"
            file.name <- create_filename("DT_uni_prob_final",lines)
          },
          "2"= {
-           var.name <- "DT.bi.prob"
+           var.name <- "DT.bi.prob.final"
            file.name <- create_filename("DT_bi_prob_final",lines)
          },
          "3"= {
-           var.name <- "DT.tri.prob"
+           var.name <- "DT.tri.prob.final"
            file.name <- create_filename("DT_tri_prob_final",lines)
          },
          "4"= {
-           var.name <- "DT.quad.prob"
+           var.name <- "DT.quad.prob.final"
            file.name <- create_filename("DT_quad_prob_final",lines)
          } 
   )
@@ -75,7 +75,7 @@ load_DT_prob_table <- function (n,lines=-1) {
   if (!exists(var.name)) {
     #Validate if the file exists an load the value
     if (file.exists(file.name)) {
-      print(paste("-----> load_DT_prob_table(",n,").......",sep=""))
+      print(paste("-----> load_DT_prob_final_table(",n,").......",sep=""))
       t1 <- proc.time()
       
       print(paste("Loading DT probability file: ",file.name, sep =""))
@@ -84,10 +84,10 @@ load_DT_prob_table <- function (n,lines=-1) {
       print(paste("Initialization of DT Prob Table from:",var.name, sep =""))
       
       switch(n,
-             "1" = DT.uni.prob <<- as.data.table(DT.uni.prob, key = "t1"),
-             "2" = DT.bi.prob <<- as.data.table(DT.bi.prob, key = "t1,t2"),
-             "3" = DT.tri.prob <<- as.data.table(DT.tri.prob, key = "t1,t2,t3"),
-             "4" = DT.quad.prob <<- as.data.table(DT.quad.prob, key = "t1,t2,t3,t4")
+             "1" = DT.uni.prob.final <<- as.data.table(DT.uni.prob.final, key = "t1"),
+             "2" = DT.bi.prob.final <<- as.data.table(DT.bi.prob.final, key = "t1,t2"),
+             "3" = DT.tri.prob.final <<- as.data.table(DT.tri.prob.final, key = "t1,t2,t3"),
+             "4" = DT.quad.prob.final <<- as.data.table(DT.quad.prob.final, key = "t1,t2,t3,t4")
       )
              
             
@@ -103,7 +103,7 @@ load_DT_prob_table <- function (n,lines=-1) {
       #}
       t2 <- proc.time()
       
-      print(paste("-----> load_DT_prob_table: Running Time .......",
+      print(paste("-----> load_DT_prob_final_table: Running Time .......",
                   elapsed_time(t1,t2)," seconds ...",sep=""))
     }
     else {
@@ -141,7 +141,7 @@ topn_predict <- function(x,p=0,n=5,f=1) {
     #topn <- DT.bi.prob[t1 == x[1] & ((prob*f) >= p),][,word:=t2,][,prob:= prob*f,][,list(word,prob),][head(order(-prob),n)]
     #
     
-    topn <- DT.bi.prob[t1 == x[1] & ((prob*f) >= p),,]
+    topn <- DT.bi.prob.final[t1 == x[1] & ((prob*f) >= p),,]
     topn[,c("word","prob") := list(t2,prob*f),]
     topn <- topn[,list(word,prob),][head(order(-prob),n)]
 
@@ -163,7 +163,7 @@ topn_predict <- function(x,p=0,n=5,f=1) {
       
       #a <- DT.uni.prob[head(order(-prob),n -num_words)] 
       
-      a <- DT.uni.prob[prob >= p,,]
+      a <- DT.uni.prob.final[prob >= p,,]
       
       a <- a[head(order(-prob),n)] 
       a[,word:=t1,] 
@@ -185,7 +185,7 @@ topn_predict <- function(x,p=0,n=5,f=1) {
     #topn <- DT.tri.prob[t1 == x[1] & t2 == x[2] & (prob*f) >= p,] [,list(word:=t3,prob:= prob*f),] [head(order(prob),n)]
 
     
-    topn <- DT.tri.prob[t1 == x[1] & t2 == x[2] & ((prob*f) >= p),,]
+    topn <- DT.tri.prob.final[t1 == x[1] & t2 == x[2] & ((prob*f) >= p),,]
     topn[,c("word","prob") := list(t3,prob*f),]
     topn <- topn[,list(word,prob),][head(order(-prob),n)]
     
@@ -210,7 +210,7 @@ topn_predict <- function(x,p=0,n=5,f=1) {
     #                list(word:=t4,prob:= prob*f),] [head(order(prob2),n)]
     
     
-    topn <- DT.quad.prob[t1 == x[1] & t2 == x[2] & t3 ==x[3] & ((prob*f) >= p),,]
+    topn <- DT.quad.prob.final[t1 == x[1] & t2 == x[2] & t3 ==x[3] & ((prob*f) >= p),,]
     topn[,c("word","prob") := list(t4,prob*f),]
     topn <- topn[,list(word,prob),][head(order(-prob),n)]
     
@@ -241,10 +241,10 @@ predict_nextword <- function(x,p=0,n=5,lines=-1) {
   
   l <- length(x)
   
-  load_DT_prob_table(1,lines)
-  load_DT_prob_table(2,lines)
-  load_DT_prob_table(3,lines)
-  load_DT_prob_table(4,lines)
+  load_DT_prob_final_table(1,lines)
+  load_DT_prob_final_table(2,lines)
+  load_DT_prob_final_table(3,lines)
+  load_DT_prob_final_table(4,lines)
   
   print(paste("-----> predict_nextword(",
               " word:=(",paste(x, collapse=","),")",

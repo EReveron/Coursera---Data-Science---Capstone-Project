@@ -6,7 +6,7 @@ library(data.table)
 #setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
 
 # For reproducibility
-#set.seed(12345)
+set.seed(12345)
 
 source("Pred Next Word vFinal.R")
 source("Pred Next Word Regex vFinal.R")

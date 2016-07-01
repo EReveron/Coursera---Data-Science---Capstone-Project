@@ -42,15 +42,15 @@ shinyServer(function(input, output,session) {
   })
   
   output$unigrams_table <- renderDataTable({
-    datatable(DT.uni.prob,options = list(lengthChange = FALSE, scroller = TRUE))
+    datatable(DT.uni.prob.final,options = list(lengthChange = FALSE, scroller = TRUE))
   })
   
   output$bigrams_table <- renderDataTable({
-    DT.bi.prob
+    DT.bi.prob.final
   }, options = list(lengthChange = FALSE, scroller = FALSE))
   
   output$trigrams_table <- renderDataTable({
-    DT.tri.prob
+    DT.tri.prob.final
   }, options = list(orderClasses = TRUE))
   
   # This function will create the wordcloud 
