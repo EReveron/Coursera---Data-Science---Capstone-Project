@@ -24,10 +24,10 @@ source("Main Predict Word vFinal.R")
 
 #DT.uni.prob
 
-load_DT_prob_table(1,100)
-load_DT_prob_table(2,100)
-load_DT_prob_table(3,100)
-load_DT_prob_table(4,100)
+load_DT_prob_final_table(1,150)
+load_DT_prob_final_table(2,150)
+load_DT_prob_final_table(3,150)
+load_DT_prob_final_table(4,150)
 
 #setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
 
