@@ -29,7 +29,7 @@ set.seed(12345)
 
 ####################################
 elapsed_time <- function(tic1,tic2) {
-  format((tic2-tic1)[3][[1]], digits = 2)
+  format((tic2-tic1)[3][[1]], digits = 3)
 }
 
 ####################################
@@ -686,9 +686,15 @@ calculate_prob_kn <- function(n,lines=-1,p1=5,numlines=-1) {
                
                for (i in 1:numlines) 
                {
+                 n1 <- proc.time()
                  t1 <- as.character(DT.uni.prob[i,t1,])
                  prob_kneser_ney(c(t1))
                  
+                 n2 <- proc.time()
+                 
+                 
+                 
+                 n3 <- proc.time()
                  ### To give some feedback, print a message each 1%
                  if (k==percent_1) {
                    nic2 <- proc.time()
@@ -700,6 +706,13 @@ calculate_prob_kn <- function(n,lines=-1,p1=5,numlines=-1) {
                    m <- m + 1
                  } else { k <- k + 1}  
                  #print(paste(" i:",i," total:",numlines," percent10:",percent_1," k:",k," m:",m))
+      
+                 n4 <- proc.time()
+                 
+                 print(paste0(". Tiempo de Calculo ",elapsed_time(n1,n2)," seconds ..."))
+                 print(paste0(". Tiempo de If  ",elapsed_time(n3,n4)," seconds ..."))
+                 
+      
                }
                  
                # Clean the DT with only two columns (t1,prob)
@@ -801,13 +814,20 @@ calculate_prob_kn <- function(n,lines=-1,p1=5,numlines=-1) {
                nic1 <- proc.time()
                
                for (i in 1:numlines) {
+                 
+                 n1 <- proc.time()
+                 
                  t1 <- as.character(DT.quad.prob[i,t1,])
                  t2 <- as.character(DT.quad.prob[i,t2,])
                  t3 <- as.character(DT.quad.prob[i,t3,])
                  t4 <- as.character(DT.quad.prob[i,t4,])
                  prob_kneser_ney(c(t1,t2,t3,t4))
                  
+                 n2 <- proc.time()
+                 
                  ### To give some feedback, print a message each 10%
+                 
+                 
                  if (k==percent_1) {
                    nic2 <- proc.time()
                    
@@ -818,7 +838,16 @@ calculate_prob_kn <- function(n,lines=-1,p1=5,numlines=-1) {
                    k <- 1
                    m <- m + 1
                  } else { k <- k + 1}
+                 n3 <- proc.time()
+                 
+                 print(paste0(". Tiempo de Calculo ",elapsed_time(n1,n2)," seconds ..."))
+                 print(paste0(". Tiempo de If  ",elapsed_time(n2,n3)," seconds ..."))
+                 
                  #print(paste(" i:",i," total:",numlines," percent1:",percent_1," k:",k," m:",m))
+              
+                 
+                 
+                 
                }
               
                save_DT_prob_temp(n,lines)
