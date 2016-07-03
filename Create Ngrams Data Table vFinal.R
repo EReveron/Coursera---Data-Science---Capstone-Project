@@ -464,7 +464,7 @@ trim_dfm <- function(n,lines=-1,mincount=5) {
       print(paste("-----> trim_dfm(",n,",",lines,").......",sep=""))
       t1 <- proc.time()
       
-      print(paste("... trim dfm:", var.name, sep=""))
+      print(paste("trim dfm:", var.name, sep=""))
       if (n == 1) {
         
         if (mincount <= 0) {
@@ -476,7 +476,7 @@ trim_dfm <- function(n,lines=-1,mincount=5) {
         gc()
         
         
-        print("... Saving dfm clean: uni.dfm.clean ..")
+        print("Saving dfm clean: uni.dfm.clean ..")
         save(uni.dfm.clean,file=file.name)
 
       } else if (n == 2) {
@@ -489,7 +489,7 @@ trim_dfm <- function(n,lines=-1,mincount=5) {
         
         rm("bi.dfm",envir =.GlobalEnv)
         gc()
-        print("... Saving dfm clean: bi.dfm.clean ..")
+        print("Saving dfm clean: bi.dfm.clean ..")
         save(bi.dfm.clean,file=file.name)
         
       } else if (n == 3) {
@@ -502,7 +502,7 @@ trim_dfm <- function(n,lines=-1,mincount=5) {
         
         rm("tri.dfm",envir =.GlobalEnv)
         gc()
-        print("... Saving dfm clean: tri.dfm.clean ..")
+        print("Saving dfm clean: tri.dfm.clean ..")
         save(tri.dfm.clean,file=file.name)
        
       } else if (n == 4) {
@@ -515,7 +515,7 @@ trim_dfm <- function(n,lines=-1,mincount=5) {
         
         rm("quad.dfm",envir =.GlobalEnv)
         gc()
-        print("... Saving dfm clean: quad.dfm.clean ..")
+        print("Saving dfm clean: quad.dfm.clean ..")
         save(quad.dfm.clean,file=file.name)
       }
       t2 <- proc.time()
@@ -561,7 +561,7 @@ create_DT <- function(n,lines=-1,mincount=5) {
       print(paste("-----> create_DT(",n,",",lines,").......",sep=""))
       t1 <- proc.time()
       
-      print(paste("... Creating DT:", var.name, sep=""))
+      print(paste("Creating DT:", var.name, sep=""))
       if (n == 1) {
         #
         # Create DT for unigrams:
@@ -571,7 +571,7 @@ create_DT <- function(n,lines=-1,mincount=5) {
         rm("uni.dfm.clean",envir =.GlobalEnv)
         gc()
         DT.uni <<- data.table(t1=names(top.uni),freq=top.uni)
-        print("... Saving DT.uni ..")
+        print("Saving DT.uni ..")
         save(DT.uni,file=file.name)
         rm("top.uni","n.uni")        
   
@@ -589,7 +589,7 @@ create_DT <- function(n,lines=-1,mincount=5) {
         gc()
         DT.bi[,c("t1","t2") := tstrsplit(V1, "_", fixed=TRUE),]
         DT.bi <<- DT.bi[,list(t1,t2,freq),]
-        print("... Saving DT.bi ..")
+        print("Saving DT.bi ..")
         save(DT.bi,file=file.name)
       } else if (n == 3) {
 
@@ -606,7 +606,7 @@ create_DT <- function(n,lines=-1,mincount=5) {
         gc()
         DT.tri[,c("t1", "t2","t3") := tstrsplit(V1, "_", fixed=TRUE),]
         DT.tri <<- DT.tri[,list(t1,t2,t3,freq),]
-        print("... Saving DT.tri ..")
+        print("Saving DT.tri ..")
         save(DT.tri,file=file.name)
       } else if (n == 4) {
 
@@ -623,7 +623,7 @@ create_DT <- function(n,lines=-1,mincount=5) {
         gc()
         DT.quad <- DT.quad[,c("t1", "t2","t3","t4") := tstrsplit(V1, "_", fixed=TRUE),]
         DT.quad <<- DT.quad[,list(t1,t2,t3,t4,freq),]
-        print("... Saving DT.quad ..")
+        print("Saving DT.quad ...")
         save(DT.quad,file=file.name)
       }
       t2 <- proc.time()

@@ -55,7 +55,7 @@ N1plus_pre <- function(x) {
   r <- -1
   
   switch(l,
-         "1L" = { #Unigrams
+         "1" = { #Unigrams
            #Check if the value exists in the ngram table
            r <- DT.uni.prob[t1 == x[1],n11,]
            
@@ -65,7 +65,7 @@ N1plus_pre <- function(x) {
              DT.uni.prob[t1 == x[1],n11:=r,]
            }
          },
-         "2L" = { #Bigrams
+         "2" = { #Bigrams
            #Check if the value exists in the ngram table
            r <- DT.bi.prob[t1 == x[1] & t2 == x[2],n11,]
            
@@ -75,7 +75,7 @@ N1plus_pre <- function(x) {
              DT.bi.prob[t1 == x[1] & t2 == x[2],n11:=r,]
            }
          },
-         "3L" = { #Trigrams
+         "3" = { #Trigrams
            #Check if the value exists in the ngram table
            r <- DT.tri.prob[t1 == x[1] & t2 == x[2] & t3 == x[3],n11,]
            
@@ -99,7 +99,7 @@ N1plus_suc <- function(x) {
   r <- -1
   
   switch(l,
-         "1L" = { #Unigram
+         "1" = { #Unigram
            #Check if the value exists in the ngram table
            r <- DT.uni.prob[t1 == x[1],n12,]
            
@@ -110,18 +110,18 @@ N1plus_suc <- function(x) {
              DT.uni.prob[t1 == x[1],n12:=r,]
            }
          },
-         "2L" = { 
+         "2" = { 
            #Check if the value exists in the ngram table
            r <- DT.bi.prob[t1 == x[1] & t2 == x[2],n12,]
            
-           if (r<0)
+           if (r < 0)
            {
              # Calculate the value and store it in the table
              r <- nrow(DT.tri.prob[t1 == x[1] & t2 == x[2] & freq >= 1,,])
              DT.bi.prob[t1 == x[1] & t2 == x[2],n12:=r,]
            }
          },
-         "3L" = {
+         "3" = {
            #Check if the value exists in the ngram table
            r <-  DT.tri.prob[t1 == x[1] & t2 == x[2] & t3 == x[3], n12,]
            
@@ -144,10 +144,10 @@ ngram_count <- function(x) {
 
   l <- as.character(length(x))
   switch(l,
-         "1L" = DT.uni.prob[t1 == x[1],freq,],
-         "2L" = DT.bi.prob[t1 == x[1] & t2 == x[2],freq,],
-         "3L" = DT.tri.prob[t1 == x[1] & t2 == x[2] & t3 == x[3],freq,],
-         "4L" = DT.quad.prob[t1 == x[1] & t2 == x[2] & t3 == x[3] & t4 == x[4],freq,]
+         "1" = DT.uni.prob[t1 == x[1],freq,],
+         "2" = DT.bi.prob[t1 == x[1] & t2 == x[2],freq,],
+         "3" = DT.tri.prob[t1 == x[1] & t2 == x[2] & t3 == x[3],freq,],
+         "4" = DT.quad.prob[t1 == x[1] & t2 == x[2] & t3 == x[3] & t4 == x[4],freq,]
   )
 }     
          
@@ -179,20 +179,18 @@ alpha <- function(x,high_order) {
   l <- as.character(length(x))
   r <- -1
   
-  #print(paste("L vale:",l))
+  
   
   
   switch(l,
-         "2L" = { # bigrams, check the table for a1 or a2 values (high/low order)
+         "2" = { # bigrams, check the table for a1 or a2 values (high/low order)
            
-           print("bigrams")
            if (high_order) {
              r <- DT.bi.prob[t1 == x[1] & t2 == x[2],a1,]
            } else {
              r <- DT.bi.prob[t1 == x[1] & t2 == x[2],a2,]
            }
            
-           print(paste("R vale:",r))
            
            if (r < 0) {
              # Calculate the value and store it in the table
@@ -206,8 +204,7 @@ alpha <- function(x,high_order) {
            }
          },
          
-         "3L" = { # trigrams, check the table for a1 or a2 values (high/low order)
-           print("trigrams")
+         "3" = { # trigrams, check the table for a1 or a2 values (high/low order)
            if (high_order) {
              r <- DT.tri.prob[t1 == x[1] & t2 == x[2] & t3 ==x[3],a1,]
            } else {
@@ -225,8 +222,7 @@ alpha <- function(x,high_order) {
              }
            }
          },
-         "4L" = { # quadgrams, check the table for a1 or a2 values (high/low order)  
-           print("quadgrams")
+         "4" = { # quadgrams, check the table for a1 or a2 values (high/low order)  
            if (high_order) {
              r <- DT.quad.prob[t1 == x[1] & t2 == x[2] & t3 ==x[3] & t4 ==x[4],a1,]
            } else {
@@ -263,7 +259,7 @@ lambda <- function(x,high_order=TRUE) {
   r <- -1
   
   switch(l,
-         "1L" = { # Unigrams, check the table for l1 or l2 values (high/low order)
+         "1" = { # Unigrams, check the table for l1 or l2 values (high/low order)
            if (high_order) {
              r <- DT.uni.prob[t1 == x[1],l1,]
            } else {
@@ -281,7 +277,7 @@ lambda <- function(x,high_order=TRUE) {
            }
          },
          
-         "2L" = { # Bigrams, check the table for l1 or l2 values (high/low order)
+         "2" = { # Bigrams, check the table for l1 or l2 values (high/low order)
            if (high_order) {
              r <- DT.bi.prob[t1 == x[1] & t2 == x[2],l1,]
            } else {
@@ -298,7 +294,7 @@ lambda <- function(x,high_order=TRUE) {
              }
            }
          },
-         "3L" = { # Trigrams, check the table for l1 or l2 values (high/low order)
+         "3" = { # Trigrams, check the table for l1 or l2 values (high/low order)
            if (high_order) {
              r <- DT.tri.prob[t1 == x[1] & t2 == x[2] & t3 ==x[3],l1,]
            } else {
@@ -332,9 +328,9 @@ prob_kneser_ney <- function(x,high_order = TRUE) {
   
   switch(l,
          
-         "1L" = { # Unigrams, check the table for pkn1 values (high/low order)
+         "1" = { # Unigrams, check the table for pkn1 values (high/low order)
            r <- DT.uni.prob[t1 == x[1],pkn1,]
-           
+    
            if (r < 0) {
              # Calculate the value and store it in the table
              r <- N1plus_pre(x) / n.bi
@@ -342,7 +338,7 @@ prob_kneser_ney <- function(x,high_order = TRUE) {
            }
          },
          
-         "2L" = { # Bigrams, check the table for pkn1 or pkn2 values (high/low order)
+         "2" = { # Bigrams, check the table for pkn1 or pkn2 values (high/low order)
            if (high_order) {
              r <- DT.bi.prob[t1 == x[1] & t2 == x[2],pkn1,]
            } else {
@@ -362,7 +358,7 @@ prob_kneser_ney <- function(x,high_order = TRUE) {
            } 
          },
          
-         "3L" = { # Trigrams, check the table for pkn1 or pkn2 values (high/low order)
+         "3" = { # Trigrams, check the table for pkn1 or pkn2 values (high/low order)
            if (high_order) {
              r <- DT.tri.prob[t1 == x[1] & t2 == x[2] & t3 == x[3],pkn1,]
            } else {
@@ -380,7 +376,7 @@ prob_kneser_ney <- function(x,high_order = TRUE) {
            }
          },
          
-         "4L" = { # Quadgrams, check the table for pkn1 or pkn2 values (high/low order)
+         "4" = { # Quadgrams, check the table for pkn1 or pkn2 values (high/low order)
            if (high_order) {
              r <- DT.quad.prob[t1 == x[1] & t2 == x[2] & t3 == x[3] & t4 == x[4],pkn1,]
            } else {
@@ -403,7 +399,7 @@ prob_kneser_ney <- function(x,high_order = TRUE) {
   
 
 ####################################
-load_DT_table <- function (n,lines=-1L) {
+load_DT_table <- function (n,lines=-1) {
   
   switch(n,
          "1" = {
@@ -456,7 +452,7 @@ load_DT_table <- function (n,lines=-1L) {
 }
 
 ####################################
-load_DT_prob_table <- function (n,lines=-1L,p1=5L) {
+load_DT_prob_table <- function (n,lines=-1,p1=5) {
   
   # Values needed for Knersey-ney prob calculations
   p1 <<- p1
@@ -680,46 +676,33 @@ calculate_prob_kn <- function(n,lines=-1,p1=5,numlines=-1) {
                if (numlines == -1) { numlines <- nrow(DT.uni.prob) }
                percent_1 <- round(numlines/100)
                print(paste("Calculating Knersey-ney prob for:",numlines," 1% is:",percent_1))
+            
                k <- 1
                m <- 1
                nic1 <- proc.time()
                
                for (i in 1:numlines) 
                {
-                 n1 <- proc.time()
                  t1 <- as.character(DT.uni.prob[i,t1,])
                  prob_kneser_ney(c(t1))
                  
-                 n2 <- proc.time()
-                 
-                 
-                 
-                 n3 <- proc.time()
                  ### To give some feedback, print a message each 1%
                  if (k==percent_1) {
                    nic2 <- proc.time()
                    print(paste("......",m,"% done in ",
                                elapsed_time(nic1,nic2)," seconds ...",sep=""))
                    # Saving DT prob temp files
-                   save_DT_prob_temp(n,lines)
+                   #save_DT_prob_temp(n,lines)
                    k <- 1
                    m <- m + 1
                  } else { k <- k + 1}  
-                 #print(paste(" i:",i," total:",numlines," percent10:",percent_1," k:",k," m:",m))
-      
-                 n4 <- proc.time()
-                 
-                 print(paste0(". Tiempo de Calculo ",elapsed_time(n1,n2)," seconds ..."))
-                 print(paste0(". Tiempo de If  ",elapsed_time(n3,n4)," seconds ..."))
-                 
-      
                }
-                 
+               save_DT_prob_temp(n,lines)
                # Clean the DT with only two columns (t1,prob)
                DT.uni.prob.final <<- DT.uni.prob[,list(t1,pkn1),]
                DT.uni.prob.final[,prob:=pkn1,]
                DT.uni.prob.final <<- DT.uni.prob.final[,list(t1,prob),]
-               rm(DT.uni.prob,envir =.GlobalEnv)
+               #rm(DT.uni.prob,envir =.GlobalEnv)
                
                print(paste("Saving DT probability final file:",file.name.final,sep=""))
                save(DT.uni.prob.final,file=file.name.final)
@@ -730,6 +713,7 @@ calculate_prob_kn <- function(n,lines=-1,p1=5,numlines=-1) {
                if (numlines == -1) { numlines <- nrow(DT.bi.prob)}
                percent_1 <- round(numlines/100)
                print(paste("Calculating Knersey-ney prob for:",numlines," 1% is:",percent_1))
+               
                k <- 1
                m <- 1
                nic1 <- proc.time()
@@ -745,18 +729,17 @@ calculate_prob_kn <- function(n,lines=-1,p1=5,numlines=-1) {
                    print(paste("......",m,"% done in ",
                                elapsed_time(nic1,nic2)," seconds ...",sep=""))
                    # Saving DT prob temp files
-                   save_DT_prob_temp(n,lines)
+                   #save_DT_prob_temp(n,lines)
                    k <- 1
                    m <- m + 1
                  } else { k <- k + 1}
-                 #print(paste(" i:",i," total:",numlines," percent10:",percent_1," k:",k," m:",m))
                }
-               
+               save_DT_prob_temp(n,lines)
                # Clean the DT with only two columns (t1,t2,prob)
                DT.bi.prob.final <<- DT.bi.prob[,list(t1,t2,pkn1),]
                DT.bi.prob.final[,prob:=pkn1,]
                DT.bi.prob.final <<- DT.bi.prob.final[,list(t1,t2,prob),]
-               rm(DT.bi.prob,envir =.GlobalEnv)
+               #rm(DT.bi.prob,envir =.GlobalEnv)
                
                print(paste("Saving DT probability final file:",file.name.final,sep=""))
                save(DT.bi.prob.final,file=file.name.final)
@@ -789,14 +772,13 @@ calculate_prob_kn <- function(n,lines=-1,p1=5,numlines=-1) {
                    k <- 1
                    m <- m + 1
                  } else { k <- k + 1}
-                 #print(paste(" i:",i," total:",numlines," percent1:",percent_1," k:",k," m:",m))
                }
                save_DT_prob_temp(n,lines)
                # Clean the DT with only four columns (t1,t2,t3,prob)
                DT.tri.prob.final <<- DT.tri.prob[,list(t1,t2,t3,pkn1),]
                DT.tri.prob.final[,prob:=pkn1,]
                DT.tri.prob.final <<- DT.tri.prob.final[,list(t1,t2,t3,prob),]
-               rm(DT.tri.prob,envir =.GlobalEnv)
+               #rm(DT.tri.prob,envir =.GlobalEnv)
                
                print(paste("Saving DT probability final file:",file.name.final,sep=""))
                save(DT.tri.prob.final,file=file.name.final)
@@ -840,14 +822,6 @@ calculate_prob_kn <- function(n,lines=-1,p1=5,numlines=-1) {
                  } else { k <- k + 1}
                  n3 <- proc.time()
                  
-                 print(paste0(". Tiempo de Calculo ",elapsed_time(n1,n2)," seconds ..."))
-                 print(paste0(". Tiempo de If  ",elapsed_time(n2,n3)," seconds ..."))
-                 
-                 #print(paste(" i:",i," total:",numlines," percent1:",percent_1," k:",k," m:",m))
-              
-                 
-                 
-                 
                }
               
                save_DT_prob_temp(n,lines)
@@ -855,7 +829,7 @@ calculate_prob_kn <- function(n,lines=-1,p1=5,numlines=-1) {
                DT.quad.prob.final <<- DT.quad.prob[,list(t1,t2,t3,t4,pkn1),]
                DT.quad.prob.final[,prob:=pkn1,]
                DT.quad.prob.final <<- DT.quad.prob.final[,list(t1,t2,t3,t4,prob),]
-               rm(DT.quad.prob,envir =.GlobalEnv)
+              #rm(DT.quad.prob,envir =.GlobalEnv)
                
                print(paste("... Saving DT probability final file:",file.name.final,sep=""))
                save(DT.quad.prob.final,file=file.name.final)
