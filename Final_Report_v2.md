@@ -1,21 +1,9 @@
----
-title: "Capstone Project - Final Report"
-author: "Enrique Reveron"
-date: "June 26, 2016"
-output:
-  html_document:
-    fig_height: 4
-    fig_width: 9
-    keep_md: yes
-    theme: default
-  pdf_document: default
-  word_document: default
----
+# Capstone Project - Final Report
+Enrique Reveron  
+June 26, 2016  
 
 
-```{r global_options, include=FALSE}
-knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=TRUE)
-```
+
 
 ## Executive Summary
 
@@ -91,8 +79,27 @@ This is a Milestone report related with the Coursera Capstone Project, the targe
 
 For this project we will use basicly the **quanteda**,**ggplot2**, **knitr** and **RColorBrewer**.
 
-```{r echo=TRUE}
+
+```r
 library(quanteda)
+```
+
+```
+## quanteda version 0.9.6.9
+```
+
+```
+## 
+## Attaching package: 'quanteda'
+```
+
+```
+## The following object is masked from 'package:base':
+## 
+##     sample
+```
+
+```r
 library(data.table)
 library(ggplot2)
 library(knitr)
@@ -111,8 +118,6 @@ set.seed(12345)
 
 # To load the Data
 setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
-
-
 ```
 
 ## 2. Create Ngram Data Table
@@ -123,14 +128,15 @@ In order to create the Ngrams we will do several steps
 
 The files that we will use in the project are bigger than **150Mbytes** each one. In order to do the exploratory data analysis and to have an acceptable runtime, I will use only **10%** of the data. 
 
-```{r createdata,echo=TRUE, cache = TRUE}
 
+```r
 #create_mydata() 
 ```
 
 ### 2.2 Create All Tokens
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_alltokens()
 ```
 
@@ -139,12 +145,14 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 
 #### 2.3.1 Create and Clean Unigrams
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_ngram(n=1)
 ```
 
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #clean_ngram(n=1)
 ```
 
@@ -152,37 +160,43 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 
 #### 2.3.2 Create and Clean Bigrams
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_ngram(n=2)
 ```
 
 
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #clean_ngram(n=2)
 ```
 
 
 #### 2.3.3 Create and Clean Trigrams
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_ngram(n=3)
 ```
 
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #clean_ngram(n=2)
 ```
 
 
 #### 2.3.4 Create and Clean Quadgrams
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_ngram(n=4)
 ```
 
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #clean_ngram(n=4)
 ```
 
@@ -191,47 +205,55 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 
 #### 2.4.1 Create and Trim Uni-dfm
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_dfm(n=1)
 ```
 
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #trim_dfm(n=1)
 ```
 
 
 #### 2.4.2 Create and Trim Bi-dfm
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_dfm(n=2)
 ```
 
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #trim_dfm(n=2)
 ```
 
 
 #### 2.4.3 Create and Trim Tri-dfm
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_dfm(n=3)
 ```
 
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #trim_dfm(n=3)
 ```
 
 #### 2.4.4 Create and Trim Quad-dfm
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_dfm(n=4)
 ```
 
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #trim_dfm(n=4)
 ```
 
@@ -240,26 +262,30 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 
 #### 2.5.1 Create Unigram Data Table with Tokens and Frequency
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_DT(n=1)
 ```
 
 
 #### 2.5.2 Create Bigram Data Table with Tokens and Frequency
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_DT(n=2)
 ```
 
 #### 2.5.3 Create Trigram Data Table with Tokens and Frequency
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_DT(n=3)
 ```
 
 #### 2.5.4 Create Quadgram Data Table with Tokens and Frequency
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #create_DT(n=4)
 ```
 
@@ -270,9 +296,8 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 The files that we will use in the project are bigger than **150Mbytes** each one. In order to
 
 
-```{r echo=TRUE}
 
-
+```r
 #init_DT_tables() 
 #calculate_prob_kn(1)
 ```
@@ -280,14 +305,16 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 
 Those are information in the Unigram DT:
 
-```{r echo=TRUE, results='asis'}
+
+```r
 # Print the basic information about the files. 
 #kable(DT.uni[1:10])
 ```
 
 The prob table has:
 
-```{r echo=TRUE, results='asis'}
+
+```r
 # Print the basic information about the files. 
 #kable(DT.uni.prob[1:10])
 ```
@@ -297,21 +324,24 @@ The prob table has:
 The files that we will use in the project are bigger than **150Mbytes** each one. In order to
 
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #init_DT_tables() 
 #calculate_prob_kn(2)
 ```
 
 Those are information in the Unigram DT:
 
-```{r echo=TRUE, results='asis'}
+
+```r
 # Print the basic information about the files. 
 #kable(DT.bi[1:10])
 ```
 
 The prob table has:
 
-```{r echo=TRUE, results='asis'}
+
+```r
 # Print the basic information about the files. 
 #kable(DT.bi.prob[1:10])
 ```
@@ -322,20 +352,23 @@ The prob table has:
 The files that we will use in the project are bigger than **150Mbytes** each one. In order to
 
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #calculate_prob_kn(3)
 ```
 
 Those are information in the Unigram DT:
 
-```{r echo=TRUE, results='asis'}
+
+```r
 # Print the basic information about the files. 
 #kable(DT.tri[1:10])
 ```
 
 The prob table has:
 
-```{r echo=TRUE, results='asis'}
+
+```r
 # Print the basic information about the files. 
 #kable(DT.tri.prob[1:10])
 ```
@@ -345,20 +378,23 @@ The prob table has:
 The files that we will use in the project are bigger than **150Mbytes** each one. In order to
 
 
-```{r echo=TRUE, cache = TRUE}
+
+```r
 #calculate_prob_kn(4)
 ```
 
 Those are information in the Unigram DT:
 
-```{r echo=TRUE, results='asis'}
+
+```r
 # Print the basic information about the files. 
 #kable(DT.quad[1:10])
 ```
 
 The prob table has:
 
-```{r echo=TRUE, results='asis'}
+
+```r
 # Print the basic information about the files. 
 #kable(DT.quad.prob[1:10])
 ```
@@ -368,34 +404,40 @@ The prob table has:
 
 ### 4.1 Example with Unigram
 
-```{r echo=TRUE} 
+
+```r
 #source("Pred Next Word vFinal.R")
 #prediction1 <- predict_nextword(c("how"),100,0,5) 
 ```
 
-```{r echo=TRUE, results='asis'} 
+
+```r
 # Print the basic information about the files.  
 #kable(prediction1)
 ```
 
 ### 4.2 Example with Bigram
 
-```{r echo=TRUE} 
+
+```r
 #prediction2 <- predict_nextword(c("how","are"),100,0,5) 
 ```
 
-```{r echo=TRUE, results='asis'} 
+
+```r
 # Print the basic information about the files.  
 #kable(prediction2)
 ```
 
 ### 4.3 Example with Trigram
 
-```{r echo=TRUE} 
+
+```r
 #prediction3 <- predict_nextword(c("how","are","you"),100,0,5) 
 ```
 
-```{r echo=TRUE, results='asis'}
+
+```r
 # Print the basic information about the files. 
 #kable(prediction3)
 ```
@@ -403,7 +445,8 @@ The prob table has:
 
 ## 4. Prediction of next word using Regex
 
-```{r echo=TRUE} 
+
+```r
 #source("Pred Next Word vFinal.R")
 #source("Pred Next Word Regex vFinal.R")
 #prediction1 <- predict_nextword_regex(c("how","are",""),100,0,5)
@@ -411,7 +454,8 @@ The prob table has:
 ```
 
 
-```{r echo=TRUE, results='asis'}
+
+```r
 # Print the basic information about the files. 
 #kable(prediction1)
 #kable(prediction2)
