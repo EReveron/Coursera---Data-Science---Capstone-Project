@@ -16,6 +16,18 @@ This is a Milestone report related with the Coursera Capstone Project, the targe
 
 ## 1. Optimizations 
 
+$$\sum_{i=1}^n X_i$$
+
+$$\alpha, \beta,  \gamma, \Gamma$$
+
+$$a \pm b$$
+$$x \ge 15$$
+$$a_i \ge 0~~~\forall i$$
+
+$$\sum_{i=1}^{n}\left( \frac{X_i}{Y_i} \right)$$
+
+$$\sum_{i=1}^{n} X^3_i$$
+
 ### 1.1 Create Ngrams Tables
 
 ###	1.1.1 quanteda Library

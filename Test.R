@@ -20,19 +20,22 @@ library(data.table)
 library(ggplot2)
 library(microbenchmark)
 
-setwd("D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
+#setwd("D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
+setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
 
 # For reproducibility
 set.seed(12345)
 
 source("Create Ngrams Data Table vFinal.R")
 #source("Knersey-ney vFinal.R")
-source("Knersey-ney Optimazed vFinal2.R")
+#source("Knersey-ney Optimazed vFinal2.R")
+source("Knersey-ney Optimazed vFinal 4.R")
 source("Main Predict Word vFinal.R")
 source("Pred Next Word Regex vFinal.R")
 source("Pred Next Word vFinal.R")
 
-setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+#setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
 
 
 mydata <- "this is a demo of games.this is a game demo a game. its a demo of games . a real a demo if games"
@@ -92,6 +95,10 @@ top.uni <- topfeatures(uni.dfm.clean,n.uni)
 DT.uni <<- data.table(t1=names(top.uni),freq=top.uni)
 
 
+p1 <- 1
+p2 <- p1 +1
+
+
 n.bi <- nfeature(bi.dfm.clean)
 top.bi <- topfeatures(bi.dfm.clean,n.bi)
 DT.bi <<- data.table(V1=names(top.bi),freq=top.bi)
@@ -113,10 +120,32 @@ DT.quad <- DT.quad[,c("t1", "t2","t3","t4") := tstrsplit(V1, "_", fixed=TRUE),]
 DT.quad <<- DT.quad[,list(t1,t2,t3,t4,freq),]
 
 
-calculate_prob_kn_opt(1,-1,1)
-calculate_prob_kn_opt(2,-1,1)
-calculate_prob_kn_opt(3,-1,1)
-calculate_prob_kn_opt(4,-1,1)
+
+DT.uni.prob <<- as.data.table(DT.uni, key = "t1")
+DT.uni.prob <<- DT.uni.prob[,freq1:=freq,][,list(t1,freq1),]
+
+DT.bi.prob <<- as.data.table(DT.bi, key = "t1,t2")
+DT.bi.prob <<- DT.bi.prob[,freq2:=freq,][,list(t1,t2,freq2),]
+
+DT.tri.prob <<- as.data.table(DT.tri, key = "t1,t2,t3")
+DT.tri.prob <<- DT.tri.prob[,freq3:=freq,][,list(t1,t2,t3,freq3),]
+
+DT.quad.prob <<- as.data.table(DT.quad, key = "t1,t2,t3,t4")
+DT.quad.prob <<- DT.quad.prob[,freq4:=freq,][,list(t1,t2,t3,t4,freq4),]
+
+
+n.uni <<- nrow(DT.uni.prob)
+numwords.uni <<- sum(DT.uni.prob$freq1)
+
+n.bi <<- nrow(DT.bi.prob)
+n1.bi <<- nrow(DT.bi.prob[freq2 == p1,,])
+n2.bi <<- nrow(DT.bi.prob[freq2 == p2,,])
+
+
+calculate_prob_kn_opt(1,50,1)
+calculate_prob_kn_opt(2,50,1)
+calculate_prob_kn_opt(3,50,1)
+calculate_prob_kn_opt(4,50,1)
 
 
 
