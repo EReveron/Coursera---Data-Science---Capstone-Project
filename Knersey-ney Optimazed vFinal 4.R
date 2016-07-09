@@ -628,6 +628,11 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
                              D3 / sum.n31 * n22 * # lambda
                              pkn22,]
                
+               DT.quad.prob[, c("a32","l32") :=  
+                              list(ifelse(D3 > n31,0,n31 - D3) /  sum.n31,  
+                              D3 / sum.n31 * n22) ,]
+               
+               
                # Let's calculate Pkn(t1 t2 t3 t4)
                print("--> Calculating Kneser-ney Prob for High Order Quadgrams = pkn41(t1 t2 t3 t4)...")
                print("    Pkn(t1 t2 t3 t4) = max{ c(t1 t2 t3 t4) - D4, 0 } / (sum(w) c(t1 t2 t3 w) + ")
