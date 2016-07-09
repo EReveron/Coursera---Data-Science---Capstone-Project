@@ -492,8 +492,8 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
                # Let's add pkn12(t3) to the Trigrams Table
                print("...... Adding to Trigrams Table: pkn12(t3) ...")
                DT.bi.temp2 <- copy(DT.bi.prob)
-               DT.bi.temp2 <- DT.bi.temp2[,list(t1,pkn12),]
-               DT.bi.temp2[,c("t3","pkn12","t1"):= list(t1,pkn12,NULL)] # Change t1 for t3 for merge
+               DT.bi.temp2 <- DT.bi.temp2[,list(t2,pkn12),]
+               DT.bi.temp2[,c("t3","pkn12","t2"):= list(t2,pkn12,NULL)] # Change t1 for t3 for merge
                setkey(DT.bi.temp2,"t3")
                DT.bi.temp2 <- unique(DT.bi.temp2)
                DT.tri.prob <- merge(DT.tri.prob, DT.bi.temp2 , by = "t3")
@@ -508,6 +508,14 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
                             D2 / sum.n21 * n12 * # lambda
                             pkn12,]
                
+               
+               DT.tri.prob[, c("a22","l22","pkn12"):= list ( 
+                             ifelse(D2 > n21,0,n21 - D2) /  sum.n21,
+                             
+                             D2 / sum.n21 * n12, # lambda
+                             pkn12),]
+               
+               
                # Let's calculate Pkn(t1 t2 t3)
                print("--> Calculating Kneser-ney Prob for High Order Trigrams = pkn31(t1 t2 t3)...")
                print("    Pkn(t1 t2 t3) = max{ c(t1 t2 t3) - D3, 0 } / ???w c(t1 t2 w) + ")
@@ -518,6 +526,13 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
                             ifelse(D3 > freq3,0,freq3 - D3) /  sum.freq3 + 
                             D3 / sum.freq3 * n22 * # lambda
                             pkn22,]
+               
+               DT.tri.prob[, c("a31","l31","pkn22"),
+                           list(
+                             ifelse(D3 > freq3,0,freq3 - D3) /  sum.freq3, 
+                             D3 / sum.freq3 * n22, 
+                             pkn22),]
+               
                
                tic2 <- proc.time()
                
@@ -590,7 +605,7 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
                DT.tri.temp1[, c("t2","t3","n22","t1"):=list(t1,t2,n22,NULL), ]
                setkeyv(DT.tri.temp1,c("t2","t3"))
                DT.tri.temp1 <- unique(DT.tri.temp1)
-               DT.quad.prob <- merge(DT.tri.prob, DT.tri.temp1 , by = c("t2","t3"))
+               DT.quad.prob <- merge(DT.quad.prob, DT.tri.temp1 , by = c("t2","t3"))
                
                # Let's add pkn22(t3 t4) to the Quadgrams Table
                print("...... Adding to Quadgrams Table: pkn22(t3 t4) ...")
@@ -600,14 +615,13 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
                
                setkeyv(DT.tri.temp2,c("t3","t4"))
                DT.tri.temp2 <- unique(DT.tri.temp2)
-               
-               
                DT.quad.prob <- merge(DT.quad.prob, DT.tri.temp2 , by = c("t3","t4"))
                
                # Let's calculate Pknr(t2 t3 t4)
                print("...... Calculating Kneser-ney Prob for Low Order Trigrams = pkn32(t2 t3 t4)...")
                print("...... Pknr(t2 t3 t4) = max{ N1+(t2 t3 t4) - D3, 0 } / (sum(w) N1+(* t2 t3 w)) + ")
                print("                        D3 / (sum(w) N1+(* t2 t3 w)) * N1+(t2 t3 *) x Pknr(t3 t4) ...")
+               
                
                DT.quad.prob[, pkn32:= 
                              ifelse(D3 > n31,0,n31 - D3) /  sum.n31 + 

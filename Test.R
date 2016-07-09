@@ -20,8 +20,8 @@ library(data.table)
 library(ggplot2)
 library(microbenchmark)
 
-#setwd("D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
-setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
+setwd("D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
+#setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
 
 # For reproducibility
 set.seed(12345)
@@ -34,8 +34,8 @@ source("Main Predict Word vFinal.R")
 source("Pred Next Word Regex vFinal.R")
 source("Pred Next Word vFinal.R")
 
-#setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
-setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+#setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
 
 
 mydata <- "this is a demo of games.this is a game demo a game. its a demo of games . a real a demo if games"
