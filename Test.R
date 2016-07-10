@@ -296,10 +296,10 @@ calculate_prob_kn(3,250,1)
 calculate_prob_kn(4,250,1)
 
 
-create_DT(1,-1,5)
-create_DT(2,-1,5)
-create_DT(3,-1,5)
-create_DT(4,-1,5)
+create_DT(1,-1,1)
+create_DT(2,-1,1)
+create_DT(3,-1,1)
+create_DT(4,-1,1)
 
 
 
@@ -343,5 +343,19 @@ predict_nextword_regex(c("this","is"),100,0,5)
 
 predict_nextword_regex(c("this","is","not"),100,0,5)
 
+
+
+################################## TEST FINAL ################################
+
+
+create_DT(1,-1,0)
+create_DT(2,-1,0)
+create_DT(3,-1,0)
+create_DT(4,-1,0)
+
+calculate_prob_kn_opt(1,-1,1,-1)
+calculate_prob_kn_opt(2,-1,1,-1)
+calculate_prob_kn_opt(3,-1,1,-1)
+calculate_prob_kn_opt(4,-1,1,-1)
 
 
