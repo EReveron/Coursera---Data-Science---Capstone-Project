@@ -13,20 +13,14 @@
 
 library(data.table)
 
-#setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
-#setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
-
-# For reproducibility
-set.seed(12345)
-
+####################################
 elapsed_time <- function(tic1,tic2) {
   format((tic2-tic1)[3][[1]], digits = 2)
 }
 
-
+####################################
 topn_predict_regex <- function(x,p=0,n=5,f=1) {
-  # f is the factor
-  
+
   
   print(paste("-----> topn_predict_regex(",
               " word:=(",paste(x, collapse=","),")",
@@ -36,7 +30,6 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
               ").......",sep=""))
   
   
-  #print(paste("-----> topn_predict(",x,",",p,",",n,",",f,").......",sep=""))
   t1 <- proc.time()
   topn <- NULL
   
@@ -126,42 +119,42 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
   }
   t2 <- proc.time()
   
-  print(paste("-----> topn_predict_regex: Running Time .......",
+  print(paste("-----> FINISH: topn_predict_regex: Running Time .......",
               elapsed_time(t1,t2)," seconds ...",sep=""))
   
   topn
 }
 
-
-predict_nextword_regex <- function(x,p=0,n=5,lines=-1) {
-  
-  l <- length(x)
-  
-  load_DT_prob_final_table(1,lines)
-  load_DT_prob_final_table(2,lines)
-  load_DT_prob_final_table(3,lines)
-  load_DT_prob_final_table(4,lines)
-  
-  print(paste("-----> predict_nextword_regex(",
+####################################
+predict_nextword_regex <- function(x,p=0,n=5,training_set=80) {
+  print(paste("-----> INIT: predict_nextword_regex(",
               " word:=(",paste(x, collapse=","),")",
-              ", lines:=",lines,
+              ", training_set:=",training_set,
               ", prob:=",p,
               ", n:=",n,
               ").......",sep=""))
+  
+  l <- length(x)
+  load_DT_prob_final_table(1,training_set)
+  load_DT_prob_final_table(2,training_set)
+  load_DT_prob_final_table(3,training_set)
+  load_DT_prob_final_table(4,training_set)
+  
+  
   t1 <- proc.time()
   
   result <- topn_predict_regex(x,p,n,1)
 
-  t2 <- proc.time()
-  print(paste("-----> predict_nextword_regex: Running Time .......",
-              elapsed_time(t1,t2)," seconds ...",sep=""))
   
   # Remove duplicated values, some words could appers duplicated as a part of
   # backoff strategy
   setkey(result,word)
   result <- unique(result)
   result[head(order(-prob),n)]
-
+  t2 <- proc.time()
+  print(paste("-----> FINISH: predict_nextword_regex: Running Time .......",
+              elapsed_time(t1,t2)," seconds ...",sep=""))
+  
 }  
 
 

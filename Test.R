@@ -26,10 +26,10 @@ setwd("D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Pr
 # For reproducibility
 set.seed(12345)
 
-source("Create Ngrams Data Table vFinal.R")
+source("Create Ngrams Data Table vFinal 2.R")
 #source("Knersey-ney vFinal.R")
 #source("Knersey-ney Optimazed vFinal2.R")
-source("Knersey-ney Optimazed vFinal 4.R")
+source("Knersey-ney Optimazed vFinal 5.R")
 source("Main Predict Word vFinal.R")
 source("Pred Next Word Regex vFinal.R")
 source("Pred Next Word vFinal.R")
@@ -353,9 +353,9 @@ create_DT(2,-1,0)
 create_DT(3,-1,0)
 create_DT(4,-1,0)
 
-calculate_prob_kn_opt(1,-1,1,-1)
-calculate_prob_kn_opt(2,-1,1,-1)
-calculate_prob_kn_opt(3,-1,1,-1)
-calculate_prob_kn_opt(4,-1,1,-1)
+calculate_prob_kn(n=1,lines=-1,p1=1)
+calculate_prob_kn(n=2,lines=-1,p1=1)
+calculate_prob_kn(n=3,lines=-1,p1=1)
+calculate_prob_kn(n=4,lines=-1,p1=1)
 
 

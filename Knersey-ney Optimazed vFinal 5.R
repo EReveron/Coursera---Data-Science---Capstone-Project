@@ -1,5 +1,5 @@
 #####################################################################
-# Knersey-ney Optimazed VFinal 4
+# Knersey-ney Optimazed VFinal 5
 # Calculate Knersey-ney of the differents ngrams (unigram, bigram, trigram and quadgrams)
 #          to be used later with Kneser-ney algortihm to calculate the
 #          probability of each ngram for predict the next word.
@@ -29,24 +29,24 @@ set.seed(12345)
 
 
 ####################################
-load_DT_table <- function (n,lines=-1) {
+load_DT_table <- function (n,training_set=80) {
   
   switch(n,
          "1" = {
            var.name <- "DT.uni"
-           file.name <- create_filename("DT_uni",lines)
+           file.name <- create_filename("DT_uni",training_set)
          },
          "2" = {
            var.name <- "DT.bi"
-           file.name <- create_filename("DT_bi",lines)
+           file.name <- create_filename("DT_bi",training_set)
          },
          "3" = {
            var.name <- "DT.tri"
-           file.name <- create_filename("DT_tri",lines)
+           file.name <- create_filename("DT_tri",training_set)
          },
          "4" = {
            var.name <- "DT.quad"
-           file.name <- create_filename("DT_quad",lines)
+           file.name <- create_filename("DT_quad",training_set)
          }
   )
   
@@ -54,7 +54,7 @@ load_DT_table <- function (n,lines=-1) {
   if (!exists(var.name)) {
     #Validate if the file exists an load the value
     if (file.exists(file.name)) {
-      print(paste("-----> load_DT_table(",n,").......",sep=""))
+      print(paste("-----> INIT: load_DT_table(n:=",n," training_set:=",training_set,").......",sep=""))
       t1 <- proc.time()
       
       print(paste("Loading DT file: ",file.name, sep =""))
@@ -70,20 +70,20 @@ load_DT_table <- function (n,lines=-1) {
       )
       
       t2 <- proc.time()
-      print(paste("-----> load_DT_table: Running Time .......",
+      print(paste("-----> FINISH: load_DT_table(n:=",n," training_set:=",training_set,"): Running Time .......",
                   elapsed_time(t1,t2)," seconds ...",sep=""))
       
     }
     else {
       # Error file doesn't exists
-      print(paste("Error file doesnt exist:",file.name, sep=""))
+      print(paste("-----> ERROR: load_DT_table(n:=",n,",training_set:=",training_set,"): Error file doesnt exist:",file.name, sep=""))
     }
   }
 }
 
 
 ####################################
-load_DT_prob_table_opt <- function (n,lines=-1,p1=5) {
+load_DT_prob_table <- function (n,training_set=80,p1=5) {
   
   # Values needed for Knersey-ney prob calculations
   p1 <<- p1
@@ -92,24 +92,24 @@ load_DT_prob_table_opt <- function (n,lines=-1,p1=5) {
   switch(n,
          "1" = {
            var.name <- "DT.uni.prob"
-           file.name <- create_filename("DT_uni_prob",lines)
-           file.name.temp <- create_filename("DT_uni_prob_temp", lines)
+           file.name <- create_filename("DT_uni_prob",training_set)
+           file.name.temp <- create_filename("DT_uni_prob_temp", training_set)
            
          },
          "2" = {
            var.name <- "DT.bi.prob"
-           file.name <- create_filename("DT_bi_prob",lines)
-           file.name.temp <- create_filename("DT_bi_prob_temp", lines)
+           file.name <- create_filename("DT_bi_prob",training_set)
+           file.name.temp <- create_filename("DT_bi_prob_temp", training_set)
          },
          "3" = {
            var.name <- "DT.tri.prob"
-           file.name <- create_filename("DT_tri_prob",lines)
-           file.name.temp <- create_filename("DT_tri_prob_temp", lines)
+           file.name <- create_filename("DT_tri_prob",training_set)
+           file.name.temp <- create_filename("DT_tri_prob_temp", training_set)
          },
          "4" = {
            var.name <- "DT.quad.prob"
-           file.name <- create_filename("DT_quad_prob",lines)
-           file.name.temp <- create_filename("DT_quad_prob_temp", lines)
+           file.name <- create_filename("DT_quad_prob",training_set)
+           file.name.temp <- create_filename("DT_quad_prob_temp", training_set)
          }
   )
   
@@ -122,8 +122,8 @@ load_DT_prob_table_opt <- function (n,lines=-1,p1=5) {
     } else {
       
       
-      load_DT_table(n,lines)
-      print(paste("-----> load_DT_prob_table(","n:=",n," p1:=",p1," lines:=",lines,").......",sep=""))
+      load_DT_table(n,training_set)
+      print(paste("-----> INIT: load_DT_prob_table(","n:=",n," p1:=",p1," training_set:=",training_set,").......",sep=""))
       t1 <- proc.time()
       
       switch(n,
@@ -136,34 +136,23 @@ load_DT_prob_table_opt <- function (n,lines=-1,p1=5) {
                
                DT.bi.prob <<- as.data.table(DT.bi, key = "t1,t2")
                DT.bi.prob <<- DT.bi.prob[,freq2:=freq,][,list(t1,t2,freq2),]
-               
-               #DT.bi.prob[,c("t21","t22","freq2") := list(t1,t2,freq)]
-               #DT.bi.prob <<- DT.bi.prob[,list(t21,t22,freq2),]
-               
                rm(DT.bi,envir =.GlobalEnv)
              },
              "3" = {
                DT.tri.prob <<- as.data.table(DT.tri, key = "t1,t2,t3")
                DT.tri.prob <<- DT.tri.prob[,freq3:=freq,][,list(t1,t2,t3,freq3),]
-               #DT.tri.prob[,c("t31","t32","t33","freq3") := list(t1,t2,t3,freq)]
-               #DT.tri.prob <<- DT.tri.prob[,list(t31,t32,t33,freq3),]
-               
                rm(DT.tri,envir =.GlobalEnv)
              },
              "4" = {
                DT.quad.prob <<- as.data.table(DT.quad, key = "t1,t2,t3,t4")
                DT.quad.prob <<- DT.quad.prob[,freq4:=freq,][,list(t1,t2,t3,t4,freq4),]
-               #DT.quad.prob[,c("t41","t42","t43","t44","freq4") := list(t1,t2,t3,t4,freq)]
-               #DT.quad.prob <<- DT.quad.prob[,list(t41,t42,t43,t44,freq4),]
-               
                rm(DT.quad,envir =.GlobalEnv)
              }
       )
       t2 <- proc.time()
-      print(paste("-----> load_DT_prob_table: Running Time .......",
+      print(paste("-----> FINISH: load_DT_prob_table(","n:=",n," p1:=",p1," training_set:=",training_set,"): Running Time .......",
                   elapsed_time(t1,t2)," seconds ...",sep=""))
     }
-    
   }
   
   switch(n, # Calculate important values for Knersey-ney, including discount values 
@@ -218,70 +207,70 @@ load_DT_prob_table_opt <- function (n,lines=-1,p1=5) {
 
 
 ####################################
-load_DT_prob_tables_opt <- function (n,lines=-1,p1=5) { 
+load_DT_prob_tables <- function (n,training_set=80,p1=5) { 
   
-  print(paste("-----> load_DT_prob_tables_opt(n:=",n," p1:=",p1," lines:=",lines,").......",sep=""))
+  print(paste("-----> INIT: load_DT_prob_tables(n:=",n," p1:=",p1," training_set:=",training_set,").......",sep=""))
   t1 <- proc.time()
   
   switch(n,
          "1" = {
-           load_DT_prob_table_opt(1,lines,p1)
-           load_DT_prob_table_opt(2,lines,p1)
+           load_DT_prob_table(1,training_set,p1)
+           load_DT_prob_table(2,training_set,p1)
          },
          "2" = {
-           load_DT_prob_table_opt(1,lines,p1)
-           load_DT_prob_table_opt(2,lines,p1)
+           load_DT_prob_table(1,training_set,p1)
+           load_DT_prob_table(2,training_set,p1)
          },
          "3" = {
-           load_DT_prob_table_opt(1,lines,p1)
-           load_DT_prob_table_opt(2,lines,p1)
-           load_DT_prob_table_opt(3,lines,p1)
+           load_DT_prob_table(1,training_set,p1)
+           load_DT_prob_table(2,training_set,p1)
+           load_DT_prob_table(3,training_set,p1)
          },
          "4" = {
-           load_DT_prob_table_opt(3,lines,p1)
-           load_DT_prob_table_opt(4,lines,p1)
+           load_DT_prob_table(3,training_set,p1)
+           load_DT_prob_table(4,training_set,p1)
          }
   )
   t2 <- proc.time()
   
-  print(paste("-----> load_DT_prob_tables_opt: Running Time .......",
+  print(paste("-----> FINISH: load_DT_prob_tables(n:=",n," p1:=",p1," training_set:=",training_set,"): Running Time .......",
               elapsed_time(t1,t2)," seconds ...",sep=""))
 }
 
 
 
 ####################################  
-calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
+calculate_prob_kn <- function(n,training_set=80,p1=5) {
     
   switch(n,
          "1" = {
            var.name <- "DT.uni.prob"
-           file.name <- create_filename("DT_uni_prob",lines)
+           file.name <- create_filename("DT_uni_prob",training_set)
            var.name.final <- "DT.uni.prob.final"
-           file.name.final <- create_filename("DT_uni_prob_final",lines)
-           file.name.temp <- create_filename("DT_uni_prob_temp",lines)
+           file.name.final <- create_filename("DT_uni_prob_final",training_set)
+           file.name.temp <- create_filename("DT_uni_prob_temp",training_set)
            
          },
          "2" = {
            var.name <- "DT.bi.prob"
-           file.name <- create_filename("DT_bi_prob",lines)
+           file.name <- create_filename("DT_bi_prob",training_set)
            var.name.final <- "DT.bi.prob.final"
-           file.name.final <- create_filename("DT_bi_prob_final",lines)
-           file.name.temp <- create_filename("DT_bi_prob_temp",lines)
+           file.name.final <- create_filename("DT_bi_prob_final",training_set)
+           file.name.temp <- create_filename("DT_bi_prob_temp",training_set)
          },
          "3" = {
            var.name <- "DT.tri.prob"
-           file.name <- create_filename("DT_tri_prob",lines)
+           file.name <- create_filename("DT_tri_prob",training_set)
            var.name.final <- "DT.tri.prob.final"
-           file.name.final <- create_filename("DT_tri_prob_final",lines)
-           file.name.temp <- create_filename("DT_tri_prob_temp",lines)
+           file.name.final <- create_filename("DT_tri_prob_final",training_set)
+           file.name.temp <- create_filename("DT_tri_prob_temp",training_set)
          },
          "4" = {
            var.name <- "DT.quad.prob.final"
-           file.name <- create_filename("DT_quad_prob_final",lines)
-           file.name.final <- create_filename("DT_quad_prob_final",lines)
+           file.name <- create_filename("DT_quad_prob_final",training_set)
+           file.name.final <- create_filename("DT_quad_prob_final",training_set)
            var.name.final <- "DT.quad.prob.final"
-           file.name.temp <- create_filename("DT_quad_prob_temp",lines)
+           file.name.temp <- create_filename("DT_quad_prob_temp",training_set)
          }
   )
   
@@ -293,17 +282,16 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
       load(file.name.final,.GlobalEnv) 
     } else {
       
-      load_DT_prob_tables_opt(n,lines,p1)
+      load_DT_prob_tables(n,training_set,p1)
       
-      print(paste("-----> calculate_prob_kn_opt(",n,",",lines,",",numlines,").......",sep=""))
+      print(paste("-----> INIT: calculate_prob_kn(n:=",n," training_set:=",training_set," p1:=",p1,").......",sep=""))
       tic1 <- proc.time()
       
-      print(paste("Calculating DT Prob Table Opt:", var.name, sep=""))
+      print(paste("Calculating DT Prob Table:", var.name, sep=""))
       
       
       switch(n,
              "1" = { # For each unigram lets calculate the kneser-ney prob
-               
                
                #################################################################################################
                # Calculate Knersey Prob for Unigrams
@@ -356,30 +344,18 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
                print(paste("Saving DT probability Temp file:",file.name.temp,sep=""))
                save(DT.uni.prob,file=file.name.temp)
                
-               # Clean the DT with only two columns (t1,prob)
+               # Clean the DT with only three columns (t1,freq1,prob)
                DT.uni.prob[,prob:=pkn11]
-               DT.uni.prob.final <<- DT.uni.prob[,list(t1,prob),]
+               DT.uni.prob.final <<- DT.uni.prob[,list(t1,freq1,prob),]
 
                rm(DT.uni.prob,envir =.GlobalEnv)
                gc()
                print(paste("Saving DT probability final file:",file.name.final,sep=""))
                save(DT.uni.prob.final,file=file.name.final)
-               
-               
              },
              
              "2" = {
-               
-               
-               # Let's add freq1(t1) to the Bigrams Table
-               print("... Adding to Bigrams Table: freq1(t1) ...")
-               DT.uni.temp1 <- copy(DT.uni.prob)
-               DT.uni.temp1 <- DT.uni.temp1[,list(t1,freq1),]
-               DT.bi.prob <- merge(DT.bi.prob, DT.uni.temp1 , by = "t1")
-               
-           
-               
-               
+              
                #################################################################################################
                # Calculate Knersey Prob for High order Bigrams
                #  Pkn(t1 t2) := max{ c(t1 t2) - D2, 0 } / (sum(w) c(t1 w)) + D2 / (sum(w) c(t1 w)) * N1+(t1 *) x Pknr (t2)
@@ -416,43 +392,19 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
                print("                    D2 / (sum(w) c(t1 w)) * N1+(t1 *) x Pknr (t2) ...")
  
                DT.bi.prob[, pkn21:= 
-                            ifelse(D2 > freq2,0,freq2 - D2) /  freq1 + 
-                            D2 / freq1 * n12 * # lambda
-                            pkn12,]
-               
-               ######### TESTTTTTT
-               DT.bi.prob[, pkn21_1:= 
                             ifelse(D2 > freq2,0,freq2 - D2) /  sum.freq2 + 
                             D2 / sum.freq2 * n12 * # lambda
                             pkn12,]
-               
-               ########## TESTTTTTTT
-               
-               
-               # For debugging purposes
-               #DT.bi.prob[, c("a21_num","sum.freq2","a21","l21_D2_sum.freq2","l21","pkn12","l22_pkn122") :=
-                #            list(
-                 #             ifelse(D2 > freq2,0,freq2 - D2), #a21_num
-                  #            sum.freq2,                       #sum.freq2
-                   #           ifelse(D2 > freq2,0,freq2 - D2) / sum.freq2, #a21
-                      
-                    #          D2 / sum.freq2,           # l21_D2_sum.freq2
-                              
-                     #         D2 / sum.freq2 * n12,     # l21
-                      #        pkn12,                    # pkn12
-                       #       D2 / sum.freq2 * n12 * pkn12 #l22_pkn12
-                        #      ),]
-                
                
                tic2 <- proc.time()
                
                print(paste("Saving DT probability Temp file:",file.name.temp,sep=""))
                save(DT.bi.prob,file=file.name.temp)
                
-               # Clean the DT with only three columns (t1,t2,prob)
+               # Clean the DT with only four columns (t1,t2,freq2,prob)
                
                DT.bi.prob[,prob:=pkn21]
-               DT.bi.prob.final <<- DT.bi.prob[,list(t1,t2,prob),]
+               DT.bi.prob.final <<- DT.bi.prob[,list(t1,t2,freq2,prob),]
                
                rm(DT.bi.prob,envir =.GlobalEnv)
                gc()
@@ -463,23 +415,6 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
              
              "3" = {
                
-               # Let's add freq2(t1 t2) to the Trigrams Table
-               print("...... Adding to Trigrams Table: freq2(t1 t2) ...")
-               DT.bi.temp1 <- copy(DT.bi.prob)
-               DT.bi.temp1 <- DT.bi.temp1[,list(t1,t2,freq2),]
-               DT.tri.prob <- merge(DT.tri.prob, DT.bi.temp1 , by = c("t1","t2"))
-               
-               # Let's add n11(t2) to the Trigrams Table
-               print("...... Adding to Trigrams Table: n11(t2) ...")
-               DT.uni.temp1 <- copy(DT.uni.prob)
-               DT.uni.temp1 <- DT.uni.temp1[,list(t1,n11),]
-               DT.uni.temp1[, c("t2","n11","t1"):=list(t1,n11,NULL), ]
-               DT.tri.prob <- merge(DT.tri.prob, DT.uni.temp1 , by = "t2")
-               
-               rm(DT.uni.temp1)
-               gc()
-               
-                              
                #################################################################################################
                # Calculate Knersey Prob for Trigrams
                #  Pkn(t1 t2 t3) = max{ c(t1 t2 t3) - D3, 0 } / (sum(w) c(t1 t2 w)) + 
@@ -556,62 +491,31 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
                print("...... Pknr(t2 t3) = max{ N1+(t2 t3) - D2, 0 } / (sum(w) N1+(* t2 w)) + ")
                print("                     D2 / (sum(w) N1+(* t2 w)) * N1+(t2 *) x Pknr(t3) ...")
                
+              
                DT.tri.prob[, pkn22:= 
-                            ifelse(D2 > n21,0,n21 - D2) /  sum.n21 + 
-                            D2 / sum.n21 * n12 * # lambda
-                            pkn12,]
-               
-               
-               ################ TEST#########################
-               DT.tri.prob[, pkn22_1:= 
                              ifelse(D2 > n21,0,n21 - D2) /  sum.n21 + 
                              D2 / sum.n21 * n12 * # lambda
                              pkn12,]
-               ################ TEST#########################
-               
-               
-              # DT.tri.prob[, c("a22","l22","pkn12"):= list ( 
-               #              ifelse(D2 > n21,0,n21 - D2) /  sum.n21,
-                             
-                #             D2 / sum.n21 * n12, # lambda
-                 #            pkn12),]
-               
                
                # Let's calculate Pkn(t1 t2 t3)
                print("--> Calculating Kneser-ney Prob for High Order Trigrams = pkn31(t1 t2 t3)...")
-               print("    Pkn(t1 t2 t3) = max{ c(t1 t2 t3) - D3, 0 } / ???w c(t1 t2 w) + ")
+               print("    Pkn(t1 t2 t3) = max{ c(t1 t2 t3) - D3, 0 } / (sum(w) c(t1 t2 w)) + ")
                print("                    D3 / (sum(w) c(t1 t2 w)) * N1+(t1 t2 *) x Pknr (t2 t3)")
                
-               
                DT.tri.prob[, pkn31:= 
-                            ifelse(D3 > freq3,0,freq3 - D3) /  freq2 + 
-                            D3 / freq2 * n22 * # lambda
-                            pkn22,]
-               
-               #DT.tri.prob[, c("a31","l31","pkn22"),
-                #           list(
-                 #            ifelse(D3 > freq3,0,freq3 - D3) /  sum.freq3, 
-                #             D3 / sum.freq3 * n22, 
-                #             pkn22),]
-               
-               ################ TEST#########################
-               DT.tri.prob[, pkn31_1:= 
                              ifelse(D3 > freq3,0,freq3 - D3) /  sum.freq3 + 
                              D3 / sum.freq3 * n22 * # lambda
-                             pkn22_1,]
-               
-               ################ TEST#########################
-               
+                             pkn22,]
                
                tic2 <- proc.time()
                
                print(paste("Saving DT probability Temp file:",file.name.temp,sep=""))
                save(DT.tri.prob,file=file.name.temp)
                
-               # Clean the DT with only three columns (t1,t2,prob)
+               # Clean the DT with only five columns (t1,t2,t3,freq3,prob)
                
                DT.tri.prob[,prob:=pkn31]
-               DT.tri.prob.final <<- DT.tri.prob[,list(t1,t2,t3,prob),]
+               DT.tri.prob.final <<- DT.tri.prob[,list(t1,t2,t3,freq3,prob),]
                
                rm(DT.tri.prob,envir =.GlobalEnv)
                gc()
@@ -621,22 +525,6 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
                
              },
              "4" = {
-               
-               # Let's add freq3(t1 t2 t3) to the Quadgrams Table
-               #print("...... Adding to Trigrams Table: freq3(t1 t2 t3) ...")
-               #DT.tri.temp1 <- DT.tri.prob
-               #DT.tri.temp1 <- DT.tri.temp1[,list(t1,t2,t3,freq3),]
-               #DT.quad.prob <- merge(DT.quad.prob, DT.tri.temp1 , by = c("t1","t2","t3"))
-               
-               
-               # Let's add n21(t2 t3) to the Quadgrams Table
-               print("...... Adding to Quadgrams Table: n21(t2 t3) ...")
-               DT.tri.temp1 <- DT.tri.prob
-               DT.tri.temp1 <- DT.tri.temp1[,list(t2,t3,n21),]
-               setkeyv(DT.tri.temp1,c("t2","t3"))
-               DT.tri.temp1 <- unique(DT.tri.temp1)
-               DT.quad.prob <- merge(DT.quad.prob, DT.tri.temp1 , by = c("t2","t3"))
-               
                
                #################################################################################################
                # Calculate Knersey Prob for Quadgrams
@@ -695,83 +583,45 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
                DT.quad.prob <- merge(DT.quad.prob, DT.tri.temp1 , by = c("t2","t3"))
                
                # Let's add pkn22(t3 t4) to the Quadgrams Table
-               #print("...... Adding to Quadgrams Table: pkn22(t3 t4) ...")
-               #DT.tri.temp1 <- copy(DT.tri.prob)
-               #DT.tri.temp1 <- DT.tri.temp1[,list(t2,t3,pkn22),]
-               #DT.tri.temp1[,c("t3","t4","pkn22","t2"):= list(t2,t3,pkn22,NULL)] # Change t2 for t3 & t3 for t4 for merge
-               #setkeyv(DT.tri.temp1,c("t3","t4"))
-               #DT.tri.temp1 <- unique(DT.tri.temp1)
-               #DT.quad.prob <- merge(DT.quad.prob, DT.tri.temp1 , by = c("t3","t4"))
-               
-               
-               ############## TEST ###########################################
-               # Let's add pkn22_1(t3 t4) to the Quadgrams Table
-               print("...... Adding to Quadgrams Table: pkn22_1(t3 t4) ...")
+               print("...... Adding to Quadgrams Table: pkn22(t3 t4) ...")
                DT.tri.temp1 <- copy(DT.tri.prob)
-               DT.tri.temp1 <- DT.tri.temp1[,list(t2,t3,pkn22_1),]
-               DT.tri.temp1[,c("t3","t4","pkn22_1","t2"):= list(t2,t3,pkn22_1,NULL)] # Change t2 for t3 & t3 for t4 for merge
+               DT.tri.temp1 <- DT.tri.temp1[,list(t2,t3,pkn22),]
+               DT.tri.temp1[,c("t3","t4","pkn22_1","t2"):= list(t2,t3,pkn22,NULL)] # Change t2 for t3 & t3 for t4 for merge
                setkeyv(DT.tri.temp1,c("t3","t4"))
                DT.tri.temp1 <- unique(DT.tri.temp1)
                DT.quad.prob <- merge(DT.quad.prob, DT.tri.temp1 , by = c("t3","t4"))
-               ############### TEST ###################################################
                rm(DT.tri.temp1)
                gc()
-               
-               
                
                # Let's calculate Pknr(t2 t3 t4)
                print("...... Calculating Kneser-ney Prob for Low Order Trigrams = pkn32(t2 t3 t4)...")
                print("...... Pknr(t2 t3 t4) = max{ N1+(t2 t3 t4) - D3, 0 } / (sum(w) N1+(* t2 t3 w)) + ")
                print("                        D3 / (sum(w) N1+(* t2 t3 w)) * N1+(t2 t3 *) x Pknr(t3 t4) ...")
                
-               
-               #DT.quad.prob[, pkn32:= 
-              #               ifelse(D3 > n31,0,n31 - D3) /  sum.n31 + 
-              #               D3 / sum.n31 * n22 * # lambda
-              #               pkn22,]
-               
-               ################# TEST ##################################
-               DT.quad.prob[, pkn32_1:= 
+               DT.quad.prob[, pkn32:= 
                               ifelse(D3 > n31,0,n31 - D3) /  sum.n31 + 
                               D3 / sum.n31 * n22 * # lambda
-                              pkn22_1,]
-               ################# TEST ###################################
-               
-               #DT.quad.prob[, c("a32","l32") :=  
-              #                list(ifelse(D3 > n31,0,n31 - D3) /  sum.n31,  
-               #               D3 / sum.n31 * n22) ,]
-               
-               
+                              pkn22,]
+
                # Let's calculate Pkn(t1 t2 t3 t4)
                print("--> Calculating Kneser-ney Prob for High Order Quadgrams = pkn41(t1 t2 t3 t4)...")
                print("    Pkn(t1 t2 t3 t4) = max{ c(t1 t2 t3 t4) - D4, 0 } / (sum(w) c(t1 t2 t3 w) + ")
                print("                       D4 / (sum(w) c(t1 t2 t3 w)) * N1+(t1 t2 t3 *) x Pknr (t2 t3 t4)")
                
-               #DT.quad.prob[, pkn41:= 
-                #             ifelse(D4 > freq4,0,freq4 - D4) /  freq3 + 
-                 #            D4 / freq3 * n32 * # lambda
-                  #           pkn32,]
-               
-               ################# TEST ##################################
-               DT.quad.prob[, pkn41_1:= 
+               DT.quad.prob[, pkn41:= 
                               ifelse(D4 > freq4,0,freq4 - D4) /  sum.freq4 + 
                               D4 / sum.freq4 * n32 * # lambda
-                              pkn32_1,]
-               
-               
-               
-               
-               ################# TEST ###################################
+                              pkn32,]
                
                tic2 <- proc.time()
                
                print(paste("Saving DT probability Temp file:",file.name.temp,sep=""))
                save(DT.quad.prob,file=file.name.temp)
                
-               # Clean the DT with only five columns (t1,t2,t3,t4,prob)
+               # Clean the DT with only six columns (t1,t2,t3,t4,freq4,prob)
                
-               DT.quad.prob[,prob:=pkn41_1]
-               DT.quad.prob.final <<- DT.quad.prob[,list(t1,t2,t3,t4,prob),]
+               DT.quad.prob[,prob:=pkn41]
+               DT.quad.prob.final <<- DT.quad.prob[,list(t1,t2,t3,t4,freq4,prob),]
                
                rm(DT.quad.prob,envir =.GlobalEnv)
                gc()
@@ -781,7 +631,7 @@ calculate_prob_kn_opt <- function(n,lines=-1,p1=5,numlines=-1) {
              }
       )
       tic2 <- proc.time()
-      print(paste("-----> calculate_prob_kn_opt: Running Time .......",
+      print(paste("-----> FINISH: calculate_prob_kn(n:=",n," training_set:=",training_set," p1:=",p1,"): Running Time .......",
                   elapsed_time(tic1,tic2)," seconds ...",sep=""))
     }
   }

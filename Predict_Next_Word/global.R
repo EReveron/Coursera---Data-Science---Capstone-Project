@@ -8,10 +8,9 @@ library(shiny)
 library(googleVis)
 library(RColorBrewer)
 library(wordcloud)
-#library(memoise)
 library(DT)
 library(markdown)
-#library(rWordCloud)
+
 
 #setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
 setwd("D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
@@ -23,14 +22,11 @@ setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
 
 #setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/FINAL2/Final 27-06")
 
-#DT.uni.prob
-
 load_DT_prob_final_table(1)
 load_DT_prob_final_table(2)
 load_DT_prob_final_table(3)
 load_DT_prob_final_table(4)
 
-#setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
 
 
 
