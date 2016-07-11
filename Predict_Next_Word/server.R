@@ -13,11 +13,20 @@ shinyServer(function(input, output,session) {
     
     isolate({
       withProgress({
-        setProgress(message = "Loading Data Table...")
+        setProgress(message = "Loading Data Tables ...")
         
-        if (input$prob_table == "1") {}
-        
-        for (i in 1:1000) { print(i)}
+        if (input$prob_table == "With Freq >= 5") {
+          load_DT_prob_final_table(1,"50_5")
+          load_DT_prob_final_table(2,"50_5")
+          load_DT_prob_final_table(3,"50_5")
+          load_DT_prob_final_table(4,"50_5")
+        }
+        else {
+          load_DT_prob_final_table(1,"50_1")
+          load_DT_prob_final_table(2,"50_1")
+          load_DT_prob_final_table(3,"50_1")
+          load_DT_prob_final_table(4,"50_1")
+        }
       })
     })
   })

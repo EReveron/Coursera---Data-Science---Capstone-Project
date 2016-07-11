@@ -22,8 +22,8 @@ shinyUI(
                             #               "year, please select the same year from beginning to end.")),
                             #helpText(paste("When is selected a year range, the Apps will show the diff (Year2 - Year1).")),
                             div(class = "option-group",
-                                radioButtons("prob_table", "Probability Table",
-                                             choices = c("Freq >= 5", "Freq >= 1"), inline = TRUE)
+                                radioButtons("prob_table", "Ngram Probability Table",
+                                             choices = c("With Freq >= 5", "With Freq >= 1"), inline = TRUE)
                             ),
                             div(class = "option-group",
                                 radioButtons("pred_method", "Prediction Method",

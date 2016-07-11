@@ -212,7 +212,6 @@ predict_nextword <- function(x,p=0,n=5,training_set=80) {
   num_words <- nrow(result)
   
   if (num_words > 0) {
-  
     setkey(result,"word")
     result <- unique(result)
     result <- result[head(order(-prob),n)] 

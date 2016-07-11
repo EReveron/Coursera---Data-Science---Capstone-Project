@@ -169,12 +169,13 @@ predict_nextword_regex <- function(x,p=0,n=5,training_set=80) {
   # Remove duplicated values, some words could appers duplicated as a part of
   # backoff strategy
   num_words <- nrow(result)
-  
+
   if (num_words > 0) {
-    setkey(result,word)
+    setkey(result,"word")
     result <- unique(result)
-    result[head(order(-prob),n)]
-  } 
+    result <- result[head(order(-prob),n)] 
+  }
+  
   t2 <- proc.time()
   print(paste("-----> FINISH: predict_nextword_regex: Running Time .......",
               elapsed_time(t1,t2)," seconds ...",sep=""))
