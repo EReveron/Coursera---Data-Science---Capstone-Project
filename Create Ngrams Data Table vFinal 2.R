@@ -109,6 +109,37 @@ create_mydata <- function(list_filenames=NULL,training_set=80) {
       mydata <- stri_replace_all_regex(mydata,"@[[:alnum:].-]+", " TWITTER ", vectorize_all=FALSE)
       # Hastag  "#[[:alnum:].-]+"
       mydata <- stri_replace_all_regex(mydata,"#[[:alnum:].-]+", " HASTAG ", vectorize_all=FALSE)
+      
+      
+      # lIMITE DE PALABRA \\b
+      # \\p{Pd} -_
+      # \\d+
+      # \\p{P}
+      
+      # Quanteda
+      
+      # Hyphen "(\\b)[\\p{Pd}](\\b)"       \\p{Pd} = - _
+      # Numbers "\\b\\d+\\b"
+      # Intra words hyphen "(\\b)[\\p{Pd}](\\b)"
+      # Punctuaton "(?![", ifelse(removeTwitter, "_", "@#_"),  "])[\\p{P}]"
+      # Symbol "[\\p{S}]"
+      # Blank spaces "\\p{WHITE_SPACE}"
+      # Separators "^\\p{Z}$"
+      
+      
+      # Remove twitter paste0("(?![@#_])[\\p{P}]")
+      
+      
+      
+      
+      
+      
+      
+      
+      # URL "(f|ht)tp(s?):\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{2,256}\\.[a-z]{2,4}\\b([-a-zA-Z0-9@:%_\\+.~#?&//=]*)"
+      
+      # Hasgtag "#\\w+\\b"
+      
       # Words that starts with Numbers, "[[0-9].-]+[a-z]+"
       #mydata <- stri_replace_all_regex(mydata,"[[0-9].-]+[a-z]+", " WORDS_NUMBERS ", vectorize_all=FALSE)
       # Words that Finish with Numbers, "[a-z]+[[0-9].-]+"
@@ -121,7 +152,7 @@ create_mydata <- function(list_filenames=NULL,training_set=80) {
       
       
       print("... Replacing punctuation for special characters ....")   
-      mydata <- stri_replace_all_regex(mydata,"[.,;:]+", " eeee ", vectorize_all=FALSE)
+      mydata <- stri_replace_all_regex(mydata,"[.!?,;:]+", " eeee ", vectorize_all=FALSE)
   
       # Replace the rest of punctutation " = ! - _ [ ] { } + ? ¿ ¡ 
       
@@ -221,32 +252,32 @@ create_ngram <- function(n,list_filenames=NULL,training_set=80)
   if (!exists(var.name)) {
     #Validate if "file.name" file exists an load the value
     if (file.exists(file.name)) {
-      print(paste("Loading ngram file: ",file.name, sep =""))
+      print(paste("... Loading ngram file: ",file.name, sep =""))
       load(file.name,.GlobalEnv) 
     }  else {
       ## Load "alltokens" and create the ngrams
       create_alltokens(list_filenames,training_set)
       
       
-      print(paste("Creating Ngram:",var.name,sep=""))
+      print(paste("... Creating Ngram:",var.name,sep=""))
       
       switch(n,
              "1"= { #Unigrams
                uni.ngram <<- ngrams(alltokens, 1)
-               print(paste("Saving Ngram file:",file.name, sep=""))       
+               print(paste("... Saving Ngram file:",file.name, sep=""))       
              },
              "2"= { #Bigrams
                bi.ngram <<- ngrams(alltokens, 2)
-               print(paste("Saving Ngram file:",file.name,sep=""))
+               print(paste("... Saving Ngram file:",file.name,sep=""))
              },
              "3"= { #Trigrams
                tri.ngram <<- ngrams(alltokens, 3)
-               print(paste("Saving Ngram file:",file.name,sep=""))
+               print(paste("... Saving Ngram file:",file.name,sep=""))
                save(tri.ngram,file=file.name)
              },
              "4"= { #Quadgrams
                quad.ngram <<- ngrams(alltokens, 4)
-               print(paste("Saving Ngram file:",file.name,sep=""))
+               print(paste("... Saving Ngram file:",file.name,sep=""))
                save(quad.ngram,file=file.name)
              }
       )
@@ -383,7 +414,7 @@ create_dfm <- function(n,list_filenames=NULL,training_set=80) {
   if (!exists(var.name)) {
     #Validate if "file.name" file exists an load the value
     if (file.exists(file.name)) {
-      print(paste("Loading dfm file:", file.name, sep=""))
+      print(paste("... Loading dfm file:", file.name, sep=""))
       load(file.name,.GlobalEnv) 
     }  else {
       ## Load the ngrams and cleaned it 
@@ -391,31 +422,31 @@ create_dfm <- function(n,list_filenames=NULL,training_set=80) {
       
      
       
-      print(paste("Creating dfm:", var.name, sep=""))
+      print(paste("... Creating dfm:", var.name, sep=""))
       
       switch(n,
              "1" = {
                uni.dfm <<- dfm(uni.ngram.clean,toLower = FALSE)
                rm(uni.ngram.clean,envir =.GlobalEnv)
-               print(paste("Saving dfm file:", file.name, sep=""))
+               print(paste("... Saving dfm file:", file.name, sep=""))
                save(uni.dfm,file=file.name)
              },
              "2" = {
                bi.dfm <<- dfm(bi.ngram.clean,toLower = FALSE)
                rm(bi.ngram.clean,envir =.GlobalEnv)
-               print(paste("Saving dfm file:", file.name, sep=""))
+               print(paste("... Saving dfm file:", file.name, sep=""))
                save(bi.dfm,file=file.name)
              },
              "3" = {
                tri.dfm <<- dfm(tri.ngram.clean,toLower = FALSE)
                rm(tri.ngram.clean,envir =.GlobalEnv)
-               print(paste("Saving dfm file:", file.name, sep=""))
+               print(paste("... Saving dfm file:", file.name, sep=""))
                save(tri.dfm,file=file.name)
              },
              "4" = {
                quad.dfm <<- dfm(quad.ngram.clean,toLower = FALSE)
                rm(quad.ngram.clean,envir =.GlobalEnv)
-               print(paste("Saving dfm file:", file.name, sep=""))
+               print(paste("... Saving dfm file:", file.name, sep=""))
                save(quad.dfm,file=file.name)
              }
       )
@@ -514,7 +545,7 @@ trim_dfm <- function(n,list_filenames=NULL,training_set=80,mincount=5) {
                
                rm("quad.dfm",envir =.GlobalEnv)
                gc()
-               print("Saving dfm clean: quad.dfm.clean ..")
+               print("... Saving dfm clean: quad.dfm.clean ..")
                save(quad.dfm.clean,file=file.name)
              }
       )
@@ -560,7 +591,7 @@ create_DT <- function(n,list_filenames=NULL,training_set=80,mincount=5) {
   if (!exists(var.name)) {
     #Validate if "file.name" file exists an load the value
     if (file.exists(file.name)) {
-      print(paste("Loading DT file:",file.name,sep=""))
+      print(paste("... Loading DT file:",file.name,sep=""))
       load(file.name,.GlobalEnv) 
     } else {
       ## Load the dfm trim 

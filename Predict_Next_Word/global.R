@@ -22,10 +22,14 @@ setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
 
 #setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/FINAL2/Final 27-06")
 
-load_DT_prob_final_table(1)
-load_DT_prob_final_table(2)
-load_DT_prob_final_table(3)
-load_DT_prob_final_table(4)
+load_DT_prob_final_table(1,50)
+#DT.uni.prob.final <- DT.uni.prob.final[freq1 >=5,,]
+load_DT_prob_final_table(2,50)
+#DT.bi.prob.final <- DT.bi.prob.final[freq2 >=5,,]
+load_DT_prob_final_table(3,50)
+#DT.tri.prob.final <- DT.tri.prob.final[freq3 >=5,,]
+load_DT_prob_final_table(4,50)
+#DT.quad.prob.final <- DT.quad.prob.final[freq4 >=5,,]
 
 
 

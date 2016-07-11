@@ -32,14 +32,22 @@ shinyServer(function(input, output,session) {
   
   output$table <- renderDataTable({
     
-    input$text_string
-    myds <- get_predicted_words()
-  
-    if (nrow(myds) > 0) {
-        datatable(myds,options = list(lengthChange = FALSE, scroller = FALSE))
-      }
+    #input$text_string
     
-  })
+    myds <- get_predicted_words()
+    
+    print(paste("NROW in Rendertable",nrow(myds)))
+  
+    #if (nrow(myds) > 0) {
+      
+    #    datatable(myds,options = list(lengthChange = FALSE, scroller = FALSE))
+    #}
+    #else {
+    #  myds
+    #}
+    myds
+    
+  }, options = list(lengthChange = FALSE, scroller = FALSE))
   
   output$unigrams_table <- renderDataTable({
     datatable(DT.uni.prob.final,options = list(lengthChange = FALSE, scroller = TRUE))
@@ -59,6 +67,10 @@ shinyServer(function(input, output,session) {
     input$text_string
     myds <- get_predicted_words()
     
+    print(paste("Nrow in wordcloud",nrow(myds)))
+    
+    
+    
     if (nrow(myds) > 0)
     {
       wordcloud(myds$word,myds$prob,
@@ -66,6 +78,7 @@ shinyServer(function(input, output,session) {
                 rot.per=0,scale=c(8,5), fixed.asp = TRUE,
                 colors = brewer.pal(6, "Dark2"))
     }
+    
   })
 })
  

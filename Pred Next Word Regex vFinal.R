@@ -31,7 +31,7 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
   
   
   t1 <- proc.time()
-  topn <- NULL
+  topn <- data.table(word=character(),prob=character())
   
   l <- length(x)
   
@@ -41,33 +41,40 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
     regex_word <- paste("^",x[1],".",sep="")
     
     topn <- DT.uni.prob.final[grepl(regex_word,t1),,]
-    topn <- topn[((prob*f) >= p),,]
-    topn <- topn[head(order(-prob),n)] 
-    topn[,word:=t1,] 
-    topn <- topn[,list(word,prob),]
-
     num_words <- nrow(topn)
+    
+    if (num_words > 0) {
+      topn <- topn[((prob*f) >= p),,]
+      topn <- topn[head(order(-prob),n)] 
+      topn[,word:=t1,] 
+      topn <- topn[,list(word,prob),]
+    }
     
     print(paste("...Found:",num_words," words ..."))
     print(topn)
+    
   } else if (l == 2) {
     #bi-gram level, let's check the unigram table for the regex and apply the factor for backoff
     
     regex_word <- paste("^",x[2],".",sep="")
-    
     topn <- DT.bi.prob.final[t1 == x[1] & ((prob*f) >= p),,]
-    topn <- topn[grepl(regex_word,t2),,]
-    
-    topn <- topn[head(order(-prob),n)] 
-    topn[,word:=t2,] 
-    topn <- topn[,list(word,prob),]
     
     num_words <- nrow(topn)
     
-    print(paste("...Found:",num_words," words ..."))
-    print(topn)
+    if (num_words > 0) {
+      topn <- topn[grepl(regex_word,t2),,]
+      num_words <- nrow(topn)
+      
+      if (num_words > 0) {
+        topn <- topn[head(order(-prob),n)] 
+        topn[,word:=t2,] 
+        topn <- topn[,list(word,prob),]
+      }
+    }
     
-
+    print(paste("...Found:",num_words," words ..."))
+    print(topn)  
+  
     if (num_words < n) {
       print(paste("... Backoff to Unigram Level with factor:",0.4*f))
       topn <- rbind(topn,topn_predict_regex(c(x[2]),p,n,0.4*f))
@@ -78,14 +85,20 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
     regex_word <- paste("^",x[3],".",sep="")
     
     topn <- DT.tri.prob.final[t1 == x[1] & t2 == x[2] & ((prob*f) >= p),,]
-    topn <- topn[grepl(regex_word,t3),,]
-    
-    topn <- topn[head(order(-prob),n)] 
-    topn[,word:=t3,] 
-    topn <- topn[,list(word,prob),]
     
     num_words <- nrow(topn)
     
+    if (num_words > 0) {
+      topn <- topn[grepl(regex_word,t3),,]
+      num_words <- nrow(topn)
+      
+      if (num_words > 0) {
+        topn <- topn[head(order(-prob),n)] 
+        topn[,word:=t3,] 
+        topn <- topn[,list(word,prob),]
+      }
+    }
+  
     print(paste("...Found:",num_words," words ..."))
     print(topn)
     
@@ -100,14 +113,20 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
     regex_word <- paste("^",x[4],sep="")
     
     topn <- DT.quad.prob.final[t1 == x[1] & t2 == x[2] & t3 == x[3] & ((prob*f) >= p),,]
-    topn <- topn[grepl(regex_word,t4),,]
-    
-    topn <- topn[head(order(-prob),n)] 
-    topn[,word:=t4,] 
-    topn <- topn[,list(word,prob),]
     
     num_words <- nrow(topn)
     
+    if (num_words > 0) {
+      topn <- topn[grepl(regex_word,t4),,]
+      num_words <- nrow(topn)
+    
+      if (num_words > 0) {
+        topn <- topn[head(order(-prob),n)] 
+        topn[,word:=t4,] 
+        topn <- topn[,list(word,prob),]
+      }
+    }
+      
     print(paste("...Found:",num_words," words ..."))
     print(topn)
     
@@ -148,12 +167,17 @@ predict_nextword_regex <- function(x,p=0,n=5,training_set=80) {
   
   # Remove duplicated values, some words could appers duplicated as a part of
   # backoff strategy
-  setkey(result,word)
-  result <- unique(result)
-  result[head(order(-prob),n)]
+  num_words <- nrow(result)
+  
+  if (num_words > 0) {
+    setkey(result,word)
+    result <- unique(result)
+    result[head(order(-prob),n)]
+  } 
   t2 <- proc.time()
   print(paste("-----> FINISH: predict_nextword_regex: Running Time .......",
               elapsed_time(t1,t2)," seconds ...",sep=""))
+  result
   
 }  
 

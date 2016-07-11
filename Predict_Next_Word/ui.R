@@ -21,6 +21,11 @@ shinyUI(
                             #helpText(paste("If you want to plot the total amount of subscriptions in a specific",
                             #               "year, please select the same year from beginning to end.")),
                             #helpText(paste("When is selected a year range, the Apps will show the diff (Year2 - Year1).")),
+                            div(class = "option-group",
+                                radioButtons("prob_table", "Probability Table",
+                                             choices = c("Freq >= 5", "Freq >= 1"), inline = TRUE)
+                            ),
+                            
                             
                             div(class = "option-group",
                                 radioButtons("pred_method", "Prediction Method",
@@ -35,7 +40,7 @@ shinyUI(
                             div(class = "option-group",
                                 sliderInput("minprob",
                                             label = "Probability Range:",
-                                            min = 0, max = 0.25,
+                                            min = 0, max = 1,
                                             value = 0)
                             ),
                             div(class = "option-group",

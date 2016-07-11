@@ -30,6 +30,8 @@ set.seed(12345)
 
 ####################################
 load_DT_table <- function (n,training_set=80) {
+  print(paste("-----> INIT: load_DT_table(n:=",n," training_set:=",training_set,").......",sep=""))
+  t1 <- proc.time()
   
   switch(n,
          "1" = {
@@ -54,13 +56,10 @@ load_DT_table <- function (n,training_set=80) {
   if (!exists(var.name)) {
     #Validate if the file exists an load the value
     if (file.exists(file.name)) {
-      print(paste("-----> INIT: load_DT_table(n:=",n," training_set:=",training_set,").......",sep=""))
-      t1 <- proc.time()
-      
-      print(paste("Loading DT file: ",file.name, sep =""))
+      print(paste("... Loading DT file: ",file.name, sep =""))
       load(file.name,.GlobalEnv) 
       
-      print(paste("Creating DT Table from:",var.name, sep =""))
+      print(paste("... Creating DT Table from:",var.name, sep =""))
       
       switch(n,
              "1" = DT.uni <<- as.data.table(DT.uni, key = "t1"),
@@ -68,22 +67,22 @@ load_DT_table <- function (n,training_set=80) {
              "3" = DT.tri <<- as.data.table(DT.tri, key = "t1,t2,t3"),
              "4" = DT.quad <<- as.data.table(DT.quad, key = "t1,t2,t3,t4")
       )
-      
-      t2 <- proc.time()
-      print(paste("-----> FINISH: load_DT_table(n:=",n," training_set:=",training_set,"): Running Time .......",
-                  elapsed_time(t1,t2)," seconds ...",sep=""))
-      
     }
     else {
       # Error file doesn't exists
       print(paste("-----> ERROR: load_DT_table(n:=",n,",training_set:=",training_set,"): Error file doesnt exist:",file.name, sep=""))
     }
   }
+  t2 <- proc.time()
+  print(paste("-----> FINISH: load_DT_table(n:=",n," training_set:=",training_set,"): Running Time .......",
+              elapsed_time(t1,t2)," seconds ...",sep=""))
 }
 
 
 ####################################
 load_DT_prob_table <- function (n,training_set=80,p1=5) {
+  print(paste("-----> INIT: load_DT_prob_table(","n:=",n," p1:=",p1," training_set:=",training_set,").......",sep=""))
+  t1 <- proc.time()
   
   # Values needed for Knersey-ney prob calculations
   p1 <<- p1
@@ -117,14 +116,13 @@ load_DT_prob_table <- function (n,training_set=80,p1=5) {
   if (!exists(var.name)) {
     #Validate if the file exists an load the value
     if (file.exists(file.name.temp)) {
-      print(paste("Loading DT Prob Temp File: ",file.name.temp, sep =""))
+      print(paste("... Loading DT Prob Temp File: ",file.name.temp, sep =""))
       load(file.name.temp,.GlobalEnv) 
     } else {
       
       
       load_DT_table(n,training_set)
-      print(paste("-----> INIT: load_DT_prob_table(","n:=",n," p1:=",p1," training_set:=",training_set,").......",sep=""))
-      t1 <- proc.time()
+     
       
       switch(n,
              "1" = {
@@ -149,9 +147,7 @@ load_DT_prob_table <- function (n,training_set=80,p1=5) {
                rm(DT.quad,envir =.GlobalEnv)
              }
       )
-      t2 <- proc.time()
-      print(paste("-----> FINISH: load_DT_prob_table(","n:=",n," p1:=",p1," training_set:=",training_set,"): Running Time .......",
-                  elapsed_time(t1,t2)," seconds ...",sep=""))
+      
     }
   }
   
@@ -203,7 +199,12 @@ load_DT_prob_table <- function (n,training_set=80,p1=5) {
          }
          
   )
+  t2 <- proc.time()
+  print(paste("-----> FINISH: load_DT_prob_table(","n:=",n," p1:=",p1," training_set:=",training_set,"): Running Time .......",
+              elapsed_time(t1,t2)," seconds ...",sep=""))
 }    
+
+
 
 
 ####################################
@@ -241,6 +242,8 @@ load_DT_prob_tables <- function (n,training_set=80,p1=5) {
 
 ####################################  
 calculate_prob_kn <- function(n,training_set=80,p1=5) {
+  print(paste("-----> INIT: calculate_prob_kn(n:=",n," training_set:=",training_set," p1:=",p1,").......",sep=""))
+  tic1 <- proc.time()
     
   switch(n,
          "1" = {
@@ -278,16 +281,13 @@ calculate_prob_kn <- function(n,training_set=80,p1=5) {
   if (!exists(var.name.final)) {
     #Validate if the file exists an load the value
     if (file.exists(file.name.final)) {
-      print(paste("Loading DT Prob Final file: ",file.name, sep =""))
+      print(paste("... Loading DT Prob Final file: ",file.name, sep =""))
       load(file.name.final,.GlobalEnv) 
     } else {
       
       load_DT_prob_tables(n,training_set,p1)
       
-      print(paste("-----> INIT: calculate_prob_kn(n:=",n," training_set:=",training_set," p1:=",p1,").......",sep=""))
-      tic1 <- proc.time()
-      
-      print(paste("Calculating DT Prob Table:", var.name, sep=""))
+      print(paste("... Calculating DT Prob Table:", var.name, sep=""))
       
       
       switch(n,
@@ -339,9 +339,7 @@ calculate_prob_kn <- function(n,training_set=80,p1=5) {
                uni.all <<- DT.uni.prob[, sum(freq1) ,]
                DT.uni.prob[,pkn11:= freq1 / uni.all]
                
-               tic2 <- proc.time()
-               
-               print(paste("Saving DT probability Temp file:",file.name.temp,sep=""))
+               print(paste("... Saving DT probability Temp file:",file.name.temp,sep=""))
                save(DT.uni.prob,file=file.name.temp)
                
                # Clean the DT with only three columns (t1,freq1,prob)
@@ -350,7 +348,7 @@ calculate_prob_kn <- function(n,training_set=80,p1=5) {
 
                rm(DT.uni.prob,envir =.GlobalEnv)
                gc()
-               print(paste("Saving DT probability final file:",file.name.final,sep=""))
+               print(paste("... Saving DT probability final file:",file.name.final,sep=""))
                save(DT.uni.prob.final,file=file.name.final)
              },
              
@@ -396,9 +394,9 @@ calculate_prob_kn <- function(n,training_set=80,p1=5) {
                             D2 / sum.freq2 * n12 * # lambda
                             pkn12,]
                
-               tic2 <- proc.time()
+            
                
-               print(paste("Saving DT probability Temp file:",file.name.temp,sep=""))
+               print(paste("... Saving DT probability Temp file:",file.name.temp,sep=""))
                save(DT.bi.prob,file=file.name.temp)
                
                # Clean the DT with only four columns (t1,t2,freq2,prob)
@@ -408,7 +406,7 @@ calculate_prob_kn <- function(n,training_set=80,p1=5) {
                
                rm(DT.bi.prob,envir =.GlobalEnv)
                gc()
-               print(paste("Saving DT probability final file:",file.name.final,sep=""))
+               print(paste("... Saving DT probability final file:",file.name.final,sep=""))
                save(DT.bi.prob.final,file=file.name.final)
                
              },
@@ -463,8 +461,6 @@ calculate_prob_kn <- function(n,training_set=80,p1=5) {
                
                DT.tri.prob[, sum.n21:= sum(n21) , by = "t2"]
                
-               
-               
                # Let's add n12(t2) to the Trigrams Table
                print("...... Adding to Trigrams Table: n12(t2) ...")
                DT.bi.temp1 <- copy(DT.bi.prob)
@@ -507,9 +503,9 @@ calculate_prob_kn <- function(n,training_set=80,p1=5) {
                              D3 / sum.freq3 * n22 * # lambda
                              pkn22,]
                
-               tic2 <- proc.time()
+              
                
-               print(paste("Saving DT probability Temp file:",file.name.temp,sep=""))
+               print(paste("... Saving DT probability Temp file:",file.name.temp,sep=""))
                save(DT.tri.prob,file=file.name.temp)
                
                # Clean the DT with only five columns (t1,t2,t3,freq3,prob)
@@ -520,7 +516,7 @@ calculate_prob_kn <- function(n,training_set=80,p1=5) {
                rm(DT.tri.prob,envir =.GlobalEnv)
                gc()
                
-               print(paste("Saving DT probability final file:",file.name.final,sep=""))
+               print(paste("... Saving DT probability final file:",file.name.final,sep=""))
                save(DT.tri.prob.final,file=file.name.final)
                
              },
@@ -613,9 +609,7 @@ calculate_prob_kn <- function(n,training_set=80,p1=5) {
                               D4 / sum.freq4 * n32 * # lambda
                               pkn32,]
                
-               tic2 <- proc.time()
-               
-               print(paste("Saving DT probability Temp file:",file.name.temp,sep=""))
+               print(paste("... Saving DT probability Temp file:",file.name.temp,sep=""))
                save(DT.quad.prob,file=file.name.temp)
                
                # Clean the DT with only six columns (t1,t2,t3,t4,freq4,prob)
@@ -626,7 +620,7 @@ calculate_prob_kn <- function(n,training_set=80,p1=5) {
                rm(DT.quad.prob,envir =.GlobalEnv)
                gc()
                
-               print(paste("Saving DT probability final file:",file.name.final,sep=""))
+               print(paste("... Saving DT probability final file:",file.name.final,sep=""))
                save(DT.quad.prob.final,file=file.name.final)
              }
       )
