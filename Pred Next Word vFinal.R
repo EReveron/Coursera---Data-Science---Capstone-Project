@@ -31,7 +31,8 @@ create_filename <- function(x,training_set=80) {
 
 ####################################
 load_DT_prob_final_table <- function (n,training_set=80) {
-  print(paste("-----> INIT: load_DT_prob_final_table(n:=",n," training_set:=",training_set,").......",sep=""))
+  print(paste("-----> INIT: load_DT_prob_final_table(n:=",n,
+              " training_set:=",training_set,").......",sep=""))
   t1 <- proc.time()
   
   switch(n,
@@ -77,7 +78,8 @@ load_DT_prob_final_table <- function (n,training_set=80) {
     }
   }
   t2 <- proc.time()
-  print(paste("-----> FINISH: load_DT_prob_final_table(n:=",n," training_set:=",training_set,"): Running Time .......",
+  print(paste("-----> FINISH: load_DT_prob_final_table(n:=",n,
+              " training_set:=",training_set,"): Running Time .......",
               elapsed_time(t1,t2)," seconds ...",sep=""))
   
 }
@@ -94,7 +96,7 @@ topn_predict <- function(x,p=0,n=5,f=1) {
               ", factor:=",f,
               ").......",sep=""))
   t1 <- proc.time()
-  topn <- data.table(word=character(),prob=character())
+  topn <- data.table(word=character(),prob=numeric())
   
   
   l <- length(x)
@@ -109,7 +111,7 @@ topn_predict <- function(x,p=0,n=5,f=1) {
       topn[,c("word","prob") := list(t2,prob*f),]
       topn <- topn[,list(word,prob),][head(order(-prob),n)]
     } else {
-      topn <- data.table(word=character(),prob=character())
+      topn <- data.table(word=character(),prob=numeric())
     }  
     
     print(paste("... Found:",num_words," words ..."))
@@ -128,7 +130,7 @@ topn_predict <- function(x,p=0,n=5,f=1) {
         a[,word:=t1,] 
         a <- a[,list(word,prob),]
       } else {
-        a <- data.table(word=character(),prob=character())
+        a <- data.table(word=character(),prob=numeric())
       }
     
       print(paste("...Found:",num_words," words ..."))
@@ -149,7 +151,7 @@ topn_predict <- function(x,p=0,n=5,f=1) {
       topn[,c("word","prob") := list(t3,prob*f),]
       topn <- topn[,list(word,prob),][head(order(-prob),n)]
     } else {
-      topn <- data.table(word=character(),prob=character())
+      topn <- data.table(word=character(),prob=numeric())
     }
     print(paste("...Found:",num_words," words ..."))
     print(topn)
@@ -167,7 +169,7 @@ topn_predict <- function(x,p=0,n=5,f=1) {
       topn[,c("word","prob") := list(t4,prob*f),]
       topn <- topn[,list(word,prob),][head(order(-prob),n)]
     } else {
-      topn <- data.table(word=character(),prob=character())
+      topn <- data.table(word=character(),prob=numeric())
     }
     
     print(paste("...Found:",num_words," words..."))
@@ -209,20 +211,11 @@ predict_nextword <- function(x,p=0,n=5,training_set=80) {
   # backoff strategy
   num_words <- nrow(result)
   
-  print(" DESPUES DE PREICT NEXT WORD")
-  
   if (num_words > 0) {
-    print("Rsult tiene")
-    print(result)
-    
+  
     setkey(result,"word")
     result <- unique(result)
-    print("despues de setjey")
-    #result[head(order(-prob),n)]
-    print("despues de order")
-    
-    print("Saliendo de order")
-    
+    result <- result[head(order(-prob),n)] 
   }
   t2 <- proc.time()
   print(paste("-----> FINISH: predict_nextword: Running Time .......",

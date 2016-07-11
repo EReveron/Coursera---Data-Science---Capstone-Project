@@ -27,6 +27,11 @@ last_n_words <- function(s, num_words = 3) {
 ####################################
 main_predict_word <- function(s,p=0,n=5,consider_regex_words = TRUE, training_set = 80) {
   
+  print(paste("-----> INIT: main_predict_word(s:=",s," p:=",p," n:=",n,
+              " consider_regex_words:=",consider_regex_words," training_set:=",training_set,
+              ").......",sep=""))
+  t1 <- proc.time()
+  
   if (s != "") {
     s <- tolower(s)
     print(paste("String:",s,"...",sep=""))
@@ -55,12 +60,19 @@ main_predict_word <- function(s,p=0,n=5,consider_regex_words = TRUE, training_se
         result <- predict_nextword(list_words,p,n,training_set)
       } else {
         print("---> Considering Regex: NO, Is a Regex Words ... Wait until a Complete Word Appear ...")
-        result <- as.data.frame(character(),character())
+        result <- data.table(character(),numeric())
       }
     }
   } else {
-    result <- as.data.frame(character(),character())
+    result <- data.table(character(),numeric())
   } 
+  
+  t2 <- proc.time()
+  print(paste("-----> FINISH: main_predict_word(s:=",s," p:=",p," n:=",n,
+              " consider_regex_words:=",consider_regex_words," training_set:=",training_set,
+              "): Running Time .......",
+              elapsed_time(t1,t2)," seconds ...",sep=""))
+  
   result
 }
 

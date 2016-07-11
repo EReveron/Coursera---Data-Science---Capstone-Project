@@ -25,18 +25,11 @@ shinyUI(
                                 radioButtons("prob_table", "Probability Table",
                                              choices = c("Freq >= 5", "Freq >= 1"), inline = TRUE)
                             ),
-                            
-                            
                             div(class = "option-group",
                                 radioButtons("pred_method", "Prediction Method",
                                              choices = c("Complete Words", "Incomplete Words"), inline = TRUE)
                             ),
-                            #hr(),
                             
-                            #selectInput("pred_method", 
-                            #            label = "Select the Prediction method to display:",
-                            #            choices = c("Based on Complete Words" = 1, 
-                            #                        "Based on Incomplete Words" = 2)),
                             div(class = "option-group",
                                 sliderInput("minprob",
                                             label = "Probability Range:",
@@ -67,16 +60,18 @@ shinyUI(
                         )
                ),
                
-               tabPanel("Report",
-                        includeMarkdown("Final Report v2.Rmd")
-               ),
+              # tabPanel("Report",
+              #          includeMarkdown("Final Report v2.Rmd")
+              # ),
                navbarMenu("More",
                           tabPanel('Unigrams Probability Table',
                                    dataTableOutput("unigrams_table")),
                           tabPanel('Bigrams Probability Table',
                                    dataTableOutput("bigrams_table")),
                           tabPanel('Trigrams Probability Table',
-                                   dataTableOutput("trigrams_table"))
+                                   dataTableOutput("trigrams_table")),
+                          tabPanel('Quadgrams Probability Table',
+                                   dataTableOutput("quadgrams_table"))
                )
               
     )

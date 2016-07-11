@@ -8,12 +8,29 @@
 shinyServer(function(input, output,session) {
 
  
+  load_Prob_Table <- reactive({
+    input$prob_table
+    
+    isolate({
+      withProgress({
+        setProgress(message = "Loading Data Table...")
+        
+        if (input$prob_table == "1") {}
+        
+        for (i in 1:1000) { print(i)}
+      })
+    })
+  })
+        
+    
   
   get_predicted_words <- reactive({
     input$text_string
     input$pred_method
     input$minprob
     input$maxwords
+    #input$prob_table
+    
     
     isolate({
       withProgress({
@@ -24,58 +41,49 @@ shinyServer(function(input, output,session) {
         } else {
           with_regex <- FALSE
         }
-        
-        x <- main_predict_word(input$text_string,input$minprob,input$maxwords,with_regex)
-        print("X vale")
-        print(x)
-        as.data.frame(x)
+        as.data.frame(main_predict_word(input$text_string,input$minprob,input$maxwords,with_regex))
       })
     })
   })
   
   output$table <- renderDataTable({
     
-    #input$text_string
+    load_Prob_Table()
     
     myds <- get_predicted_words()
     
-    print(paste("NROW in Rendertable",nrow(myds)))
-  
-    #if (nrow(myds) > 0) {
-      
-    #    datatable(myds,options = list(lengthChange = FALSE, scroller = FALSE))
-    #}
-    #else {
-    #  myds
-    #}
     
-    myds
-    
-    
-    
-  }, options = list(lengthChange = FALSE, scroller = FALSE))
+    if (nrow(myds) > 0) {
+      myds
+    }
+  }, options = list(lengthChange = FALSE, orderClasses = FALSE, scroller = FALSE))
   
   output$unigrams_table <- renderDataTable({
-    datatable(DT.uni.prob.final,options = list(lengthChange = FALSE, scroller = TRUE))
-  })
+    load_Prob_Table()
+    DT.uni.prob.final
+  }, options = list(lengthChange = TRUE,orderClasses = TRUE, scroller = TRUE))
   
   output$bigrams_table <- renderDataTable({
+    load_Prob_Table()
     DT.bi.prob.final
-  }, options = list(lengthChange = FALSE, scroller = FALSE))
+  }, options = list(lengthChange = TRUE,orderClasses = TRUE, scroller = TRUE))
   
   output$trigrams_table <- renderDataTable({
+    load_Prob_Table()
     DT.tri.prob.final
-  }, options = list(orderClasses = TRUE))
+  }, options = list(lengthChange = TRUE,orderClasses = TRUE, scroller = TRUE))
+  
+  output$quadgrams_table <- renderDataTable({
+    load_Prob_Table()
+    DT.quad.prob.final
+  }, options = list(lengthChange = TRUE,orderClasses = TRUE, scroller = TRUE))
   
   # This function will create the wordcloud 
   
   output$word_cloud <- renderPlot({
-    input$text_string
+    #input$text_string
+    load_Prob_Table()
     myds <- get_predicted_words()
-    
-    print(paste("Nrow in wordcloud",nrow(myds)))
-    
-    
     
     if (nrow(myds) > 0)
     {
@@ -83,7 +91,7 @@ shinyServer(function(input, output,session) {
                 max.words = input$maxwords, random.order = FALSE, random.color = FALSE,
                 rot.per=0,scale=c(8,5), fixed.asp = TRUE,
                 colors = brewer.pal(6, "Dark2"))
-    }
+    } 
     
   })
 })
