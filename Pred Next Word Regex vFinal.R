@@ -48,6 +48,8 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
       topn <- topn[head(order(-prob),n)] 
       topn[,word:=t1,] 
       topn <- topn[,list(word,prob),]
+    } else {
+      topn <- data.table(word=character(),prob=character())
     }
     
     print(paste("...Found:",num_words," words ..."))
@@ -70,6 +72,8 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
         topn[,word:=t2,] 
         topn <- topn[,list(word,prob),]
       }
+    } else {
+      topn <- data.table(word=character(),prob=character())
     }
     
     print(paste("...Found:",num_words," words ..."))
@@ -96,7 +100,11 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
         topn <- topn[head(order(-prob),n)] 
         topn[,word:=t3,] 
         topn <- topn[,list(word,prob),]
+      } else {
+        topn <- data.table(word=character(),prob=character())
       }
+    } else {
+      topn <- data.table(word=character(),prob=character())
     }
   
     print(paste("...Found:",num_words," words ..."))
@@ -124,7 +132,11 @@ topn_predict_regex <- function(x,p=0,n=5,f=1) {
         topn <- topn[head(order(-prob),n)] 
         topn[,word:=t4,] 
         topn <- topn[,list(word,prob),]
+      } else {
+        topn <- data.table(word=character(),prob=character())
       }
+    } else {
+      topn <- data.table(word=character(),prob=character())
     }
       
     print(paste("...Found:",num_words," words ..."))

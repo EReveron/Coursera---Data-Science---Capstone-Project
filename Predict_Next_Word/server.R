@@ -25,7 +25,10 @@ shinyServer(function(input, output,session) {
           with_regex <- FALSE
         }
         
-        as.data.frame(main_predict_word(input$text_string,input$minprob,input$maxwords,with_regex))
+        x <- main_predict_word(input$text_string,input$minprob,input$maxwords,with_regex)
+        print("X vale")
+        print(x)
+        as.data.frame(x)
       })
     })
   })
@@ -45,7 +48,10 @@ shinyServer(function(input, output,session) {
     #else {
     #  myds
     #}
+    
     myds
+    
+    
     
   }, options = list(lengthChange = FALSE, scroller = FALSE))
   

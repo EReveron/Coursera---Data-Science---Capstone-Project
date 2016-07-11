@@ -108,7 +108,9 @@ topn_predict <- function(x,p=0,n=5,f=1) {
     if (num_words > 0) {
       topn[,c("word","prob") := list(t2,prob*f),]
       topn <- topn[,list(word,prob),][head(order(-prob),n)]
-    }   
+    } else {
+      topn <- data.table(word=character(),prob=character())
+    }  
     
     print(paste("... Found:",num_words," words ..."))
     print(topn)
@@ -125,6 +127,8 @@ topn_predict <- function(x,p=0,n=5,f=1) {
         a <- a[head(order(-prob),n)] 
         a[,word:=t1,] 
         a <- a[,list(word,prob),]
+      } else {
+        a <- data.table(word=character(),prob=character())
       }
     
       print(paste("...Found:",num_words," words ..."))
@@ -144,6 +148,8 @@ topn_predict <- function(x,p=0,n=5,f=1) {
     if (num_words > 0) {
       topn[,c("word","prob") := list(t3,prob*f),]
       topn <- topn[,list(word,prob),][head(order(-prob),n)]
+    } else {
+      topn <- data.table(word=character(),prob=character())
     }
     print(paste("...Found:",num_words," words ..."))
     print(topn)
@@ -160,6 +166,8 @@ topn_predict <- function(x,p=0,n=5,f=1) {
     if (num_words > 0) {
       topn[,c("word","prob") := list(t4,prob*f),]
       topn <- topn[,list(word,prob),][head(order(-prob),n)]
+    } else {
+      topn <- data.table(word=character(),prob=character())
     }
     
     print(paste("...Found:",num_words," words..."))
@@ -200,10 +208,20 @@ predict_nextword <- function(x,p=0,n=5,training_set=80) {
   # Remove duplicated values, some words could appers duplicated as a part of
   # backoff strategy
   num_words <- nrow(result)
+  
+  print(" DESPUES DE PREICT NEXT WORD")
+  
   if (num_words > 0) {
-    setkey(result,word)
+    print("Rsult tiene")
+    print(result)
+    
+    setkey(result,"word")
     result <- unique(result)
-    result[head(order(-prob),n)]
+    print("despues de setjey")
+    #result[head(order(-prob),n)]
+    print("despues de order")
+    
+    print("Saliendo de order")
     
   }
   t2 <- proc.time()

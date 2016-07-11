@@ -55,11 +55,11 @@ main_predict_word <- function(s,p=0,n=5,consider_regex_words = TRUE, training_se
         result <- predict_nextword(list_words,p,n,training_set)
       } else {
         print("---> Considering Regex: NO, Is a Regex Words ... Wait until a Complete Word Appear ...")
-        result <- as.data.frame(character())
+        result <- as.data.frame(character(),character())
       }
     }
   } else {
-    result <- as.data.frame(character())
+    result <- as.data.frame(character(),character())
   } 
   result
 }
