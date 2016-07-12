@@ -140,14 +140,17 @@ $(document).ready(function () {
 <div id="no-corpus" class="section level5">
 <h5>1.1.1.1 no corpus</h5>
 </div>
+<div id="strategy-to-clean-the-corpora-eee-for-punctuations" class="section level4">
+<h4>1.1.1.2 Strategy to clean the corpora ( EEE for punctuations)</h4>
+</div>
 <div id="tokenizer-remove-bad-words-before-dfm" class="section level4">
-<h4>1.1.1.2 tokenizer + remove bad words before dfm</h4>
+<h4>1.1.1.3 tokenizer + remove bad words before dfm</h4>
 </div>
 <div id="tokenizer-unigrams-to-create-tokenizer-of-ngrams" class="section level4">
-<h4>1.1.1.3 tokenizer unigrams + to create tokenizer of ngrams</h4>
+<h4>1.1.1.4 tokenizer unigrams + to create tokenizer of ngrams</h4>
 </div>
 <div id="dfm-dfm-clean" class="section level4">
-<h4>1.1.1.4 dfm + dfm clean</h4>
+<h4>1.1.1.5 dfm + dfm clean</h4>
 </div>
 </div>
 <div id="data-frame-vs-data-table" class="section level3">
@@ -231,20 +234,27 @@ $(document).ready(function () {
 library(ggplot2)
 library(knitr)
 
-# To load the local files
+wd.R &lt;- &quot;D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project&quot;
+#wd.R &lt;- &quot;D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project&quot;
 
-setwd(&quot;D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project&quot;)
-#setwd(&quot;D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US&quot;)
+wd.RData &lt;- &quot;D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/&quot;
+#wd.RData &lt;- &quot;D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US&quot;
 
-source(&quot;Create Ngrams Data Table vFinal.R&quot;)
-source(&quot;Knersey-ney vFinal.R&quot;)
+# To load the R local files
+setwd(wd.R)
+
+source(&quot;Create Ngrams Data Table vFinal 2.R&quot;)
+source(&quot;Knersey-ney Optimazed vFinal 5.R&quot;)
+source(&quot;Main Predict Word vFinal.R&quot;)
+source(&quot;Pred Next Word Regex vFinal.R&quot;)
 source(&quot;Pred Next Word vFinal.R&quot;)
+
 
 # For reproducibility
 set.seed(12345)
 
 # To load the Data
-setwd(&quot;D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US&quot;)</code></pre>
+setwd(wd.RData)</code></pre>
 </div>
 <div id="create-ngram-data-table" class="section level2">
 <h2>2. Create Ngram Data Table</h2>
@@ -252,7 +262,32 @@ setwd(&quot;D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US&quot;)</c
 <div id="load-all-the-data" class="section level3">
 <h3>2.1 Load All the Data</h3>
 <p>The files that we will use in the project are bigger than <strong>150Mbytes</strong> each one. In order to do the exploratory data analysis and to have an acceptable runtime, I will use only <strong>10%</strong> of the data.</p>
-<pre class="r"><code>#create_mydata() </code></pre>
+<pre class="r"><code>setwd(wd.RData)
+list_filenames &lt;- c(&quot;en_US.blogs.txt&quot;,&quot;en_US.news.txt&quot;,&quot;en_US.twitter.txt&quot;)
+create_mydata(list_filenames, 1) </code></pre>
+<pre><code>## [1] &quot;-----&gt; INIT: create_mydata(1).......&quot;
+## [1] &quot;... Loading the Data from the file: en_US.blogs.txt ...&quot;
+## [1] &quot;... Loading the Data from the file: en_US.news.txt ...&quot;
+## [1] &quot;... Loading the Data from the file: en_US.twitter.txt ...&quot;
+## [1] &quot;... Taking a Training Sample of: 1% ...&quot;
+## [1] &quot;... Removing emojies and other characters ....&quot;
+## [1] &quot;... To Lower Data ....&quot;
+## [1] &quot;... Replace URL ....&quot;
+## [1] &quot;... Email ....&quot;
+## [1] &quot;... Replace twitter ....&quot;
+## [1] &quot;... Replace Hashtag ....&quot;
+## [1] &quot;... Replacing special english character ' for special character ffff ....&quot;
+## [1] &quot;... Replacing punctuation for special characters ....&quot;
+## [1] &quot;... Replace Word that start with numbers ....&quot;
+## [1] &quot;... Replace Word that finish with numbers ....&quot;
+## [1] &quot;... Replace Digits ....&quot;
+## [1] &quot;... Replacing rest of punctuation ....&quot;
+## [1] &quot;... Put back ' ...&quot;
+## [1] &quot;... Saving mydata file:mydata_1.RData&quot;
+## [1] &quot;-----&gt; FINISH: create_mydata(1): Running Time .......81 seconds ...&quot;</code></pre>
+<pre><code>##           used (Mb) gc trigger  (Mb) max used  (Mb)
+## Ncells 1429886 76.4    5489235 293.2  4780641 255.4
+## Vcells 4586027 35.0   61511113 469.3 74844633 571.1</code></pre>
 </div>
 <div id="create-all-tokens" class="section level3">
 <h3>2.2 Create All Tokens</h3>

@@ -23,7 +23,7 @@ shinyUI(
                             #helpText(paste("When is selected a year range, the Apps will show the diff (Year2 - Year1).")),
                             div(class = "option-group",
                                 radioButtons("prob_table", "Ngram Probability Table",
-                                             choices = c("With Freq >= 5", "With Freq >= 1"), inline = TRUE)
+                                             choices = c("With Freq >= 5", "With Freq > 1"), inline = TRUE)
                             ),
                             div(class = "option-group",
                                 radioButtons("pred_method", "Prediction Method",
@@ -59,19 +59,31 @@ shinyUI(
                           )
                         )
                ),
-               
-              # tabPanel("Report",
-              #          includeMarkdown("Final Report v2.Rmd")
-              # ),
+               setwd(wd.R),
+               tabPanel("Report",
+                        includeMarkdown("Final Report v2.Rmd")
+               ),
+               setwd(wd.RData),
                navbarMenu("More",
                           tabPanel('Unigrams Probability Table',
+                                   titlePanel("Unigrams Probability Table"),
                                    dataTableOutput("unigrams_table")),
                           tabPanel('Bigrams Probability Table',
+                                   titlePanel("Bigrams Probability Table"),
                                    dataTableOutput("bigrams_table")),
                           tabPanel('Trigrams Probability Table',
+                                   titlePanel("Trigrams Probability Table"),
                                    dataTableOutput("trigrams_table")),
                           tabPanel('Quadgrams Probability Table',
-                                   dataTableOutput("quadgrams_table"))
+                                   titlePanel("Quadgrams Probability Table"),
+                                   dataTableOutput("quadgrams_table")),
+                          tabPanel('Prob Data Table Frequency Analisys',
+                                   titlePanel("Prob Data Table Frequency Analisys"),
+                                   dataTableOutput("freq_table"),
+                                   plotOutput("freq_plot_uni"),
+                                   plotOutput("freq_plot_bi"),
+                                   plotOutput("freq_plot_tri"),
+                                   plotOutput("freq_plot_quad"))
                )
               
     )

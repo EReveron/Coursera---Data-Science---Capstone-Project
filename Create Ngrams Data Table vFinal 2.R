@@ -80,9 +80,8 @@ create_mydata <- function(list_filenames=NULL,training_set=80) {
       
       if (training_set < 100)
       {
-        t <- training_set / 100
-        print(paste("... Taking a Training Sample of: ", t,"% ...",sep=""))
-        mydata <- sample(mydata, length(mydata) * t)
+        print(paste("... Taking a Training Sample of: ", training_set,"% ...",sep=""))
+        mydata <- sample(mydata, length(mydata) * training_set / 100)
       }
       
       # Remove emojies and other characters.
@@ -100,7 +99,7 @@ create_mydata <- function(list_filenames=NULL,training_set=80) {
       
       # Email
       print("... Email ....")
-      mydata <- stri_replace_all_regex(mydata,"[[:alnum:].-_]+@[[:alnum:].-_]+", " EMAIL ", vectorize_all=FALSE)
+      mydata <- stri_replace_all_regex(mydata,"[[:alnum:].-_]+@[[:alnum:].-_]+", " ", vectorize_all=FALSE)
 
       # Twitter 
       print("... Replace twitter ....")
@@ -119,8 +118,9 @@ create_mydata <- function(list_filenames=NULL,training_set=80) {
       print("... Replacing punctuation for special characters ....")   
       mydata <- stri_replace_all_regex(mydata,"[.!?,;:]+", " eeee ", vectorize_all=FALSE)
       
-      
-      
+      # Remove characters FALTA * [] ¬ ¬° !1¬#$%&/()=?¡´¨*¨{}{}
+      print("... Replacing $ + < > ....")    
+      mydata <- stri_replace_all_regex(mydata,"[\\[\\]\\+\\-(){}°$#@<>=_%&¿]+", " ", vectorize_all=FALSE)
       
       # lIMITE DE PALABRA \\b
       # \\p{Pd} -_

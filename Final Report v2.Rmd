@@ -111,20 +111,27 @@ library(data.table)
 library(ggplot2)
 library(knitr)
 
-# To load the local files
+wd.R <- "D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project"
+#wd.R <- "D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project"
 
-setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
-#setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+wd.RData <- "D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/"
+#wd.RData <- "D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US"
 
-source("Create Ngrams Data Table vFinal.R")
-source("Knersey-ney vFinal.R")
+# To load the R local files
+setwd(wd.R)
+
+source("Create Ngrams Data Table vFinal 2.R")
+source("Knersey-ney Optimazed vFinal 5.R")
+source("Main Predict Word vFinal.R")
+source("Pred Next Word Regex vFinal.R")
 source("Pred Next Word vFinal.R")
+
 
 # For reproducibility
 set.seed(12345)
 
 # To load the Data
-setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+setwd(wd.RData)
 
 
 ```
@@ -138,14 +145,17 @@ In order to create the Ngrams we will do several steps
 The files that we will use in the project are bigger than **150Mbytes** each one. In order to do the exploratory data analysis and to have an acceptable runtime, I will use only **10%** of the data. 
 
 ```{r createdata,echo=TRUE, cache = TRUE}
-
-#create_mydata() 
+setwd(wd.RData)
+list_filenames <- c("en_US.blogs.txt","en_US.news.txt","en_US.twitter.txt")
+#create_mydata(list_filenames, 1) 
 ```
 
 ### 2.2 Create All Tokens
 
 ```{r createalltokens,echo=TRUE, cache = TRUE}
-#create_alltokens()
+
+
+#create_alltokens(list_files,1)
 ```
 
 
@@ -154,12 +164,12 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 #### 2.3.1 Create and Clean Unigrams
 
 ```{r create_unigram, echo=TRUE, cache = TRUE}
-#create_ngram(n=1)
+#create_ngram(n=1,list_filenames,training_set= 1)
 ```
 
 
 ```{r clean_unigram, echo=TRUE, cache = TRUE}
-#clean_ngram(n=1)
+#clean_ngram(n=1,list_filenames,training_set= 1)
 ```
 
 
@@ -167,37 +177,37 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 #### 2.3.2 Create and Clean Bigrams
 
 ```{r create_bigram, echo=TRUE, cache = TRUE}
-#create_ngram(n=2)
+#create_ngram(n=2,list_filenames,training_set= 1)
 ```
 
 
 
 ```{r clean_bigram, echo=TRUE, cache = TRUE}
-#clean_ngram(n=2)
+#clean_ngram(n=2,list_filenames,training_set= 1)
 ```
 
 
 #### 2.3.3 Create and Clean Trigrams
 
 ```{r create_trigram,echo=TRUE, cache = TRUE}
-#create_ngram(n=3)
+#create_ngram(n=3,list_filenames,training_set= 1)
 ```
 
 
 ```{r clean_trigram,echo=TRUE, cache = TRUE}
-#clean_ngram(n=2)
+#clean_ngram(n=3,list_filenames,training_set= 1)
 ```
 
 
 #### 2.3.4 Create and Clean Quadgrams
 
 ```{r create_quadgram,echo=TRUE, cache = TRUE}
-#create_ngram(n=4)
+#create_ngram(n=4,list_filenames,training_set= 1)
 ```
 
 
 ```{r clean_quadgram,echo=TRUE, cache = TRUE}
-#clean_ngram(n=4)
+#clean_ngram(n=4,list_filenames,training_set= 1)
 ```
 
 
@@ -206,19 +216,19 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 #### 2.4.1 Create and Trim Uni-dfm
 
 ```{r create_unidfm,echo=TRUE, cache = TRUE}
-#create_dfm(n=1)
+#create_dfm(n=1,list_filenames,training_set= 1)
 ```
 
 
 ```{r trim_unidfm,echo=TRUE, cache = TRUE}
-#trim_dfm(n=1)
+#trim_dfm(n=1,list_filenames,training_set= 1,mincount=1)
 ```
 
 
 #### 2.4.2 Create and Trim Bi-dfm
 
 ```{r create_bidfm,echo=TRUE, cache = TRUE}
-#create_dfm(n=2)
+#create_dfm(n=2,list_filenames,training_set= 1)
 ```
 
 
@@ -230,7 +240,7 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 #### 2.4.3 Create and Trim Tri-dfm
 
 ```{r create_tridfm,echo=TRUE, cache = TRUE}
-#create_dfm(n=3)
+#create_dfm(n=3,list_filenames,training_set= 1)
 ```
 
 
@@ -241,7 +251,7 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 #### 2.4.4 Create and Trim Quad-dfm
 
 ```{r create_quaddfm,echo=TRUE, cache = TRUE}
-#create_dfm(n=4)
+#create_dfm(n=4,list_filenames,training_set= 1)
 ```
 
 
@@ -288,7 +298,7 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 
 
 #init_DT_tables() 
-#calculate_prob_kn(1)
+#calculate_prob_kn(1,1,1)
 ```
 
 

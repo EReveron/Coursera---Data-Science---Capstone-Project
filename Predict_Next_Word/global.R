@@ -11,16 +11,19 @@ library(wordcloud)
 library(DT)
 library(markdown)
 
+wd.R <- "D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project"
+#wd.R <- "D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project"
 
-setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
-#setwd("D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
+wd.RData <- "D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/"
+#wd.RData <- "D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US"
+
+setwd(wd.R)
 
 source("Pred Next Word vFinal.R")
 source("Pred Next Word Regex vFinal.R")
 source("Main Predict Word vFinal.R")
 
-#setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
-setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/")
+setwd(wd.RData)
 
 #load_DT_prob_final_table(1,50)
 #load_DT_prob_final_table(2,50)

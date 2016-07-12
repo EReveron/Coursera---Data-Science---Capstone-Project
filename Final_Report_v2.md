@@ -34,11 +34,13 @@ $$\sum_{i=1}^{n} X^3_i$$
 
 #####		1.1.1.1 no corpus
 
-####		1.1.1.2 tokenizer + remove bad words before dfm
+####    1.1.1.2 Strategy to clean the corpora ( EEE for punctuations)
+
+####		1.1.1.3 tokenizer + remove bad words before dfm
 		
-####		1.1.1.3 tokenizer unigrams + to create tokenizer of ngrams
+####		1.1.1.4 tokenizer unigrams + to create tokenizer of ngrams
 				
-####		1.1.1.4 dfm + dfm clean
+####		1.1.1.5 dfm + dfm clean
 
 ### 1.1.2 data frame vs data table
 
@@ -116,20 +118,27 @@ library(data.table)
 library(ggplot2)
 library(knitr)
 
-# To load the local files
+wd.R <- "D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project"
+#wd.R <- "D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project"
 
-setwd("D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project")
-#setwd("D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+wd.RData <- "D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/"
+#wd.RData <- "D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US"
 
-source("Create Ngrams Data Table vFinal.R")
-source("Knersey-ney vFinal.R")
+# To load the R local files
+setwd(wd.R)
+
+source("Create Ngrams Data Table vFinal 2.R")
+source("Knersey-ney Optimazed vFinal 5.R")
+source("Main Predict Word vFinal.R")
+source("Pred Next Word Regex vFinal.R")
 source("Pred Next Word vFinal.R")
+
 
 # For reproducibility
 set.seed(12345)
 
 # To load the Data
-setwd("D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US")
+setwd(wd.RData)
 ```
 
 ## 2. Create Ngram Data Table
@@ -142,7 +151,38 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 
 
 ```r
-#create_mydata() 
+setwd(wd.RData)
+list_filenames <- c("en_US.blogs.txt","en_US.news.txt","en_US.twitter.txt")
+create_mydata(list_filenames, 1) 
+```
+
+```
+## [1] "-----> INIT: create_mydata(1)......."
+## [1] "... Loading the Data from the file: en_US.blogs.txt ..."
+## [1] "... Loading the Data from the file: en_US.news.txt ..."
+## [1] "... Loading the Data from the file: en_US.twitter.txt ..."
+## [1] "... Taking a Training Sample of: 1% ..."
+## [1] "... Removing emojies and other characters ...."
+## [1] "... To Lower Data ...."
+## [1] "... Replace URL ...."
+## [1] "... Email ...."
+## [1] "... Replace twitter ...."
+## [1] "... Replace Hashtag ...."
+## [1] "... Replacing special english character ' for special character ffff ...."
+## [1] "... Replacing punctuation for special characters ...."
+## [1] "... Replace Word that start with numbers ...."
+## [1] "... Replace Word that finish with numbers ...."
+## [1] "... Replace Digits ...."
+## [1] "... Replacing rest of punctuation ...."
+## [1] "... Put back ' ..."
+## [1] "... Saving mydata file:mydata_1.RData"
+## [1] "-----> FINISH: create_mydata(1): Running Time .......81 seconds ..."
+```
+
+```
+##           used (Mb) gc trigger  (Mb) max used  (Mb)
+## Ncells 1429886 76.4    5489235 293.2  4780641 255.4
+## Vcells 4586027 35.0   61511113 469.3 74844633 571.1
 ```
 
 ### 2.2 Create All Tokens

@@ -16,16 +16,16 @@ shinyServer(function(input, output,session) {
         setProgress(message = "Loading Data Tables ...")
         
         if (input$prob_table == "With Freq >= 5") {
-          load_DT_prob_final_table(1,"50_5")
-          load_DT_prob_final_table(2,"50_5")
-          load_DT_prob_final_table(3,"50_5")
-          load_DT_prob_final_table(4,"50_5")
+          load_DT_prob_final_table(1,"1.5")
+          load_DT_prob_final_table(2,"1.5")
+          load_DT_prob_final_table(3,"1.5")
+          load_DT_prob_final_table(4,"1.5")
         }
         else {
-          load_DT_prob_final_table(1,"50_1")
-          load_DT_prob_final_table(2,"50_1")
-          load_DT_prob_final_table(3,"50_1")
-          load_DT_prob_final_table(4,"50_1")
+          load_DT_prob_final_table(1,"1.2")
+          load_DT_prob_final_table(2,"1.2")
+          load_DT_prob_final_table(3,"1.2")
+          load_DT_prob_final_table(4,"1.2")
         }
       })
     })
@@ -86,6 +86,36 @@ shinyServer(function(input, output,session) {
     load_Prob_Table()
     DT.quad.prob.final
   }, options = list(lengthChange = TRUE,orderClasses = TRUE, scroller = TRUE))
+  
+  output$freq_table <- renderDataTable({
+    load_Prob_Table()
+    
+    DT.quad.prob.final
+  }, options = list(lengthChange = TRUE,orderClasses = TRUE, scroller = TRUE))
+  
+  output$freq_plot_uni <- renderPlot({
+    load_Prob_Table()
+    
+    hist(DT.uni.prob.final$freq1)
+    })
+  
+  output$freq_plot_bi <- renderPlot({
+    load_Prob_Table()
+    
+    hist(DT.bi.prob.final$freq2)
+  })
+  
+  output$freq_plot_tri <- renderPlot({
+    load_Prob_Table()
+    
+    hist(DT.tri.prob.final$freq3)
+  })
+  
+  output$freq_plot_quad <- renderPlot({
+    load_Prob_Table()
+    
+    hist(DT.quad.prob.final$freq4)
+  })
   
   # This function will create the wordcloud 
   
