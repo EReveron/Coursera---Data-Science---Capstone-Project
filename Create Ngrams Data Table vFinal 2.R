@@ -124,7 +124,7 @@ create_mydata <- function(list_filenames=NULL,training_set=80) {
       
       # Remove characters FALTA * [] ¬ ¬° !1¬#$%&/()=?¡´¨*¨{}{}
       print("... Replacing $ + < > ....")    
-      mydata <- stri_replace_all_regex(mydata,"[\\[\\]\\+\\-(){}°$#@<>=_%&¿]+", " ", vectorize_all=FALSE)
+      mydata <- stri_replace_all_regex(mydata,"[\\[\\]\\+\\-(){}°$#@<>=_%&¿´¨\\^~]+", " ", vectorize_all=FALSE)
       
       # Words that start with numbers: 123end  
       print("... Replace Word that start with numbers ....")
