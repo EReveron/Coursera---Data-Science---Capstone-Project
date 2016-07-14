@@ -1,7 +1,7 @@
 ---
 title: "Capstone Project - Final Report"
 author: "Enrique Reveron"
-date: "June 26, 2016"
+date: "July 14, 2016"
 output:
   html_document:
     fig_height: 4
@@ -111,11 +111,11 @@ library(data.table)
 library(ggplot2)
 library(knitr)
 
-wd.R <- "D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project"
-#wd.R <- "D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project"
+#wd.R <- "D:/Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project"
+wd.R <- "D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project"
 
-wd.RData <- "D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/"
-#wd.RData <- "D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US"
+#wd.RData <- "D:/Coursera/Capstone Project/Coursera-SwiftKey/final/en_US/"
+wd.RData <- "D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US"
 
 # To load the R local files
 setwd(wd.R)
@@ -126,13 +126,8 @@ source("Main Predict Word vFinal.R")
 source("Pred Next Word Regex vFinal.R")
 source("Pred Next Word vFinal.R")
 
-
 # For reproducibility
 set.seed(12345)
-
-# To load the Data
-setwd(wd.RData)
-
 
 ```
 
@@ -145,17 +140,14 @@ In order to create the Ngrams we will do several steps
 The files that we will use in the project are bigger than **150Mbytes** each one. In order to do the exploratory data analysis and to have an acceptable runtime, I will use only **10%** of the data. 
 
 ```{r createdata,echo=TRUE, cache = TRUE}
-setwd(wd.RData)
 list_filenames <- c("en_US.blogs.txt","en_US.news.txt","en_US.twitter.txt")
-#create_mydata(list_filenames, 1) 
+create_mydata(list_filenames, 80) 
 ```
 
 ### 2.2 Create All Tokens
 
 ```{r createalltokens,echo=TRUE, cache = TRUE}
-
-
-#create_alltokens(list_files,1)
+create_alltokens(list_files,80)
 ```
 
 
@@ -164,12 +156,12 @@ list_filenames <- c("en_US.blogs.txt","en_US.news.txt","en_US.twitter.txt")
 #### 2.3.1 Create and Clean Unigrams
 
 ```{r create_unigram, echo=TRUE, cache = TRUE}
-#create_ngram(n=1,list_filenames,training_set= 1)
+create_ngram(n=1,list_filenames,training_set= 80) 
 ```
 
 
 ```{r clean_unigram, echo=TRUE, cache = TRUE}
-#clean_ngram(n=1,list_filenames,training_set= 1)
+clean_ngram(n=1,list_filenames,training_set= 80) 
 ```
 
 
@@ -177,37 +169,37 @@ list_filenames <- c("en_US.blogs.txt","en_US.news.txt","en_US.twitter.txt")
 #### 2.3.2 Create and Clean Bigrams
 
 ```{r create_bigram, echo=TRUE, cache = TRUE}
-#create_ngram(n=2,list_filenames,training_set= 1)
+create_ngram(n=2,list_filenames,training_set= 80)
 ```
 
 
 
 ```{r clean_bigram, echo=TRUE, cache = TRUE}
-#clean_ngram(n=2,list_filenames,training_set= 1)
+clean_ngram(n=2,list_filenames,training_set= 80)
 ```
 
 
 #### 2.3.3 Create and Clean Trigrams
 
 ```{r create_trigram,echo=TRUE, cache = TRUE}
-#create_ngram(n=3,list_filenames,training_set= 1)
+create_ngram(n=3,list_filenames,training_set= 80)
 ```
 
 
 ```{r clean_trigram,echo=TRUE, cache = TRUE}
-#clean_ngram(n=3,list_filenames,training_set= 1)
+clean_ngram(n=3,list_filenames,training_set= 80)
 ```
 
 
 #### 2.3.4 Create and Clean Quadgrams
 
 ```{r create_quadgram,echo=TRUE, cache = TRUE}
-#create_ngram(n=4,list_filenames,training_set= 1)
+create_ngram(n=4,list_filenames,training_set= 80)
 ```
 
 
 ```{r clean_quadgram,echo=TRUE, cache = TRUE}
-#clean_ngram(n=4,list_filenames,training_set= 1)
+clean_ngram(n=4,list_filenames,training_set= 80)
 ```
 
 
@@ -216,47 +208,47 @@ list_filenames <- c("en_US.blogs.txt","en_US.news.txt","en_US.twitter.txt")
 #### 2.4.1 Create and Trim Uni-dfm
 
 ```{r create_unidfm,echo=TRUE, cache = TRUE}
-#create_dfm(n=1,list_filenames,training_set= 1)
+create_dfm(n=1,list_filenames,training_set= 80)
 ```
 
 
 ```{r trim_unidfm,echo=TRUE, cache = TRUE}
-#trim_dfm(n=1,list_filenames,training_set= 1,mincount=1)
+trim_dfm(n=1,list_filenames,training_set= 80,mincount=1)
 ```
 
 
 #### 2.4.2 Create and Trim Bi-dfm
 
 ```{r create_bidfm,echo=TRUE, cache = TRUE}
-#create_dfm(n=2,list_filenames,training_set= 1)
+create_dfm(n=2,list_filenames,training_set= 80)
 ```
 
 
 ```{r clean_unidfm,echo=TRUE, cache = TRUE}
-#trim_dfm(n=2)
+trim_dfm(n=2,list_filenames,training_set= 80,mincount=1)
 ```
 
 
 #### 2.4.3 Create and Trim Tri-dfm
 
 ```{r create_tridfm,echo=TRUE, cache = TRUE}
-#create_dfm(n=3,list_filenames,training_set= 1)
+create_dfm(n=3,list_filenames,training_set= 80)
 ```
 
 
 ```{r trim_tridfm,echo=TRUE, cache = TRUE}
-#trim_dfm(n=3)
+trim_dfm(n=3,list_filenames,training_set= 80,mincount=1)
 ```
 
 #### 2.4.4 Create and Trim Quad-dfm
 
 ```{r create_quaddfm,echo=TRUE, cache = TRUE}
-#create_dfm(n=4,list_filenames,training_set= 1)
+create_dfm(n=4,list_filenames,training_set= 80)
 ```
 
 
 ```{r trim_quaddfm,echo=TRUE, cache = TRUE}
-#trim_dfm(n=4)
+trim_dfm(n=4,list_filenames,training_set= 80,mincount=1)
 ```
 
 
@@ -265,26 +257,26 @@ list_filenames <- c("en_US.blogs.txt","en_US.news.txt","en_US.twitter.txt")
 #### 2.5.1 Create Unigram Data Table with Tokens and Frequency
 
 ```{r create_uniDT,echo=TRUE, cache = TRUE}
-#create_DT(n=1)
+create_DT(n=1,list_filenames,training_set= 80,mincount=1)
 ```
 
 
 #### 2.5.2 Create Bigram Data Table with Tokens and Frequency
 
 ```{r create_biDT,echo=TRUE, cache = TRUE}
-#create_DT(n=2)
+create_DT(n=2,list_filenames,training_set= 80,mincount=1)
 ```
 
 #### 2.5.3 Create Trigram Data Table with Tokens and Frequency
 
 ```{r create_triDT,echo=TRUE, cache = TRUE}
-#create_DT(n=3)
+create_DT(n=3,list_filenames,training_set= 80,mincount=1)
 ```
 
 #### 2.5.4 Create Quadgram Data Table with Tokens and Frequency
 
 ```{r create_quadDT,echo=TRUE, cache = TRUE}
-#create_DT(n=4)
+create_DT(n=4,list_filenames,training_set= 80,mincount=1)
 ```
 
 ### 3. Calculate Probability for Each Ngram
@@ -295,10 +287,7 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 
 
 ```{r calculate_uniProb, echo=TRUE}
-
-
-#init_DT_tables() 
-#calculate_prob_kn(1,1,1)
+calculate_prob_kn(n=1,training_set=80,p1=1)
 ```
 
 
@@ -322,8 +311,7 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 
 
 ```{r calculate_biProb,echo=TRUE, cache = TRUE}
-#init_DT_tables() 
-#calculate_prob_kn(2)
+calculate_prob_kn(n=2,training_set=80,p1=1)
 ```
 
 Those are information in the Unigram DT:
@@ -347,7 +335,7 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 
 
 ```{r calculate_triProb,echo=TRUE, cache = TRUE}
-#calculate_prob_kn(3)
+calculate_prob_kn(n=3,training_set=80,p1=1)
 ```
 
 Those are information in the Unigram DT:
@@ -370,7 +358,7 @@ The files that we will use in the project are bigger than **150Mbytes** each one
 
 
 ```{r calculate_quadProb,echo=TRUE, cache = TRUE}
-#calculate_prob_kn(4)
+calculate_prob_kn(n=4,training_set=80,p1=1)
 ```
 
 Those are information in the Unigram DT:
@@ -388,9 +376,32 @@ The prob table has:
 ```
 
 
-## 4. Prediction of next word
+## 4. Ngrams Probability Frequency Table Analysis
 
-### 4.1 Example with Unigram
+```{r dt_prob_freq,echo=TRUE, cache = TRUE}
+DT.prob.freq <- DT_prob_freq(training_set=80) 
+```
+
+
+```{r echo=TRUE, results='asis'}
+kable(DT.prob.freq)
+```
+
+## 5. Singleton Probability Table
+
+```{r dt_prob_sing,echo=TRUE, cache = TRUE}
+DT.prob.sing <- DT_prob_singletons(training_set=80) 
+```
+
+
+
+```{r echo=TRUE, results='asis'}
+kable(DT.prob.sing)
+```
+
+## 6. Prediction of next word
+
+### 6.1 Example with Unigram
 
 ```{r predic_uni1, echo=TRUE} 
 #source("Pred Next Word vFinal.R")
@@ -402,7 +413,7 @@ The prob table has:
 #kable(prediction1)
 ```
 
-### 4.2 Example with Bigram
+### 6.2 Example with Bigram
 
 ```{r predict_bi1,echo=TRUE} 
 #prediction2 <- predict_nextword(c("how","are"),100,0,5) 
@@ -413,7 +424,7 @@ The prob table has:
 #kable(prediction2)
 ```
 
-### 4.3 Example with Trigram
+### 6.3 Example with Trigram
 
 ```{r predict_tri1,echo=TRUE} 
 #prediction3 <- predict_nextword(c("how","are","you"),100,0,5) 
@@ -425,7 +436,7 @@ The prob table has:
 ```
 
 
-## 4. Prediction of next word using Regex
+## 7. Prediction of next word using Regex
 
 ```{r predict_regex,echo=TRUE} 
 #source("Pred Next Word vFinal.R")

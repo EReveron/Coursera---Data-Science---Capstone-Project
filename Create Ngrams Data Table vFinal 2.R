@@ -98,7 +98,7 @@ create_mydata <- function(list_filenames=NULL,training_set=80) {
       mydata <- stri_replace_all_regex(mydata,"(f|ht)tp(s?)://(.*)[.][a-z]+", " ", vectorize_all=FALSE)
       
       # Email
-      print("... Email ....")
+      print("... Replace Email ....")
       mydata <- stri_replace_all_regex(mydata,"[[:alnum:].-_]+@[[:alnum:].-_]+", " ", vectorize_all=FALSE)
 
       # Twitter 
@@ -109,9 +109,13 @@ create_mydata <- function(list_filenames=NULL,training_set=80) {
       print("... Replace Hashtag ....")
       mydata <- stri_replace_all_regex(mydata,"#[[:alnum:].-_]+", " ", vectorize_all=FALSE)
       
-      # Replace special english character ' for ffff 
-      print("... Replacing special english character ' for special character ffff ....")   
-      mydata <- stri_replace_all_regex(mydata,"'+", " ffff ", vectorize_all=FALSE)
+      # To preserve  special english character ' between words replace for ffff 
+      print("... Replacing special english character between words ' for special character ffff ....")   
+      mydata <- stri_replace_all_regex(mydata,"([:alpha:]+)'([:alpha:]+)", "$1 ffff $2", vectorize_all=FALSE)
+      
+      # Remove left '
+      print("... Replacing left ' ....")   
+      mydata <- stri_replace_all_regex(mydata,"'+", " ", vectorize_all=FALSE)
       
       # Replace punctuation for a special word "eeee" in order to 
       # avoid some ngrams that doesn't exists
@@ -121,24 +125,6 @@ create_mydata <- function(list_filenames=NULL,training_set=80) {
       # Remove characters FALTA * [] ¬ ¬° !1¬#$%&/()=?¡´¨*¨{}{}
       print("... Replacing $ + < > ....")    
       mydata <- stri_replace_all_regex(mydata,"[\\[\\]\\+\\-(){}°$#@<>=_%&¿]+", " ", vectorize_all=FALSE)
-      
-      # lIMITE DE PALABRA \\b
-      # \\p{Pd} -_
-      # \\d+
-      # \\p{P}
-      
-      # Quanteda
-      
-      # Hyphen "(\\b)[\\p{Pd}](\\b)"       \\p{Pd} = - _
-      # Numbers "\\b\\d+\\b"
-      # Intra words hyphen "(\\b)[\\p{Pd}](\\b)"
-      # Punctuaton "(?![", ifelse(removeTwitter, "_", "@#_"),  "])[\\p{P}]"
-      # Symbol "[\\p{S}]"
-      # Blank spaces "\\p{WHITE_SPACE}"
-      # Separators "^\\p{Z}$"
-      
-      
-      # Remove twitter paste0("(?![@#_])[\\p{P}]")
       
       # Words that start with numbers: 123end  
       print("... Replace Word that start with numbers ....")
@@ -263,11 +249,13 @@ create_ngram <- function(n,list_filenames=NULL,training_set=80)
       switch(n,
              "1"= { #Unigrams
                uni.ngram <<- ngrams(alltokens, 1)
-               print(paste("... Saving Ngram file:",file.name, sep=""))       
+               print(paste("... Saving Ngram file:",file.name, sep=""))
+               save(uni.ngram,file=file.name)
              },
              "2"= { #Bigrams
                bi.ngram <<- ngrams(alltokens, 2)
                print(paste("... Saving Ngram file:",file.name,sep=""))
+               save(bi.ngram,file=file.name)
              },
              "3"= { #Trigrams
                tri.ngram <<- ngrams(alltokens, 3)
@@ -418,8 +406,6 @@ create_dfm <- function(n,list_filenames=NULL,training_set=80) {
     }  else {
       ## Load the ngrams and cleaned it 
       clean_ngram(n,list_filenames,training_set)
-      
-     
       
       print(paste("... Creating dfm:", var.name, sep=""))
       

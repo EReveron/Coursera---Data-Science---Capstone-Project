@@ -16,17 +16,18 @@ shinyServer(function(input, output,session) {
         setProgress(message = "Loading Data Tables ...")
         
         if (input$prob_table == "With Freq >= 5") {
-          load_DT_prob_final_table(1,"1.5")
-          load_DT_prob_final_table(2,"1.5")
-          load_DT_prob_final_table(3,"1.5")
-          load_DT_prob_final_table(4,"1.5")
+          training_set <<- "80.5"
+        } else {
+          training_set <<- "80.2"
         }
-        else {
-          load_DT_prob_final_table(1,"1.2")
-          load_DT_prob_final_table(2,"1.2")
-          load_DT_prob_final_table(3,"1.2")
-          load_DT_prob_final_table(4,"1.2")
-        }
+        rm(DT.uni.prob.final,envir = .GlobalEnv)
+        rm(DT.bi.prob.final,envir = .GlobalEnv)
+        rm(DT.tri.prob.final,envir = .GlobalEnv)
+        rm(DT.quad.prob.final,envir = .GlobalEnv)
+        load_DT_prob_final_table(1,training_set)
+        load_DT_prob_final_table(2,training_set)
+        load_DT_prob_final_table(3,training_set)
+        load_DT_prob_final_table(4,training_set)
       })
     })
   })
@@ -38,8 +39,7 @@ shinyServer(function(input, output,session) {
     input$pred_method
     input$minprob
     input$maxwords
-    #input$prob_table
-    
+    input$prob_table
     
     isolate({
       withProgress({
@@ -56,12 +56,9 @@ shinyServer(function(input, output,session) {
   })
   
   output$table <- renderDataTable({
-    
     load_Prob_Table()
     
     myds <- get_predicted_words()
-    
-    
     if (nrow(myds) > 0) {
       myds
     }
@@ -89,38 +86,55 @@ shinyServer(function(input, output,session) {
   
   output$freq_table <- renderDataTable({
     load_Prob_Table()
+    DT_prob_freq(training_set)
     
-    DT.quad.prob.final
   }, options = list(lengthChange = TRUE,orderClasses = TRUE, scroller = TRUE))
   
-  output$freq_plot_uni <- renderPlot({
-    load_Prob_Table()
-    
-    hist(DT.uni.prob.final$freq1)
+  output$freq_plot <- renderPlot({
+    isolate({
+      withProgress({
+        setProgress(message = "Generating Data ...")
+
+        load_Prob_Table()
+        
+        g1 <- ggplot(data=DT.uni.prob.final, aes(freq1)) +
+          geom_histogram(breaks=seq(1, 50, by = 1),
+                         col="red", 
+                         fill="green") + 
+          labs(title="Histogram for Unigrams Frequency") +
+          labs(x="Frequency",y="Number of Unigrams") 
+        
+        
+        g2 <- ggplot(data=DT.bi.prob.final, aes(freq2)) +
+          geom_histogram(breaks=seq(1, 50, by = 1),
+                         col="red", 
+                         fill="blue") +
+          labs(title="Histogram for Bigrams Frequency") +
+          labs(x="Frequency",y="Number of Bigrams") 
+        
+        g3 <- ggplot(data=DT.tri.prob.final, aes(freq3)) +
+          geom_histogram(breaks=seq(1, 50, by = 1),
+                         col="red", 
+                         fill="white") + 
+          labs(title="Histogram for Trigrams Frequency") +
+          labs(x="Frequency",y="Number of Trigrams") 
+        
+        g4 <- ggplot(data=DT.quad.prob.final, aes(freq4)) +
+          geom_histogram(breaks=seq(1, 50, by = 1),
+                         col="yellow", 
+                         fill="red") +
+          labs(title="Histogram for Quadgrams Frequency") +
+          labs(x="Frequency",y="Number of Quadgrams") 
+        
+        grid.arrange(g1, g2, g3,g4, ncol = 2, nrow = 2)
+      })
     })
-  
-  output$freq_plot_bi <- renderPlot({
-    load_Prob_Table()
-    
-    hist(DT.bi.prob.final$freq2)
   })
-  
-  output$freq_plot_tri <- renderPlot({
-    load_Prob_Table()
-    
-    hist(DT.tri.prob.final$freq3)
-  })
-  
-  output$freq_plot_quad <- renderPlot({
-    load_Prob_Table()
-    
-    hist(DT.quad.prob.final$freq4)
-  })
+            
   
   # This function will create the wordcloud 
   
   output$word_cloud <- renderPlot({
-    #input$text_string
     load_Prob_Table()
     myds <- get_predicted_words()
     
@@ -131,7 +145,19 @@ shinyServer(function(input, output,session) {
                 rot.per=0,scale=c(8,5), fixed.asp = TRUE,
                 colors = brewer.pal(6, "Dark2"))
     } 
-    
   })
+  
+
+  getPage<-function(x) {
+    return(includeHTML(x))
+  }
+  
+  output$report1 <-renderUI({getPage("Middle_Report.html")})
+  
+  output$report2 <-renderUI({getPage("Final_Report_v2.html")})
+  
+  output$report3 <-renderUI({getPage("Output_Report_v2.html")})
+  
+  
 })
  

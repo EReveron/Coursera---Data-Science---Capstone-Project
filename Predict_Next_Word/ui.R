@@ -59,11 +59,17 @@ shinyUI(
                           )
                         )
                ),
-               setwd(wd.R),
-               tabPanel("Report",
-                        includeMarkdown("Final Report v2.Rmd")
+               #setwd(wd.R),
+               
+               navbarMenu("Reports",
+                          tabPanel('Middle Report',
+                                   htmlOutput("report1")),
+                          tabPanel('Final Report',
+                                   htmlOutput("report2")),
+                          tabPanel('Output Report',
+                                   htmlOutput("report3"))
                ),
-               setwd(wd.RData),
+               #setwd(wd.RData),
                navbarMenu("More",
                           tabPanel('Unigrams Probability Table',
                                    titlePanel("Unigrams Probability Table"),
@@ -80,12 +86,8 @@ shinyUI(
                           tabPanel('Prob Data Table Frequency Analisys',
                                    titlePanel("Prob Data Table Frequency Analisys"),
                                    dataTableOutput("freq_table"),
-                                   plotOutput("freq_plot_uni"),
-                                   plotOutput("freq_plot_bi"),
-                                   plotOutput("freq_plot_tri"),
-                                   plotOutput("freq_plot_quad"))
+                                   plotOutput("freq_plot"))
                )
-              
     )
   )
 )

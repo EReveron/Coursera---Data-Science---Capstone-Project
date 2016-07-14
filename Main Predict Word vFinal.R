@@ -36,9 +36,9 @@ DT_prob_singletons <- function (training_set=80) {
   t1 <- proc.time()
   
   DT.result <- data.table("Ngram"=character(),
-                          "Object Size All Freq"=double(),
-                          "Object Size Freq > 1"=double(),"Percent  Freq > 1"=double(),
-                          "Object Size Freq >= 5"=double(),"Percent Freq >= 5"=double())
+                          "Object Size All Freq (Mbytes)"=double(),
+                          "Object Size Freq > 1 (Mbytes)"=double(),"Percent  Freq > 1"=double(),
+                          "Object Size Freq >= 5 (Mbytes)"=double(),"Percent Freq >= 5"=double())
   
   for (i in 1:4)
   {
@@ -109,10 +109,12 @@ DT_prob_singletons <- function (training_set=80) {
              gc()
            }
     )
-    
-    DT.result <- rbind(DT.result,as.list(c(i,s0,
-                                           s1,format_number(s1/s0*100),
-                                           s2,format_number(s2/s0*100))))
+    mbytes <- 1024 * 1024
+    DT.result <- rbind(DT.result,as.list(c(i,format_number(s0[1]/mbytes),
+                                           format_number(s1[1]/mbytes),
+                                           format_number(s1[1]/s0[1]*100),
+                                           format_number(s2[1]/mbytes),
+                                           format_number(s2[1]/s0[1]*100))))
   
   }
   
@@ -147,8 +149,8 @@ DT_prob_freq <- function (training_set=80) {
              s4 <- nrow(DT.uni.prob.final[freq1 == (min_freq + 4),,])
              s5 <- nrow(DT.uni.prob.final[freq1 >= (min_freq + 5),,])
              sn <- nrow(DT.uni.prob.final[freq1 >= max_freq,,])
-             rm(DT.uni.prob.final,envir = .GlobalEnv)
-             gc()
+             #rm(DT.uni.prob.final,envir = .GlobalEnv)
+             #gc()
            },
            "2" = {
              l <- nrow(DT.bi.prob.final)
@@ -162,8 +164,8 @@ DT_prob_freq <- function (training_set=80) {
              s5 <- nrow(DT.bi.prob.final[freq2 >= (min_freq + 5),,])
              sn <- nrow(DT.bi.prob.final[freq2 >= max_freq,,])
              
-             rm(DT.bi.prob.final,envir = .GlobalEnv)
-             gc()
+             #rm(DT.bi.prob.final,envir = .GlobalEnv)
+             #gc()
              
            },
            "3" = {
@@ -178,8 +180,8 @@ DT_prob_freq <- function (training_set=80) {
              s5 <- nrow(DT.tri.prob.final[freq3 >= (min_freq + 5),,])
              sn <- nrow(DT.tri.prob.final[freq3 >= max_freq,,])
              
-             rm(DT.tri.prob.final,envir = .GlobalEnv)
-             gc()
+             #rm(DT.tri.prob.final,envir = .GlobalEnv)
+             #gc()
              
            },
            "4" = {
@@ -194,8 +196,8 @@ DT_prob_freq <- function (training_set=80) {
              s5 <- nrow(DT.quad.prob.final[freq4 >= (min_freq + 5),,])
              sn <- nrow(DT.quad.prob.final[freq4 >= max_freq,,])
              
-             rm(DT.quad.prob.final,envir = .GlobalEnv)
-             gc()
+             #rm(DT.quad.prob.final,envir = .GlobalEnv)
+             #gc()
            }
     )
     
