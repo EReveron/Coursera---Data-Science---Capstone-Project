@@ -120,8 +120,8 @@ wd.RData <- "D:/001 -- Coursera/Capstone Project/Coursera-SwiftKey/final/en_US"
 # To load the R local files
 setwd(wd.R)
 
-source("Create Ngrams Data Table vFinal 2.R")
-source("Knersey-ney Optimazed vFinal 5.R")
+source("Create Ngrams Data Table vFinal.R")
+source("Knersey-ney Optimazed vFinal.R")
 source("Main Predict Word vFinal.R")
 source("Pred Next Word Regex vFinal.R")
 source("Pred Next Word vFinal.R")
@@ -135,7 +135,7 @@ set.seed(12345)
 
 In order to create the Ngrams we will do several steps
 
-### 2.1 Load All the Data
+### 2.1 Load and Clean the Data
 
 The files that we will use in the project are bigger than **150Mbytes** each one. In order to do the exploratory data analysis and to have an acceptable runtime, I will use only **10%** of the data. 
 
@@ -151,7 +151,7 @@ create_alltokens(list_files,80)
 ```
 
 
-### 2.3 Create Ngrams 
+### 2.3 Create Unigrams Frequency Table 
 
 #### 2.3.1 Create and Clean Unigrams
 
@@ -165,8 +165,30 @@ clean_ngram(n=1,list_filenames,training_set= 80)
 ```
 
 
+#### 2.3.2 Create and Trim Uni-dfm
 
-#### 2.3.2 Create and Clean Bigrams
+```{r create_unidfm,echo=TRUE, cache = TRUE}
+create_dfm(n=1,list_filenames,training_set= 80)
+```
+
+
+```{r trim_unidfm,echo=TRUE, cache = TRUE}
+trim_dfm(n=1,list_filenames,training_set= 80,mincount=1)
+```
+
+
+#### 2.3.3 Create Unigram Data Table with Tokens and Frequency
+
+```{r create_uniDT,echo=TRUE, cache = TRUE}
+create_DT(n=1,list_filenames,training_set= 80,mincount=1)
+```
+
+
+
+### 2.4 Create Bigrams Frequency Table 
+
+
+#### 2.4.1 Create and Clean Bigrams
 
 ```{r create_bigram, echo=TRUE, cache = TRUE}
 create_ngram(n=2,list_filenames,training_set= 80)
@@ -176,44 +198,6 @@ create_ngram(n=2,list_filenames,training_set= 80)
 
 ```{r clean_bigram, echo=TRUE, cache = TRUE}
 clean_ngram(n=2,list_filenames,training_set= 80)
-```
-
-
-#### 2.3.3 Create and Clean Trigrams
-
-```{r create_trigram,echo=TRUE, cache = TRUE}
-create_ngram(n=3,list_filenames,training_set= 80)
-```
-
-
-```{r clean_trigram,echo=TRUE, cache = TRUE}
-clean_ngram(n=3,list_filenames,training_set= 80)
-```
-
-
-#### 2.3.4 Create and Clean Quadgrams
-
-```{r create_quadgram,echo=TRUE, cache = TRUE}
-create_ngram(n=4,list_filenames,training_set= 80)
-```
-
-
-```{r clean_quadgram,echo=TRUE, cache = TRUE}
-clean_ngram(n=4,list_filenames,training_set= 80)
-```
-
-
-### 2.4 Create and Trim DFM 
-
-#### 2.4.1 Create and Trim Uni-dfm
-
-```{r create_unidfm,echo=TRUE, cache = TRUE}
-create_dfm(n=1,list_filenames,training_set= 80)
-```
-
-
-```{r trim_unidfm,echo=TRUE, cache = TRUE}
-trim_dfm(n=1,list_filenames,training_set= 80,mincount=1)
 ```
 
 
@@ -229,7 +213,30 @@ trim_dfm(n=2,list_filenames,training_set= 80,mincount=1)
 ```
 
 
-#### 2.4.3 Create and Trim Tri-dfm
+#### 2.4.3 Create Bigram Data Table with Tokens and Frequency
+
+```{r create_biDT,echo=TRUE, cache = TRUE}
+create_DT(n=2,list_filenames,training_set= 80,mincount=1)
+```
+
+
+
+### 2.5 Create Trigrams Frequency Table 
+
+
+#### 2.5.1 Create and Clean Trigrams
+
+```{r create_trigram,echo=TRUE, cache = TRUE}
+create_ngram(n=3,list_filenames,training_set= 80)
+```
+
+
+```{r clean_trigram,echo=TRUE, cache = TRUE}
+clean_ngram(n=3,list_filenames,training_set= 80)
+```
+
+
+#### 2.5.2 Create and Trim Tri-dfm
 
 ```{r create_tridfm,echo=TRUE, cache = TRUE}
 create_dfm(n=3,list_filenames,training_set= 80)
@@ -240,7 +247,33 @@ create_dfm(n=3,list_filenames,training_set= 80)
 trim_dfm(n=3,list_filenames,training_set= 80,mincount=1)
 ```
 
-#### 2.4.4 Create and Trim Quad-dfm
+#### 2.5.3 Create Trigram Data Table with Tokens and Frequency
+
+```{r create_triDT,echo=TRUE, cache = TRUE}
+create_DT(n=3,list_filenames,training_set= 80,mincount=1)
+```
+
+
+
+
+
+
+### 2.6 Create Quadgrams Frequency Table 
+
+
+#### 2.6.1 Create and Clean Quadgrams
+
+```{r create_quadgram,echo=TRUE, cache = TRUE}
+create_ngram(n=4,list_filenames,training_set= 80)
+```
+
+
+```{r clean_quadgram,echo=TRUE, cache = TRUE}
+clean_ngram(n=4,list_filenames,training_set= 80)
+```
+
+
+#### 2.6.2 Create and Trim Quad-dfm
 
 ```{r create_quaddfm,echo=TRUE, cache = TRUE}
 create_dfm(n=4,list_filenames,training_set= 80)
@@ -251,29 +284,7 @@ create_dfm(n=4,list_filenames,training_set= 80)
 trim_dfm(n=4,list_filenames,training_set= 80,mincount=1)
 ```
 
-
-### 2.5 Create Data Table with Tokens and Frequency
-
-#### 2.5.1 Create Unigram Data Table with Tokens and Frequency
-
-```{r create_uniDT,echo=TRUE, cache = TRUE}
-create_DT(n=1,list_filenames,training_set= 80,mincount=1)
-```
-
-
-#### 2.5.2 Create Bigram Data Table with Tokens and Frequency
-
-```{r create_biDT,echo=TRUE, cache = TRUE}
-create_DT(n=2,list_filenames,training_set= 80,mincount=1)
-```
-
-#### 2.5.3 Create Trigram Data Table with Tokens and Frequency
-
-```{r create_triDT,echo=TRUE, cache = TRUE}
-create_DT(n=3,list_filenames,training_set= 80,mincount=1)
-```
-
-#### 2.5.4 Create Quadgram Data Table with Tokens and Frequency
+#### 2.6.2 Create Quadgram Data Table with Tokens and Frequency
 
 ```{r create_quadDT,echo=TRUE, cache = TRUE}
 create_DT(n=4,list_filenames,training_set= 80,mincount=1)

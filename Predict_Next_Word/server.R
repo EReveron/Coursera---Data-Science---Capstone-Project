@@ -140,11 +140,47 @@ shinyServer(function(input, output,session) {
     
     if (nrow(myds) > 0)
     {
+      if (input$maxwords < 5) {
+        scale_wordcloud <- c(7,5)
+      } else if (input$maxwords < 10) {
+        scale_wordcloud <- c(6,4)
+      }
+      else {
+        scale_wordcloud <- c(5,3)
+      }
+      
       wordcloud(myds$word,myds$prob,
                 max.words = input$maxwords, random.order = FALSE, random.color = FALSE,
-                rot.per=0,scale=c(8,5), fixed.asp = TRUE,
+                rot.per=0,scale=scale_wordcloud, fixed.asp = TRUE,
                 colors = brewer.pal(6, "Dark2"))
     } 
+  })
+  
+  
+  output$text_pred <- renderUI({
+    myds <- get_predicted_words()
+    
+    if (nrow(myds) > 0) {
+      word_predicted <- myds$word[1]
+      
+      last_word <- last_n_words(input$text_string,1)
+      
+      is_final_word <- stri_endswith_fixed(input$text_string," ")
+      
+      if (input$pred_method == "Incomplete Words") {
+        
+        if (!is_final_word) {
+          word_predicted <- stri_replace_all_regex(word_predicted,
+                                                 paste0(last_word,"(.*)"),
+                                                 "$1")
+        }
+      } 
+      word_predicted <- tags$span(word_predicted,style = "color:blue")
+    } else {
+      word_predicted <- ""
+    }  
+    HTML(paste0("<h4>",input$text_string,"<b>",word_predicted,"</b>","</h4>"))
+
   })
   
 

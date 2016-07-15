@@ -55,6 +55,9 @@ shinyUI(
                                       value = "",
                                       width = '100%',
                                       placeholder = "Type your text here ..."),
+                            h4("Next Word Prediction:"),
+                            htmlOutput("text_pred"),
+                            hr(),
                             plotOutput("word_cloud")
                           )
                         )

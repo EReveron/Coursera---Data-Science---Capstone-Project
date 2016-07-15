@@ -28,7 +28,7 @@ source("Pred Next Word vFinal.R")
 source("Pred Next Word Regex vFinal.R")
 source("Main Predict Word vFinal.R")
 
-#setwd(wd.RData)
+setwd(wd.RData)
 
 #load_DT_prob_final_table(1,50)
 #load_DT_prob_final_table(2,50)
