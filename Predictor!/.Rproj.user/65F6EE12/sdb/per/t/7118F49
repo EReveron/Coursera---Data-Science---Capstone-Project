@@ -1,0 +1,17 @@
+{
+    "contents" : "# This is the global.R file for a Shiny web application.\n# Author: Enrique Reveron\n# Date: 2016-07-17\n# Content: This Shiny Apps predict the next word for english language using\n#          Knersey-ney Algoritm and Backoff\n\nlibrary(shiny)\nlibrary(googleVis)\nlibrary(RColorBrewer)\nlibrary(wordcloud)\nlibrary(DT)\nlibrary(markdown)\nlibrary(ggplot2)\nlibrary(grid)\nlibrary(gridExtra)\n\nsource(\"Pred Next Word vFinal.R\")\nsource(\"Pred Next Word Regex vFinal.R\")\nsource(\"Main Predict Word vFinal.R\")",
+    "created" : 1468783547688.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "700996723",
+    "id" : "7118F49",
+    "lastKnownWriteTime" : 1468783552,
+    "path" : "D:/001 -- Coursera/Capstone Project/Coursera---Data-Science---Capstone-Project/Predictor!/global.R",
+    "project_path" : "global.R",
+    "properties" : {
+    },
+    "relative_order" : 3,
+    "source_on_save" : false,
+    "type" : "r_source"
+}
